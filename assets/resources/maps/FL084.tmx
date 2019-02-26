@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="8" height="10" tilewidth="80" tileheight="80">
+ <tileset firstgid="1" name="Tile" tilewidth="1" tileheight="1">
+  <image source="Tile.png" width="1" height="1"/>
+ </tileset>
+
+ <layer name="floor" width="8" height="10">
+  <data encoding="base64" compression="zlib">
+   eJx7xcjA8AqKQeAzlIaBV2jyb4mQR8YwNTCASx6GsckjA3R5Qvg1GkYXw2cuMoCp/4ymFwC12DTO
+  </data>
+ </layer>
+ <layer name="logic" width="8" height="10">
+  <data encoding="base64" compression="zlib">
+   eJybycDAMBOKKxgZGKoYITQMz2JAYBCfgQFVHhnA+JeB9BUgvgpV04Sm/g0jxL53SPIwDJOfyIiQR8ZaULPjobQukhtgbF1GVDejuxddDCaeCjVHmxERHui4Go0PACxFIy4=
+  </data>
+ </layer>
+ <objectgroup name="hero" width="8" height="10">
+  <object name="EXIT" x="336" y="103" width="43" height="43">
+   <properties>
+    <property name="FL085" value="a"/>
+   </properties>
+  </object>
+  <object name="EXIT" x="331" y="650" width="51" height="51">
+   <properties>
+    <property name="FL083" value="a"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>
