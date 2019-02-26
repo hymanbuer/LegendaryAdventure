@@ -358,11 +358,10 @@ cc.Class({
                 if (/FL/.test(key)) {
                     const match = key.match(/\d+/);
                     const id = Number.parseInt(match[0]);
-                    const grid = this.getGridAt(properties.x, properties.y);
                     const exit = {};
                     const symbol = properties[key];
                     exit.nextFloorName = key;
-                    exit.grid = cc.v2(grid.x, this._mapSize.height-1 - grid.y);
+                    exit.grid = this.getGridAt(properties.x, properties.y);
                     exit.floorId = id;
                     exit.symbol = symbol;
                     this._exits.push(exit);
