@@ -7,11 +7,10 @@ cc.Class({
     },
 
     start () {
-        this.splashAnimation.on('finished', this.onSplashFinished, this);
+        cc.director.preloadScene('main');
+        this.splashAnimation.on('finished', () => {
+            cc.director.loadScene('main');
+        });
         this.splashAnimation.play();
-    },
-
-    onSplashFinished () {
-        cc.director.loadScene('main');
     },
 });

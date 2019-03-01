@@ -40,7 +40,7 @@
     //Right before exporting the validator object, pass each of the builtins
     //through extend() so that their first argument is coerced to a string
     encryptjs.init = function () {
-        console.log("--------------------Applying Encryption Algorithm------------------ ");
+        // console.log("--------------------Applying Encryption Algorithm------------------ ");
     };
     'use strict';
     if (typeof module!='undefined' && module.exports) var Algo = require('./algo'); // CommonJS (Node.js)
