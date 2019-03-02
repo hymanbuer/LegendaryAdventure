@@ -20,7 +20,7 @@ cc.Class({
     },
 
     start () {
-        
+        cc.director.preloadScene('game');
     },
 
     onClickStartGame () {

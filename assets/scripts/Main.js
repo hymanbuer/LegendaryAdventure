@@ -14,9 +14,9 @@ const Main = cc.Class({
     },
 
     onLoad () {
-        cc.game.addPersistRootNode(this.node);
         Main.instance = this;
         this._init();
+        this._addPersistRootNodes();
     },
 
     onDestroy () {
@@ -39,5 +39,10 @@ const Main = cc.Class({
     _init () {
         setting.load();
         profile.load();
+    },
+
+    _addPersistRootNodes () {
+        cc.game.addPersistRootNode(this.node);
+        cc.game.addPersistRootNode(this.mask);
     },
 });
