@@ -12,19 +12,10 @@ cc.Class({
         },
 
         clickVolumne: 1.0,
-
-        target: {
-            type: cc.Node,
-            default: null,
-        }
-    },
-
-    __preload () {
-        !this.target && (this.target = this.node);
     },
 
     start () {
-        this.target && this.target.getComponents(cc.Button)
+        this.node.getComponents(cc.Button)
             .map(comp => comp.node)
             .filter(node => !node.getComponent(cc.AudioSource))
             .forEach(node => {

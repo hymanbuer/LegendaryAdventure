@@ -1,6 +1,7 @@
 
 const setting = require('GameSetting');
 const profile = require('GameProfile');
+const Main = require('Main');
 
 cc.Class({
     extends: cc.Component,
@@ -19,7 +20,7 @@ cc.Class({
     },
 
     start () {
-        cc.director.preloadScene('game');
+        
     },
 
     onClickStartGame () {
@@ -32,7 +33,7 @@ cc.Class({
     },
 
     onClickContinueGame () {
-        cc.director.loadScene('game');
+        Main.instance.transition('game');
     },
 
     onClickAbout () {
@@ -46,13 +47,12 @@ cc.Class({
 
     _loadSceneAfterPlaySound (node) {
         const source = node.getComponent(cc.AudioSource);
-        cc.director.preloadScene('opening');
         if (source) {
             this.scheduleOnce(() => {
-                cc.director.loadScene('opening');
+                Main.instance.transition('opening');
             }, source.getDuration());
         } else {
-            cc.director.loadScene('opening');
+            Main.instance.transition('opening');
         }
     },
 });

@@ -10,7 +10,7 @@ const Main = cc.Class({
     },
 
     properties: {
-        
+        mask: cc.Node,
     },
 
     onLoad () {
@@ -22,6 +22,18 @@ const Main = cc.Class({
     onDestroy () {
         Main.instance = null;
         cc.game.removePersistRootNode(this.node);
+    },
+
+    transition (nextSceneName) {
+        cc.director.preloadScene(nextSceneName);
+        this.mask.runAction(cc.sequence(
+            cc.fadeIn(0.5),
+            cc.callFunc(() => {
+                cc.director.loadScene(nextSceneName, () => {
+                    this.mask.runAction(cc.fadeOut(0.5));
+                });
+            }),
+        ));
     },
 
     _init () {
