@@ -13,22 +13,22 @@ cc.Class({
     },
 
     onLoad () {
-        this.btnStart.active = profile.isNew;
-        this.btnContinue.active = !profile.isNew;
-        this.btnRestart.active = !profile.isNew;
+        this.btnStart.active = !profile.wasShowOpening;
+        this.btnContinue.active = profile.wasShowOpening;
+        this.btnRestart.active = profile.wasShowOpening;
     },
 
     start () {
-        
+        cc.director.preloadScene('game');
     },
 
     onClickStartGame () {
-        cc.director.loadScene('opening');
+        this._loadSceneAfterPlaySound(this.btnStart);
     },
 
     onClickReplayGame () {
         profile.reset();
-        cc.director.loadScene('opening');
+        this._loadSceneAfterPlaySound(this.btnRestart);
     },
 
     onClickContinueGame () {
@@ -42,5 +42,17 @@ cc.Class({
 
     onClickExit () {
         cc.game.end();
-    }
+    },
+
+    _loadSceneAfterPlaySound (node) {
+        const source = node.getComponent(cc.AudioSource);
+        cc.director.preloadScene('opening');
+        if (source) {
+            this.scheduleOnce(() => {
+                cc.director.loadScene('opening');
+            }, source.getDuration());
+        } else {
+            cc.director.loadScene('opening');
+        }
+    },
 });

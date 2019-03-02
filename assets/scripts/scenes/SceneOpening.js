@@ -1,4 +1,6 @@
 
+const profile = require('GameProfile');
+
 cc.Class({
     extends: cc.Component,
 
@@ -24,6 +26,8 @@ cc.Class({
     },
 
     gotoGameScene () {
+        profile.wasShowOpening = true;
+        profile.save();
         this.story.node.runAction(cc.sequence(cc.fadeOut(0.5), cc.callFunc(()=> {
             cc.director.loadScene('game');
         })));

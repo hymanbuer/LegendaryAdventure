@@ -1,5 +1,4 @@
 
-const localStorage = require('LocalStorage');
 const setting = require('GameSetting');
 const profile = require('GameProfile');
 
@@ -26,12 +25,7 @@ const Main = cc.Class({
     },
 
     _init () {
-        try {
-            const setting = localStorage.getItem('GameSetting', {});
-            GameSetting.init(setting);
-        } catch (err) {
-            cc.error(err.message);
-            localStorage.clear();
-        }
+        setting.load();
+        profile.load();
     },
 });

@@ -1,20 +1,12 @@
 
+const localStorage = require('LocalStorage');
+
 exports.isAudioOn = true;
 
-exports.toJsonString = function () {
-    return JSON.stringify(this);
+exports.load = function () {
+    Object.assign(this, localStorage.getItem('GameSetting', {}));
 };
 
-exports.loadJsonString = function (str) {
-    try {
-        const o = JSON.parse(str);
-        for (const key in o) {
-            if (o.hasOwnProperty(key) && this.hasOwnProperty(key)) {
-                this[key] = o[key];
-            }
-        }
-    } catch (err) {
-        cc.log('failed to load json string: ', str);
-        cc.log(err);
-    }
+exports.save = function () {
+    localStorage.setItem('GameSetting', this);
 };
