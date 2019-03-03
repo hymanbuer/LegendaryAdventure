@@ -48,9 +48,8 @@ cc.Class({
     _loadSceneAfterPlaySound (node) {
         const source = node.getComponent(cc.AudioSource);
         if (source) {
-            this.scheduleOnce(() => {
-                Main.instance.transition('opening');
-            }, source.getDuration());
+            source.play();
+            Main.instance.transition('opening', source.getDuration());
         } else {
             Main.instance.transition('opening');
         }

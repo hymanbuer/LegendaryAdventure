@@ -24,13 +24,14 @@ const Main = cc.Class({
         cc.game.removePersistRootNode(this.node);
     },
 
-    transition (nextSceneName) {
+    transition (nextSceneName, inTime, outTime) {
         cc.director.preloadScene(nextSceneName);
+        this.mask.zIndex = cc.macro.MAX_ZINDEX;
         this.mask.runAction(cc.sequence(
-            cc.fadeIn(0.5),
+            cc.fadeIn(inTime || 0.5),
             cc.callFunc(() => {
                 cc.director.loadScene(nextSceneName, () => {
-                    this.mask.runAction(cc.fadeOut(0.5));
+                    this.mask.runAction(cc.fadeOut(outTime || 0.5));
                 });
             }),
         ));

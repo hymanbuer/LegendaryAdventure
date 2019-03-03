@@ -15,8 +15,12 @@ cc.Class({
     },
 
     start () {
-        this.node.getComponents(cc.Button)
-            .map(comp => comp.node)
+        this._check(this.node.getComponents(cc.Button));
+        this._check(this.node.getComponentsInChildren(cc.Button));
+    },
+
+    _check (comps) {
+        comps.map(comp => comp.node)
             .filter(node => !node.getComponent(cc.AudioSource))
             .forEach(node => {
                 const source = node.addComponent(cc.AudioSource);
