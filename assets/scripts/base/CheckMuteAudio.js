@@ -1,7 +1,5 @@
 
-/**
- * !#zh将自身及子节点拥有cc.Button的节点添加点击音效
- */
+
 cc.Class({
     extends: cc.Component,
 

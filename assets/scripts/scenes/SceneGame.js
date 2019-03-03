@@ -5,6 +5,7 @@ const World = require('World');
 const DataCenter = require('DataCenter');
 const HudControl = require('HudControl');
 const Resources = require('Resources');
+const PanelManager = require('PanelManager');
 
 cc.Class({
     extends: cc.Component,
@@ -81,6 +82,10 @@ cc.Class({
         if (gid == 155 || gid == 156 || gid == 157) {
             this.hud.updateNumKeys();
         }
+    },
+
+    onClickSetting () {
+        PanelManager.instance.openPanel('setting');
     },
 
     _maskIn (callback) {

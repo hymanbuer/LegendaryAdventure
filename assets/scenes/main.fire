@@ -95,9 +95,6 @@
       },
       {
         "__id__": 37
-      },
-      {
-        "__id__": 38
       }
     ],
     "_prefab": null,
@@ -231,7 +228,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "fengmian_background",
+    "_name": "background",
     "_objFlags": 0,
     "_parent": {
       "__id__": 2
@@ -1387,7 +1384,7 @@
     "_enabled": true,
     "alignMode": 1,
     "_target": null,
-    "_alignFlags": 4,
+    "_alignFlags": 44,
     "_left": 0,
     "_right": 0,
     "_top": 0,
@@ -1400,7 +1397,7 @@
     "_isAbsBottom": true,
     "_isAbsHorizontalCenter": true,
     "_isAbsVerticalCenter": true,
-    "_originalWidth": 0,
+    "_originalWidth": 640,
     "_originalHeight": 0,
     "_id": "53pVdi4wZG7rpzZA4/kTti"
   },
@@ -1460,19 +1457,5 @@
     "playOnLoad": true,
     "preload": true,
     "_id": "744CUjvolHqaMCkLjctqLb"
-  },
-  {
-    "__type__": "6735b+sjFZJtK/GTuvk8EeH",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 2
-    },
-    "_enabled": true,
-    "clickClip": {
-      "__uuid__": "c1ef294b-657e-42fa-a50f-9e95bfda0fe1"
-    },
-    "clickVolumne": 1,
-    "_id": "f8chOgwk9D8psnV3PhH1ie"
   }
 ]

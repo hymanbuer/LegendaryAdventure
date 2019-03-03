@@ -1,6 +1,7 @@
 
 const setting = require('GameSetting');
 const profile = require('GameProfile');
+const AudioManager = require('AudioManager');
 
 const Main = cc.Class({
     extends: cc.Component,
@@ -22,6 +23,10 @@ const Main = cc.Class({
     onDestroy () {
         Main.instance = null;
         cc.game.removePersistRootNode(this.node);
+    },
+
+    start () {
+        AudioManager.instance.muteAudio = !setting.isAudioOn;
     },
 
     transition (nextSceneName, inTime, outTime) {

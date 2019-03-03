@@ -1,0 +1,14 @@
+{
+    "default": {
+        "isHideMask": true,
+        "blockInput": true,
+        "singleton": true,
+        "showOnLoad": true
+    },
+
+    "panels": {
+        "setting": {
+            "uuid": "ae279a29-f819-4041-9685-2c504e05dd34"
+        }
+    }
+}

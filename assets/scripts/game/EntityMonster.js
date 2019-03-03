@@ -16,7 +16,9 @@ cc.Class({
     },
 
     onDestroy () {
-        MapState.instance.removeEntity(this.floorId, this.grid);
+        if (MapState.instance) {
+            MapState.instance.removeEntity(this.floorId, this.grid);
+        }
     },
 
     doBeforeEnter () {
