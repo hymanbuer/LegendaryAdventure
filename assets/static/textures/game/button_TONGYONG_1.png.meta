@@ -1,0 +1,31 @@
+{
+  "ver": "2.2.0",
+  "uuid": "ac255ce2-b8ff-4bb1-b210-5b5deaec3cf6",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "subMetas": {
+    "button_TONGYONG_1": {
+      "ver": "1.0.3",
+      "uuid": "82a7340f-161f-4123-809c-9f04d901f0bd",
+      "rawTextureUuid": "ac255ce2-b8ff-4bb1-b210-5b5deaec3cf6",
+      "trimType": "custom",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 216,
+      "height": 96,
+      "rawWidth": 216,
+      "rawHeight": 96,
+      "borderTop": 40,
+      "borderBottom": 41,
+      "borderLeft": 51,
+      "borderRight": 52,
+      "subMetas": {}
+    }
+  }
+}
