@@ -1,17 +1,26 @@
 
+const loader = require('CCLoaderHelper');
+const animations = require('AnimationManager');
+
 cc.Class({
     extends: cc.Component,
 
     properties: {
-        walk: {
+        animationsConfig: {
             default: null,
-            type: cc.TextAsset,
-        }
+            type: cc.JsonAsset,
+        },
+
+        animation: cc.Animation,
+
+        
     },
 
     start () {
-        // cc.log(this.walk);
-        const result = cc.plistParser.parse(this.walk.text);
-        cc.log(result);
+        const clipName = 'walk_l';
+        animations.instance.getClip(clipName, cc.WrapMode.Loop).then(clip => {
+            this.animation.addClip(clip);
+            this.animation.play(clipName);
+        });
     },
 });
