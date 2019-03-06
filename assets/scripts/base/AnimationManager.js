@@ -19,7 +19,7 @@ class AnimationManager {
         Object.assign(this._animationsConfig, ...configs);
     }
 
-    hasClip (clipName) {
+    hasClipConfig (clipName) {
         return !!this._animationsConfig[clipName];
     }
 
