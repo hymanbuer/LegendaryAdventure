@@ -1,9 +1,7 @@
 
-const CCLoaderHelper = module.exports = {};
+const exports = module.exports = {};
 
-// if the res was already loaded then return directly,
-// other then load by cc.loader.loadRes.
-CCLoaderHelper.loadResByUrl = function (url, type) {
+exports.loadResByUrl = function (url, type) {
     return new Promise((resolve, reject) => {
         cc.loader.loadRes(url, type, (err, asset) => {
             if (err)
@@ -12,9 +10,9 @@ CCLoaderHelper.loadResByUrl = function (url, type) {
                 resolve(asset);
         });
     });
-}
+};
 
-CCLoaderHelper.loadResByUuid = function (uuid) {
+exports.loadResByUuid = function (uuid) {
     return new Promise((resolve, reject) => {
         cc.loader.load({ type: 'uuid', uuid: uuid }, null, (err, asset) => {
             if (err)
@@ -23,5 +21,24 @@ CCLoaderHelper.loadResByUuid = function (uuid) {
                 resolve(asset);
         });
     });
-}
+};
 
+exports.getResByUrl = function (url, type) {
+    return cc.loader.getRes(url, type);
+};
+
+exports.getResByUuid = function (uuid) {
+    const url = cc.AssetLibrary.getLibUrlNoExt(uuid) + '.json';
+    return cc.loader.getRes(url);
+};
+
+exports.releaseRecursively = function (owner, excludeMap) {
+    const deps = cc.loader.getDependsRecursively(owner);
+    for (let key of deps) {
+        if (excludeMap && excludeMap[key]) {
+            continue;
+        } else {
+            cc.loader.release(key);
+        }
+    }
+};

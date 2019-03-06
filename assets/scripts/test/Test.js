@@ -17,10 +17,13 @@ cc.Class({
     },
 
     start () {
+        animations.update(this.animationsConfig.json);
+
         const clipName = 'walk_l';
-        animations.instance.getClip(clipName, cc.WrapMode.Loop).then(clip => {
-            this.animation.addClip(clip);
-            this.animation.play(clipName);
-        });
+        animations.loadClip(clipName, cc.WrapMode.Loop)
+            .then(clip => {
+                this.animation.addClip(clip);
+                this.animation.play(clipName);
+            });
     },
 });
