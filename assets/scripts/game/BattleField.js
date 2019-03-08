@@ -1,4 +1,5 @@
 
+const setting = require('GameSetting');
 
 const AttackType = cc.Enum({
     PLAYER_CRITICAL_ATTACK: 'baoji',
@@ -18,10 +19,35 @@ cc.Class({
         attackSign: cc.Sprite,
         specialSign: cc.Sprite,
         spriteAtlas: cc.SpriteAtlas,
+
+        autoPlayToggle: cc.Toggle,
+        autoPlayTips: cc.Node,
+
+        swordCursor: cc.Node,
     },
 
     onLoad () {
         this._initCriticalSignAnimation();
+        this._initUi();
+    },
+
+    start () {
+        
+    },
+
+    onEnable () {
+        this._totalAttackCount = 0;
+        this._isAttackReady = true;
+    },
+
+    onDisable () {
+        this._hideSwordCursor();
+    },
+
+    update (dt) {
+        if (this._isAttackReady) {
+            this._doNextTurn();
+        }
     },
 
     _initCriticalSignAnimation () {
@@ -38,45 +64,125 @@ cc.Class({
         animation.addClip(clip);
     },
 
+    _initUi () {
+        this.autoPlayToggle.isChecked = setting.isAutoPlay;
+        this.autoPlayTips.active = setting.isAutoPlay;
+    },
+
     onClickAutoPlay (sender) {
-        if (sender.isChecked) {
-            this.showPlayerCriticalAttack(36)
-                .then(() => this.showMonsterAttack(48));
+        setting.isAutoPlay = sender.isChecked;
+        setting.save();
+        this.autoPlayTips.active = setting.isAutoPlay;
+    },
+
+    _doNextTurn () {
+        if (this._isPlayerTurn()) {
+            if (setting.isAutoPlay) {
+                this._hideSwordCursor();
+                this._doPlayerAttack();
+            } else {
+                this._showSwordCursor();
+            }
         } else {
-            this.showPlayerMiss()
-                .then(() => this.showMonsterMiss());
+            this._doMonsterAttack();
         }
     },
 
-    showPlayerMiss () {
+    _isPlayerTurn () {
+        return this._totalAttackCount % 2 == 0;
+    },
+
+    _doPlayerAttack () {
+        this._isAttackReady = false;
+        this._showPlayerNormalAttack(20)
+            .then(() => this._completeAttack());
+    },
+
+    _doMonsterAttack () {
+        this._isAttackReady = false;
+        this._showMonsterAttack(24)
+            .then(() => this._completeAttack());
+    },
+
+    _completeAttack () {
+        this._isAttackReady = true;
+        this._totalAttackCount += 1;
+    },
+
+    _showSwordCursor () {
+        if (this.swordCursor.active) {
+            return;
+        }
+        this.swordCursor.active = true;
+        this.node.once('touchstart', this._touchStartHandler, this);
+
+        const cursor = this.swordCursor;
+        const parent = this.swordCursor.parent;
+        const originX = parent.convertToNodeSpaceAR(cc.v2(0, 0)).x - cursor.width/2.0;
+        const totalWidth = parent.width + cursor.width;
+        cursor.x = originX;
+        cc.tween(cursor)
+            .by(1.5, {x: totalWidth})
+            .to(0, {x: originX})
+            .repeatForever()
+            .start()
+    },
+
+    _hideSwordCursor () {
+        if (!this.swordCursor.active) {
+            return;
+        }
+        this.swordCursor.active = false;
+        this._stopSwordCursor();
+    },
+
+    _stopSwordCursor () {
+        this.node.off('touchstart', this._touchStartHandler, this);
+        this.swordCursor.stopAllActions();
+    },
+
+    _touchStartHandler () {
+        if (!this._isAttackReady) {
+            return;
+        }
+        this._isAttackReady = false;
+        this._stopSwordCursor();
+        this._showPlayerNormalAttack(44)
+            .then(() => {
+                this._hideSwordCursor();
+                this._completeAttack();
+            });
+    },
+
+    _showPlayerMiss () {
         this.node.emit('player-miss');
-        this._showMonsterDodge();
+        this._showMonsterDodgeAction();
         return this._showPlayerMissSign();
     },
 
-    showMonsterMiss () {
+    _showMonsterMiss () {
         this.node.emit('monster-miss');
-        this._showMonsterAttack();
+        this._showMonsterAttackAction();
         return this._showMonsterMissSign();
     },
 
-    showPlayerNormalAttack (num) {
+    _showPlayerNormalAttack (num) {
         this.node.emit('player-attack', num);
-        this._showMonsterHurt();
+        this._showMonsterHurtAction();
         this._showNormalAttackSign(AttackType.PLAYER_ATTACK);
         return this._showPlayerAttackNumber(num);
     },
 
-    showPlayerCriticalAttack (num) {
+    _showPlayerCriticalAttack (num) {
         this.node.emit('player-attack', num);
-        this._showMonsterHurt();
+        this._showMonsterHurtAction();
         this._showCriticalAttackSign();
         this._showCriticalSign();
         return this._showPlayerAttackNumber(num);
     },
 
-    showMonsterAttack (num) {
-        return this._showMonsterAttack().then(() => {
+    _showMonsterAttack (num) {
+        return this._showMonsterAttackAction().then(() => {
             this.node.emit('monster-attack', num);
             this._showShakeEffect();
             this._showNormalAttackSign(AttackType.MONSTER_ATTACK);
@@ -84,7 +190,7 @@ cc.Class({
         });
     },
 
-    _showMonsterAttack () {
+    _showMonsterAttackAction () {
         return new Promise(resolve => {
             cc.tween(this.monster.node)
                 .by(3/30, {scale: -0.1})
@@ -94,7 +200,7 @@ cc.Class({
         });
     },
 
-    _showMonsterHurt () {
+    _showMonsterHurtAction () {
         return new Promise(resolve => {
             this.monster.node.color = cc.color(236, 57, 57);
             cc.tween(this.monster.node)
@@ -106,7 +212,7 @@ cc.Class({
         });
     },
 
-    _showMonsterDodge () {
+    _showMonsterDodgeAction () {
         return new Promise(resolve => {
             const delta = 16;
             cc.tween(this.monster.node)
