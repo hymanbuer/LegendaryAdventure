@@ -7,28 +7,32 @@ const HudControl = require('HudControl');
 const Resources = require('Resources');
 const PanelManager = require('PanelManager');
 
+const profile = require('GameProfile');
+
 cc.Class({
     extends: cc.Component,
 
     properties: {
         hud: HudControl,
-        hero: CharacterControl,
         world: World,
         mask: cc.Node,
+        bg: cc.Node,
 
         atlas: cc.SpriteAtlas,
+        heroPrefab: cc.Prefab,
     },
 
     onLoad () {
         this.node.on('changefloor', this.onChangeFloor, this);
         this.node.on('getitem', this.onUpdateNumItems, this);
         this.node.on('useitem', this.onUpdateNumItems, this);
-        this.mask.active = true;
     },
 
     start () {
-        const floorId = 0;
+        const floorId = profile.lastFloorId;
+        this.mask.active = true;
         DataCenter.instance.init()
+            .then(()=> this._loadBackground(floorId))
             .then(()=> Resources.instance.init(floorId))
             .then(()=> this.world.init(floorId))
             .then((start)=> {
@@ -58,11 +62,10 @@ cc.Class({
 
     onChangeFloor (event) {
         const exit = event.detail;
-        const floorId = event.detail;
-        this.hero.node.parent = this.world.node;
         this._isChangingFloor = true;
         this._maskIn(()=> {
             Resources.instance.init(exit.floorId)
+                .then(()=> this._loadBackground(exit.floorId))
                 .then(()=> this.world.initFloor(exit.floorId))
                 .then(()=> {
                     if (exit.isUp)
@@ -72,6 +75,9 @@ cc.Class({
                     
                     this.hud.changeSite(exit.floorId);
                     this._maskOut(()=> this._isChangingFloor = false);
+
+                    profile.lastFloorId = exit.floorId;
+                    profile.save();
                 });
         });
     },
@@ -100,8 +106,11 @@ cc.Class({
     },
 
     _placeHeroAt (grid) {
+        const node = cc.instantiate(this.heroPrefab)
+        node.parent = this.world.node;
+        this.hero = node.getComponent(CharacterControl);
+        this.hero.world = this.world;
         this.hero.placeAt(grid);
-        this.hero.parent = this.world.getLogicLayer();
     },
 
     _showForbidAnimation (grid) {
@@ -116,8 +125,18 @@ cc.Class({
         LoaderHelper.loadResByUrl(prefabPath, cc.Prefab).then(prefab => {
             const node = cc.instantiate(prefab);
             node.position = this.world.getPositionAt(grid);
+            node.zIndex = cc.macro.MAX_ZINDEX;
             node.getComponent(cc.Animation).on('finished', node.destroy, node);
             this.world.node.addChild(node);
         });
-    }
+    },
+
+    _loadBackground (floorId) {
+        const path = `prefabs/game/${floorId == 0 ? 'home_bg' : 'tower_bg'}`;
+        return LoaderHelper.loadResByUrl(path).then(prefab => {
+            const node = cc.instantiate(prefab);
+            this.bg.removeAllChildren();
+            this.bg.addChild(node);
+        });
+    },
 });

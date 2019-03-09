@@ -13,8 +13,6 @@ const CRITICAL_ATTACK_WIDTH = 56;
 const CRITICAL_TIMES = 1.5;
 const MISS_RATIO = 0.05;
 
-const doNothing = function () {};
-
 cc.Class({
     extends: cc.Component,
 
@@ -152,23 +150,27 @@ cc.Class({
     },
 
     _doPlayerAttack () {
-        const damage = Math.random() <= MISS_RATIO ? 0 : this._player.attack;
-        this._monster.hp = Math.max(0, this._monster.hp - damage);
-
-        const attack = damage <= 0 ? this._showPlayerMiss() 
-                        : this._showPlayerNormalAttack(damage);
+        let attack = this._showPlayerMiss;
+        let damage = 0;
+        if (Math.random() > MISS_RATIO) {
+            damage = this._calculateDamage(this._player, this._monster);
+            attack = this._showPlayerNormalAttack;
+            this._monster.hp = Math.max(0, this._monster.hp - damage);
+        }
         this._isAttackReady = false;
-        attack.then(() => this._completeAttack());
+        attack.call(this, damage).then(() => this._completeAttack());
     },
 
     _doMonsterAttack () {
-        const damage = Math.random() <= MISS_RATIO ? 0 : this._monster.attack;
-        this._player.hp = Math.max(0, this._player.hp - damage);
-
-        const attack = damage <= 0 ? this._showMonsterMiss() 
-                        : this._showMonsterAttack(damage);
+        let attack = this._showMonsterMiss;
+        let damage = 0;
+        if (Math.random() > MISS_RATIO) {
+            damage = this._calculateDamage(this._monster, this._player);
+            attack = this._showMonsterAttack;
+            this._player.hp = Math.max(0, this._player.hp - damage);
+        }
         this._isAttackReady = false;
-        attack.then(() => this._completeAttack());
+        attack.call(this, damage).then(() => this._completeAttack());
     },
 
     _completeAttack () {
@@ -237,20 +239,26 @@ cc.Class({
         const normalStart = -this.normalAttackBar.width/2.0;
         const normalEnd = this.normalAttackBar.width/2.0;
         const cursorX = this.swordCursor.x;
-        let attack = doNothing;
+        let attack = this._showPlayerMiss;
         let damage = 0;
         if (cursorX >= criticalStart && cursorX <= criticalEnd) {
-            damage = this._player.attack * CRITICAL_TIMES;
+            damage = this._calculateDamage(this._player, this._monster, true);
             attack = this._showPlayerCriticalAttack;
         } else if (cursorX >= normalStart && cursorX <= normalEnd) {
-            damage = this._player.attack;
+            damage = this._calculateDamage(this._player, this._monster, false);
             attack = this._showPlayerNormalAttack;
-        } else {
-            attack = this._showPlayerMiss;
         }
         this._monster.hp = Math.max(0, this._monster.hp - damage);
 
         return attack.call(this, damage);
+    },
+
+    _calculateDamage (attacker, defencer, isCritical) {
+        let damage = Math.max(0, attacker.attack - defencer.defence);
+        if (isCritical) {
+            damage *= CRITICAL_TIMES;
+        }
+        return damage;
     },
 
     _onPlayerAttack (num) {
@@ -263,30 +271,38 @@ cc.Class({
     },
 
     _showPlayerMiss () {
-        this.node.emit('player-miss');
-        this._showMonsterDodgeAction();
-        return this._showPlayerMissSign();
+        return Promise.resolve().then(() => {
+            this.node.emit('player-miss');
+            this._showMonsterDodgeAction();
+            return this._showPlayerMissSign();
+        });
     },
 
     _showMonsterMiss () {
-        this.node.emit('monster-miss');
-        this._showMonsterAttackAction();
-        return this._showMonsterMissSign();
+        return Promise.resolve().then(() => {
+            this.node.emit('monster-miss');
+            this._showMonsterAttackAction();
+            return this._showMonsterMissSign();
+        });
     },
 
     _showPlayerNormalAttack (num) {
-        this.node.emit('player-attack', num);
-        this._showMonsterHurtAction();
-        this._showNormalAttackSign(AttackType.PLAYER_ATTACK);
-        return this._showPlayerAttackNumber(num);
+        return Promise.resolve().then(() => {
+            this.node.emit('player-attack', num);
+            this._showMonsterHurtAction();
+            this._showNormalAttackSign(AttackType.PLAYER_ATTACK);
+            return this._showPlayerAttackNumber(num);
+        });
     },
 
     _showPlayerCriticalAttack (num) {
-        this.node.emit('player-attack', num);
-        this._showMonsterHurtAction(true);
-        this._showCriticalAttackSign();
-        this._showCriticalSign();
-        return this._showPlayerAttackNumber(num);
+        return Promise.resolve().then(() => {
+            this.node.emit('player-attack', num);
+            this._showMonsterHurtAction(true);
+            this._showCriticalAttackSign();
+            this._showCriticalSign();
+            return this._showPlayerAttackNumber(num);
+        });
     },
 
     _showMonsterAttack (num) {

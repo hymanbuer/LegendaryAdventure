@@ -37,7 +37,7 @@ const monsterAtlasNames = [
 
 function getSceneId(floorId) {
     let sceneId = Math.floor(floorId / 10);
-    // sceneId += floorId % 10 === 0 ? 0 : 1;
+    sceneId += floorId % 10 === 0 ? 0 : 1;
     return sceneId;
 }
 
@@ -79,7 +79,11 @@ const Resources = cc.Class({
 
     preloadMonsterAtlas (floorId) {
         const sceneId = getSceneId(floorId);
-        const atlasUrl = 'sheets/monsters/' + monsterAtlasNames[sceneId];
+        if (sceneId == 0) {
+            return Promise.resolve();
+        }
+        
+        const atlasUrl = 'sheets/monsters/' + monsterAtlasNames[sceneId - 1];
         return LoaderHelper.loadResByUrl(atlasUrl, cc.SpriteAtlas).then(atlas => {
             this.monsterAtlasList[sceneId] = atlas;
         });

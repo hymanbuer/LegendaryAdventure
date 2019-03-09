@@ -105,9 +105,6 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        floor: cc.Node,
-        logic: cc.Node,
-
         itemAtlas: cc.SpriteAtlas,
         monsterPrefab: cc.Prefab,
         itemPrefab: cc.Prefab,
@@ -131,8 +128,8 @@ cc.Class({
         const tilesetUrl = 'sheets/tilesets/' + tilesetNames[sceneId];
         const atlasUrl = 'sheets/monsters/' + monsterAtlasNames[sceneId];
         this._floorId = floorId;
-        this.floor.removeAllChildren();
-        this.logic.removeAllChildren();
+        this.node.removeAllChildren();
+        this.node.removeAllChildren();
 
         return LoaderHelper.loadResByUrl(tilesetUrl, cc.SpriteAtlas)
             .then((asset)=> {
@@ -210,7 +207,7 @@ cc.Class({
     },
 
     getLogicLayer () {
-        return this.logic;
+        return this.node;
     },
 
     onBeforeEnter (grid) {
@@ -328,11 +325,11 @@ cc.Class({
     },
 
     _initLayerFloor () {
-        this._initLayerTiles(this._layerFloor);
+        this._initLayerTiles(this._layerFloor, true);
     },
 
     _initLayerLogic () {
-        this._initLayerTiles(this._layerLogic);
+        this._initLayerTiles(this._layerLogic, false);
 
         for (let y = 0; y < this._mapSize.height; y++) {
             for (let x = 0; x < this._mapSize.width; x++) {
@@ -418,7 +415,7 @@ cc.Class({
             const monster = cc.instantiate(this.monsterPrefab);
             monster.position = this.getPositionAt(x, y);
             monster.getComponent(EntityView).init(gid, viewConfig);
-            this.logic.addChild(monster);
+            this.node.addChild(monster);
             this._entities[y][x] = monster;
             this._layerLogic.setTileGIDAt(0, x, y);
 
@@ -436,7 +433,7 @@ cc.Class({
             const npc = cc.instantiate(this.monsterPrefab);
             npc.position = this.getPositionAt(x, y);
             npc.getComponent(EntityView).init(gid, viewConfig);
-            this.logic.addChild(npc);
+            this.node.addChild(npc);
             this._entities[y][x] = npc;
             this._layerLogic.setTileGIDAt(0, x, y);
 
@@ -455,7 +452,7 @@ cc.Class({
             const item = cc.instantiate(this.itemPrefab);
             item.position = this.getPositionAt(x, y);
             item.getComponent(EntityView).init(gid, viewConfig);
-            this.logic.addChild(item);
+            this.node.addChild(item);
             this._entities[y][x] = item;
             this._layerLogic.setTileGIDAt(0, x, y);
 
@@ -473,7 +470,7 @@ cc.Class({
             const item = cc.instantiate(this.triggerPrefab);
             item.position = this.getPositionAt(x, y);
             item.getComponent(EntityView).init(gid, viewConfig);
-            this.logic.addChild(item);
+            this.node.addChild(item);
             this._entities[y][x] = item;
             this._layerLogic.setTileGIDAt(0, x, y);
 
@@ -491,7 +488,7 @@ cc.Class({
             const item = cc.instantiate(this.itemPrefab);
             item.position = this.getPositionAt(x, y);
             item.getComponent(EntityView).init(gid, viewConfig);
-            this.logic.addChild(item);
+            this.node.addChild(item);
             this._entities[y][x] = item;
             this._layerLogic.setTileGIDAt(0, x, y);
 
@@ -508,7 +505,7 @@ cc.Class({
             const item = cc.instantiate(this.itemPrefab);
             item.position = this.getPositionAt(x, y);
             item.getComponent(EntityView).init(gid, viewConfig);
-            this.logic.addChild(item);
+            this.node.addChild(item);
             this._entities[y][x] = item;
             this._layerLogic.setTileGIDAt(0, x, y);
 
@@ -523,7 +520,7 @@ cc.Class({
         }
     },
 
-    _initLayerTiles (layer) {
+    _initLayerTiles (layer, isFloor) {
         if (this._floorId == 0) {
             return;
         }
@@ -538,8 +535,8 @@ cc.Class({
                 tile.anchorX = 0;
                 tile.anchorY = 0;
                 tile.position = layer.getPositionAt(x, y);
-                tile.zIndex = y;
-                this.floor.addChild(tile);
+                tile.zIndex = isFloor ? 0 : y;
+                this.node.addChild(tile);
             }
         }
     },
