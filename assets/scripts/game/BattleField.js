@@ -153,6 +153,7 @@ cc.Class({
         const attack = Math.random() <= MISS_RATIO ? this._showPlayerMiss() 
                         : this._showPlayerNormalAttack(this._player.attack);
         this._isAttackReady = false;
+        this._monster.hp = Math.max(0, this._monster.hp - this._player.attack);
         attack.then(() => this._completeAttack());
     },
 
@@ -160,6 +161,7 @@ cc.Class({
         const attack = Math.random() <= MISS_RATIO ? this._showMonsterMiss() 
                         : this._showMonsterAttack(this._monster.attack);
         this._isAttackReady = false;
+        this._player.hp = Math.max(0, this._player.hp - this._monster.attack);
         attack.then(() => this._completeAttack());
     },
 
@@ -229,24 +231,28 @@ cc.Class({
         const normalStart = -this.normalAttackBar.width/2.0;
         const normalEnd = this.normalAttackBar.width/2.0;
         const cursorX = this.swordCursor.x;
+        let attack = Promise.resolve();
+        let damage = 0;
         if (cursorX >= criticalStart && cursorX <= criticalEnd) {
-            const damage = this._player.attack * CRITICAL_TIMES;
-            return this._showPlayerCriticalAttack(damage);
+            damage = this._player.attack * CRITICAL_TIMES;
+            attack = this._showPlayerCriticalAttack(damage);
         } else if (cursorX >= normalStart && cursorX <= normalEnd) {
-            return this._showPlayerNormalAttack(this._player.attack);
+            damage = this._player.attack;
+            attack = this._showPlayerNormalAttack(damage);
         } else {
-            return this._showPlayerMiss();
+            attack = this._showPlayerMiss();
         }
+        this._monster.hp = Math.max(0, this._monster.hp - damage);
+        return attack;
     },
 
     _onPlayerAttack (num) {
-        this._monster.hp = Math.max(0, this._monster.hp - num);
         this.monsterHp.string = `${this._monster.hp}:${this._monster.maxHp}`;
         this.monsterHpProgress.progress = this._monster.hp / this._monster.maxHp;
     },
 
     _onMonsterAttack (num) {
-        this._player.hp = Math.max(0, this._player.hp - num);
+        
     },
 
     _showPlayerMiss () {
