@@ -41,8 +41,8 @@
     },
     "_scale": {
       "__type__": "cc.Vec3",
-      "x": 0.5644366304639373,
-      "y": 0.5644366304639373,
+      "x": 0.4584650056855723,
+      "y": 0.4584650056855723,
       "z": 1
     },
     "_quat": {
@@ -2815,14 +2815,23 @@
       "__id__": 5
     },
     "_enabled": true,
-    "monster": {
-      "__id__": 8
-    },
     "playerAttackNumber": {
       "__id__": 54
     },
     "monsterAttackNumber": {
       "__id__": 56
+    },
+    "monsterName": {
+      "__id__": 30
+    },
+    "monsterHp": {
+      "__id__": 33
+    },
+    "monsterHpProgress": {
+      "__id__": 35
+    },
+    "monster": {
+      "__id__": 8
     },
     "redBarLeft": {
       "__id__": 58

@@ -10,14 +10,20 @@ const AttackType = cc.Enum({
 const ROOT_BAR_WIDTH = 768;
 const NORMAL_ATTACK_WIDTH = 480;
 const CRITICAL_ATTACK_WIDTH = 56;
+const CRITICAL_TIMES = 1.5;
+const MISS_RATIO = 0.05;
 
 cc.Class({
     extends: cc.Component,
 
     properties: {
-        monster: cc.Sprite,
         playerAttackNumber: cc.Label,
         monsterAttackNumber: cc.Label,
+        monsterName: cc.Label,
+        monsterHp: cc.Label,
+        monsterHpProgress: cc.ProgressBar,
+
+        monster: cc.Sprite,
         redBarLeft: cc.Sprite,
         redBarRight: cc.Sprite,
         attackSign: cc.Sprite,
@@ -36,28 +42,34 @@ cc.Class({
     onLoad () {
         this._initCriticalSignAnimation();
         this._initUi();
-        this._addEventListeners();
     },
 
     onDestroy () {
-        this._removeEventListeners();
     },
 
     start () {
-        this.updateBattleData({
-            CRITPOS: 7,
-            CRITLENGHT: 1.2,
-            TIMING: 1.0,
+        this.resetBattleData({
+            hp: 999,
+            maxHp: 999,
+            attack: 20,
+            defence: 10,
+        }, {
+            id: 226,
+            name: '王宫卫士',
+            hp: 999,
+            maxHp: 999,
+            attack: 18,
+            defence: 8,
+            criticalPos: 7,
+            criticalLength: 1.2,
+            cursorMoveDuration: 1.0,
         });
     },
 
     onEnable () {
-        this._totalAttackCount = 0;
-        this._isAttackReady = true;
-    },
-
-    onDisable () {
-        this._hideSwordCursor();
+        this.rootBar.on(cc.Node.EventType.SIZE_CHANGED, this._udpateAttackRange, this);
+        this.node.on('player-attack', this._onPlayerAttack, this);
+        this.node.on('monster-attack', this._onMonsterAttack, this);
     },
 
     update (dt) {
@@ -66,11 +78,20 @@ cc.Class({
         }
     },
 
-    updateBattleData (config) {
-        this._criticalPos = config.CRITPOS;
-        this._criticalLength = config.CRITLENGHT;
-        this._cursorMoveDuration = config.TIMING;
-        this._udpateAttackData();
+    resetBattleData (player, monster) {
+        this._player = player;
+        this._monster = monster;
+        this._criticalPos = monster.criticalPos;
+        this._criticalLength = monster.criticalLength;
+        this._cursorMoveDuration = monster.cursorMoveDuration;
+        this._udpateAttackRange();
+
+        this._totalAttackCount = 0;
+        this._isAttackReady = true;
+
+        this.monsterName.string = monster.name;
+        this.monsterHp.string = `${monster.maxHp}:${monster.maxHp}`;
+        this.monsterHpProgress.progress = 1.0;
     },
 
     onClickAutoPlay (sender) {
@@ -100,15 +121,7 @@ cc.Class({
         this.autoPlayTips.active = setting.isAutoPlay;
     },
 
-    _addEventListeners () {
-        this.rootBar.on(cc.Node.EventType.SIZE_CHANGED, this._udpateAttackData, this);
-    },
-
-    _removeEventListeners () {
-        this.rootBar.off(cc.Node.EventType.SIZE_CHANGED, this._udpateAttackData, this);
-    },
-
-    _udpateAttackData () {
+    _udpateAttackRange () {
         if (!this._criticalPos || !this._criticalLength) {
             return;
         }
@@ -137,20 +150,32 @@ cc.Class({
     },
 
     _doPlayerAttack () {
+        const attack = Math.random() <= MISS_RATIO ? this._showPlayerMiss() 
+                        : this._showPlayerNormalAttack(this._player.attack);
         this._isAttackReady = false;
-        this._showPlayerNormalAttack(20)
-            .then(() => this._completeAttack());
+        attack.then(() => this._completeAttack());
     },
 
     _doMonsterAttack () {
+        const attack = Math.random() <= MISS_RATIO ? this._showMonsterMiss() 
+                        : this._showMonsterAttack(this._monster.attack);
         this._isAttackReady = false;
-        this._showMonsterAttack(24)
-            .then(() => this._completeAttack());
+        attack.then(() => this._completeAttack());
     },
 
     _completeAttack () {
-        this._isAttackReady = true;
         this._totalAttackCount += 1;
+        if (!this._checkBattleOver()) {
+            this._isAttackReady = true;
+        }
+    },
+
+    _checkBattleOver () {
+        const isOver = this._player.hp <= 0 || this._monster.hp <= 0;
+        if (isOver) {
+            this.node.emit('battle-over', this._monster.hp <= 0);
+        }
+        return isOver;
     },
 
     _showSwordCursor () {
@@ -205,12 +230,23 @@ cc.Class({
         const normalEnd = this.normalAttackBar.width/2.0;
         const cursorX = this.swordCursor.x;
         if (cursorX >= criticalStart && cursorX <= criticalEnd) {
-            return this._showPlayerCriticalAttack(66);
+            const damage = this._player.attack * CRITICAL_TIMES;
+            return this._showPlayerCriticalAttack(damage);
         } else if (cursorX >= normalStart && cursorX <= normalEnd) {
-            return this._showPlayerNormalAttack(44);
+            return this._showPlayerNormalAttack(this._player.attack);
         } else {
             return this._showPlayerMiss();
         }
+    },
+
+    _onPlayerAttack (num) {
+        this._monster.hp = Math.max(0, this._monster.hp - num);
+        this.monsterHp.string = `${this._monster.hp}:${this._monster.maxHp}`;
+        this.monsterHpProgress.progress = this._monster.hp / this._monster.maxHp;
+    },
+
+    _onMonsterAttack (num) {
+        this._player.hp = Math.max(0, this._player.hp - num);
     },
 
     _showPlayerMiss () {
