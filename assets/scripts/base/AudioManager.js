@@ -50,13 +50,11 @@ const AudioManager = cc.Class({
         }
 
         node = node || cc.director.getScene();
-        check(node.getComponents(cc.Button));
         check(node.getComponentsInChildren(cc.Button));
     },
 
     checkMuteAudio (node) {
         node = node || cc.director.getScene();
-        node.getComponents(cc.AudioSource).forEach(src => src.mute = this.muteAudio);
         node.getComponentsInChildren(cc.AudioSource).forEach(src => src.mute = this.muteAudio);
     },
 });

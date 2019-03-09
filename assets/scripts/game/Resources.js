@@ -11,7 +11,6 @@ spriteMap.set(159, 'mirror');
 
 const maxSceneId = 10;
 const tilesetNames = [
-    '',
     'TiledMapOne',
     'TiledMapTwo',
     'TiledMapThree',
@@ -24,7 +23,6 @@ const tilesetNames = [
     'TiledMapTen',
 ];
 const monsterAtlasNames = [
-    '',
     'MonsterOne',
     'MonsterTwo',
     'MonsterThree',
@@ -39,7 +37,7 @@ const monsterAtlasNames = [
 
 function getSceneId(floorId) {
     let sceneId = Math.floor(floorId / 10);
-    sceneId += floorId % 10 === 0 ? 0 : 1;
+    // sceneId += floorId % 10 === 0 ? 0 : 1;
     return sceneId;
 }
 

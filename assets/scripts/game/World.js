@@ -149,7 +149,8 @@ cc.Class({
                         resolve();
                     }, reject);
                 })
-            });
+            })
+            .then(() => this.getDownGrid() || this.getUpGrid());
     },
 
     getMapSize () {
@@ -318,8 +319,8 @@ cc.Class({
         this._layerFloor = this._tiledMap.getLayer('floor');
         this._layerLogic.node.active = false;
         this._layerFloor.node.active = false;
-        this._printLayer(this._layerFloor);
-        this._printLayer(this._layerLogic);
+        this._printLayer('floor', this._layerFloor);
+        this._printLayer('logic', this._layerLogic);
 
         this._initLayerFloor();
         this._initLayerLogic();
@@ -360,6 +361,11 @@ cc.Class({
                     const id = Number.parseInt(match[0]);
                     const exit = {};
                     const symbol = properties[key];
+                    // spawn point
+                    if (symbol == 'z') {
+                        continue;
+                    }
+
                     exit.nextFloorName = key;
                     exit.grid = this.getGridAt(properties.x, properties.y);
                     exit.floorId = id;
@@ -518,6 +524,9 @@ cc.Class({
     },
 
     _initLayerTiles (layer) {
+        if (this._floorId == 0) {
+            return;
+        }
         for (let y = 0; y < this._mapSize.height; y++) {
             for (let x = 0; x < this._mapSize.width; x++) {
                 const tile = new cc.Node();
@@ -631,7 +640,8 @@ cc.Class({
         return cc.v2(pos, y);
     },
 
-    _printLayer (layer) {
+    _printLayer (name, layer) {
+        cc.log('------------', name);
         const str = [];
         for (let y = 0; y < this._mapSize.height; ++y) {
             const s = [];

@@ -27,12 +27,11 @@ cc.Class({
     },
 
     start () {
-        const floorId = 2;
-        const start = cc.v2(3, 7);
+        const floorId = 0;
         DataCenter.instance.init()
             .then(()=> Resources.instance.init(floorId))
             .then(()=> this.world.init(floorId))
-            .then(()=> {
+            .then((start)=> {
                 this.hud.changeSite(floorId);
                 this._placeHeroAt(start);
                 this._maskOut();

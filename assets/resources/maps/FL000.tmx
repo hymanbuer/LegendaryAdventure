@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="8" height="12" tilewidth="80" tileheight="80">
- <tileset firstgid="1" name="Tile" tilewidth="1" tileheight="1">
+<map version="1.0" tiledversion="2018.06.01" orientation="orthogonal" renderorder="right-down" width="8" height="12" tilewidth="80" tileheight="80" infinite="0" nextlayerid="4" nextobjectid="3">
+ <tileset firstgid="1" name="Tile" tilewidth="1" tileheight="1" tilecount="1" columns="1">
   <image source="Tile.png" width="1" height="1"/>
  </tileset>
- <layer name="floor" width="8" height="12">
+ <layer id="1" name="floor" width="8" height="12">
   <data encoding="base64" compression="zlib">
    eJy7w8jAcIdO+DAUkyKPLIaNjY1/mET9tMSEwgQAhIxOfA==
   </data>
  </layer>
- <layer name="logic" width="8" height="12">
+ <layer id="2" name="logic" width="8" height="12">
   <data encoding="base64" compression="zlib">
    eJyrYGRgqKAjrkbjwwASk4ETiY2uDl1cGMjmAGJ2JDlBIOYGYh5MbRiAF4hZgJgZSYwJiLmAWIgI/axAzA/EbEhiIkAsAMR8DNj9iiwGACyZFLA=
   </data>
  </layer>
- <objectgroup name="hero" width="8" height="12">
-  <object name="EXIT" x="255" y="657" width="42" height="47">
+ <objectgroup id="3" name="hero">
+  <object id="1" name="EXIT" x="255" y="657" width="42" height="47">
    <properties>
     <property name="FL000" value="z"/>
    </properties>
   </object>
-  <object name="EXIT" x="340" y="335" width="42" height="47">
+  <object id="2" name="EXIT" x="340" y="335" width="42" height="47">
    <properties>
-    <property name="FL000" value="a"/>
+    <property name="FL001" value="a"/>
    </properties>
   </object>
  </objectgroup>
