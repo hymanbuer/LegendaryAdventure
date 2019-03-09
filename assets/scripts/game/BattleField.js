@@ -13,6 +13,8 @@ const CRITICAL_ATTACK_WIDTH = 56;
 const CRITICAL_TIMES = 1.5;
 const MISS_RATIO = 0.05;
 
+const doNothing = function () {};
+
 cc.Class({
     extends: cc.Component,
 
@@ -49,15 +51,15 @@ cc.Class({
 
     start () {
         this.resetBattleData({
-            hp: 999,
-            maxHp: 999,
+            hp: 360,
+            maxHp: 360,
             attack: 20,
             defence: 10,
         }, {
             id: 226,
             name: '王宫卫士',
-            hp: 999,
-            maxHp: 999,
+            hp: 360,
+            maxHp: 360,
             attack: 18,
             defence: 8,
             criticalPos: 7,
@@ -150,18 +152,22 @@ cc.Class({
     },
 
     _doPlayerAttack () {
-        const attack = Math.random() <= MISS_RATIO ? this._showPlayerMiss() 
-                        : this._showPlayerNormalAttack(this._player.attack);
+        const damage = Math.random() <= MISS_RATIO ? 0 : this._player.attack;
+        this._monster.hp = Math.max(0, this._monster.hp - damage);
+
+        const attack = damage <= 0 ? this._showPlayerMiss() 
+                        : this._showPlayerNormalAttack(damage);
         this._isAttackReady = false;
-        this._monster.hp = Math.max(0, this._monster.hp - this._player.attack);
         attack.then(() => this._completeAttack());
     },
 
     _doMonsterAttack () {
-        const attack = Math.random() <= MISS_RATIO ? this._showMonsterMiss() 
-                        : this._showMonsterAttack(this._monster.attack);
+        const damage = Math.random() <= MISS_RATIO ? 0 : this._monster.attack;
+        this._player.hp = Math.max(0, this._player.hp - damage);
+
+        const attack = damage <= 0 ? this._showMonsterMiss() 
+                        : this._showMonsterAttack(damage);
         this._isAttackReady = false;
-        this._player.hp = Math.max(0, this._player.hp - this._monster.attack);
         attack.then(() => this._completeAttack());
     },
 
@@ -231,28 +237,30 @@ cc.Class({
         const normalStart = -this.normalAttackBar.width/2.0;
         const normalEnd = this.normalAttackBar.width/2.0;
         const cursorX = this.swordCursor.x;
-        let attack = Promise.resolve();
+        let attack = doNothing;
         let damage = 0;
         if (cursorX >= criticalStart && cursorX <= criticalEnd) {
             damage = this._player.attack * CRITICAL_TIMES;
-            attack = this._showPlayerCriticalAttack(damage);
+            attack = this._showPlayerCriticalAttack;
         } else if (cursorX >= normalStart && cursorX <= normalEnd) {
             damage = this._player.attack;
-            attack = this._showPlayerNormalAttack(damage);
+            attack = this._showPlayerNormalAttack;
         } else {
-            attack = this._showPlayerMiss();
+            attack = this._showPlayerMiss;
         }
         this._monster.hp = Math.max(0, this._monster.hp - damage);
-        return attack;
+
+        return attack.call(this, damage);
     },
 
     _onPlayerAttack (num) {
+        cc.log('## on player attack', num);
         this.monsterHp.string = `${this._monster.hp}:${this._monster.maxHp}`;
         this.monsterHpProgress.progress = this._monster.hp / this._monster.maxHp;
     },
 
     _onMonsterAttack (num) {
-        
+        cc.log('## on monster attack', num);
     },
 
     _showPlayerMiss () {
