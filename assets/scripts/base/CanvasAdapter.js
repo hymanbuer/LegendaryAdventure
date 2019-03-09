@@ -23,10 +23,13 @@ cc.Class({
     onLoad () {
         window.addEventListener('resize', onResize);
         window.addEventListener('orientationchange', onResize);
+        cc.director.on(cc.Director.EVENT_AFTER_SCENE_LAUNCH, onResize);
+        onResize();
     },
 
     onDestroy () {
         window.removeEventListener('resize', onResize);
         window.removeEventListener('orientationchange', onResize);
+        cc.director.off(cc.Director.EVENT_AFTER_SCENE_LAUNCH, onResize);
     },
 });

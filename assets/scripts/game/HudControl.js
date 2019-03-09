@@ -24,9 +24,12 @@ cc.Class({
         numYellowKeys: cc.Label,
         numBlueKeys: cc.Label,
         numRedKeys: cc.Label,
+
+        top: cc.Node,
+        bottom: cc.Node,
     },
 
-    onLoad () {
+    start () {
 
     },
 

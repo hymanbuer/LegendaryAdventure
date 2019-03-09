@@ -106,11 +106,11 @@ cc.Class({
     },
 
     _showForbidAnimation (grid) {
-        this._showAnimation(grid, 'prefabs/gb_stop');
+        this._showAnimation(grid, 'prefabs/game/gb_stop');
     },
 
     _showTargetAnimation (grid) {
-        this._showAnimation(grid, 'prefabs/gb_target');
+        this._showAnimation(grid, 'prefabs/game/gb_target');
     },
 
     _showAnimation (grid, prefabPath) {

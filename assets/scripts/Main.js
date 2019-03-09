@@ -11,18 +11,20 @@ const Main = cc.Class({
     },
 
     properties: {
-        mask: cc.Node,
+        maskPrefab: cc.Prefab,
     },
 
     onLoad () {
         Main.instance = this;
         this._init();
-        this._addPersistRootNodes();
+        this._addMask();
+        cc.game.addPersistRootNode(this.node);
     },
 
     onDestroy () {
         Main.instance = null;
         cc.game.removePersistRootNode(this.node);
+        cc.game.removePersistRootNode(this.mask);
     },
 
     start () {
@@ -47,8 +49,9 @@ const Main = cc.Class({
         profile.load();
     },
 
-    _addPersistRootNodes () {
-        cc.game.addPersistRootNode(this.node);
+    _addMask () {
+        this.mask = cc.instantiate(this.maskPrefab);
+        this.mask.parent = this.node.parent;
         cc.game.addPersistRootNode(this.mask);
     },
 });

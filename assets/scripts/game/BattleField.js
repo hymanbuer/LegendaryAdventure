@@ -254,13 +254,12 @@ cc.Class({
     },
 
     _onPlayerAttack (num) {
-        cc.log('## on player attack', num);
         this.monsterHp.string = `${this._monster.hp}:${this._monster.maxHp}`;
         this.monsterHpProgress.progress = this._monster.hp / this._monster.maxHp;
     },
 
     _onMonsterAttack (num) {
-        cc.log('## on monster attack', num);
+
     },
 
     _showPlayerMiss () {
