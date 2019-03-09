@@ -41,8 +41,8 @@
     },
     "_scale": {
       "__type__": "cc.Vec3",
-      "x": 0.5644366304639372,
-      "y": 0.5644366304639372,
+      "x": 0.5644366304639373,
+      "y": 0.5644366304639373,
       "z": 1
     },
     "_quat": {
@@ -472,12 +472,6 @@
         "__id__": 10
       },
       {
-        "__id__": 12
-      },
-      {
-        "__id__": 14
-      },
-      {
         "__id__": 16
       }
     ],
@@ -543,12 +537,19 @@
     "_parent": {
       "__id__": 9
     },
-    "_children": [],
+    "_children": [
+      {
+        "__id__": 11
+      },
+      {
+        "__id__": 13
+      }
+    ],
     "_active": true,
     "_level": 2,
     "_components": [
       {
-        "__id__": 11
+        "__id__": 15
       }
     ],
     "_prefab": null,
@@ -562,7 +563,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 378,
+      "width": 400,
       "height": 68
     },
     "_anchorPoint": {
@@ -597,48 +598,18 @@
     "_id": "0cSYPUW55JRoGn58KmD3Oq"
   },
   {
-    "__type__": "cc.Sprite",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 10
-    },
-    "_enabled": true,
-    "_spriteFrame": {
-      "__uuid__": "947d7af6-0c06-4842-a45c-a1f707c16857"
-    },
-    "_type": 0,
-    "_sizeMode": 0,
-    "_fillType": 0,
-    "_fillCenter": {
-      "__type__": "cc.Vec2",
-      "x": 0,
-      "y": 0
-    },
-    "_fillStart": 0,
-    "_fillRange": 0,
-    "_isTrimmedMode": true,
-    "_state": 0,
-    "_atlas": {
-      "__uuid__": "793e7163-4438-4466-aa60-438bb333f518"
-    },
-    "_srcBlendFactor": 770,
-    "_dstBlendFactor": 771,
-    "_id": "12+7HHJGtD74k9n8kQkYX/"
-  },
-  {
     "__type__": "cc.Node",
     "_name": "battle_baoji",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 9
+      "__id__": 10
     },
     "_children": [],
     "_active": true,
-    "_level": 2,
+    "_level": 3,
     "_components": [
       {
-        "__id__": 13
+        "__id__": 12
       }
     ],
     "_prefab": null,
@@ -662,8 +633,8 @@
     },
     "_position": {
       "__type__": "cc.Vec3",
-      "x": 113,
-      "y": 2,
+      "x": 125,
+      "y": 0,
       "z": 0
     },
     "_scale": {
@@ -691,7 +662,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 12
+      "__id__": 11
     },
     "_enabled": true,
     "_spriteFrame": {
@@ -721,14 +692,14 @@
     "_name": "battle_biaoji",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 9
+      "__id__": 10
     },
     "_children": [],
     "_active": false,
-    "_level": 2,
+    "_level": 3,
     "_components": [
       {
-        "__id__": 15
+        "__id__": 14
       }
     ],
     "_prefab": null,
@@ -753,7 +724,7 @@
     "_position": {
       "__type__": "cc.Vec3",
       "x": -320,
-      "y": 2,
+      "y": 0,
       "z": 0
     },
     "_scale": {
@@ -781,7 +752,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 14
+      "__id__": 13
     },
     "_enabled": true,
     "_spriteFrame": {
@@ -805,6 +776,36 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_id": "200H2aZ49Ow4bH6rgrA7D6"
+  },
+  {
+    "__type__": "cc.Sprite",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 10
+    },
+    "_enabled": true,
+    "_spriteFrame": {
+      "__uuid__": "947d7af6-0c06-4842-a45c-a1f707c16857"
+    },
+    "_type": 0,
+    "_sizeMode": 0,
+    "_fillType": 0,
+    "_fillCenter": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 0
+    },
+    "_fillStart": 0,
+    "_fillRange": 0,
+    "_isTrimmedMode": true,
+    "_state": 0,
+    "_atlas": {
+      "__uuid__": "793e7163-4438-4466-aa60-438bb333f518"
+    },
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
+    "_id": "12+7HHJGtD74k9n8kQkYX/"
   },
   {
     "__type__": "cc.Node",
@@ -2302,7 +2303,7 @@
     "_position": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 22,
+      "y": -58,
       "z": 0
     },
     "_scale": {
@@ -2845,7 +2846,16 @@
       "__id__": 16
     },
     "swordCursor": {
-      "__id__": 14
+      "__id__": 13
+    },
+    "rootBar": {
+      "__id__": 9
+    },
+    "normalAttackBar": {
+      "__id__": 10
+    },
+    "criticalAttackBar": {
+      "__id__": 11
     },
     "_id": "7fspDStEFNOprU2lp5HRZX"
   },

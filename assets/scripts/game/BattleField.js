@@ -7,6 +7,10 @@ const AttackType = cc.Enum({
     MONSTER_ATTACK: 'zh',
 });
 
+const ROOT_BAR_WIDTH = 768;
+const NORMAL_ATTACK_WIDTH = 480;
+const CRITICAL_ATTACK_WIDTH = 56;
+
 cc.Class({
     extends: cc.Component,
 
@@ -24,15 +28,27 @@ cc.Class({
         autoPlayTips: cc.Node,
 
         swordCursor: cc.Node,
+        rootBar: cc.Node,
+        normalAttackBar: cc.Node,
+        criticalAttackBar: cc.Node,
     },
 
     onLoad () {
         this._initCriticalSignAnimation();
         this._initUi();
+        this._addEventListeners();
+    },
+
+    onDestroy () {
+        this._removeEventListeners();
     },
 
     start () {
-        
+        this.updateBattleData({
+            CRITPOS: 7,
+            CRITLENGHT: 1.2,
+            TIMING: 1.0,
+        });
     },
 
     onEnable () {
@@ -50,13 +66,28 @@ cc.Class({
         }
     },
 
+    updateBattleData (config) {
+        this._criticalPos = config.CRITPOS;
+        this._criticalLength = config.CRITLENGHT;
+        this._cursorMoveDuration = config.TIMING;
+        this._udpateAttackData();
+    },
+
+    onClickAutoPlay (sender) {
+        setting.isAutoPlay = sender.isChecked;
+        setting.save();
+        this.autoPlayTips.active = setting.isAutoPlay;
+    },
+
+    //////////////////////////////////////////////////////////////////
+
     _initCriticalSignAnimation () {
         const frames = [];
         for (let i = 1; i <= 6; ++i) {
             const frame = this.spriteAtlas.getSpriteFrame(`b${i}`);
             frames.push(frame);
         }
-        const clip = cc.AnimationClip.createWithSpriteFrames(frames, 10);
+        const clip = cc.AnimationClip.createWithSpriteFrames(frames, 12);
         clip.name = 'critical';
         clip.wrapMode = cc.WrapMode.Normal;
 
@@ -69,10 +100,23 @@ cc.Class({
         this.autoPlayTips.active = setting.isAutoPlay;
     },
 
-    onClickAutoPlay (sender) {
-        setting.isAutoPlay = sender.isChecked;
-        setting.save();
-        this.autoPlayTips.active = setting.isAutoPlay;
+    _addEventListeners () {
+        this.rootBar.on(cc.Node.EventType.SIZE_CHANGED, this._udpateAttackData, this);
+    },
+
+    _removeEventListeners () {
+        this.rootBar.off(cc.Node.EventType.SIZE_CHANGED, this._udpateAttackData, this);
+    },
+
+    _udpateAttackData () {
+        if (!this._criticalPos || !this._criticalLength) {
+            return;
+        }
+        const ratio = this.rootBar.width / ROOT_BAR_WIDTH;
+        const normalBarX = ratio * CRITICAL_ATTACK_WIDTH * this._criticalPos;
+        this.normalAttackBar.width = ratio * NORMAL_ATTACK_WIDTH;
+        this.criticalAttackBar.width = ratio * CRITICAL_ATTACK_WIDTH * this._criticalLength;
+        this.criticalAttackBar.x = -this.normalAttackBar.width/2.0 + normalBarX;
     },
 
     _doNextTurn () {
@@ -119,10 +163,10 @@ cc.Class({
         const cursor = this.swordCursor;
         const parent = this.swordCursor.parent;
         const originX = parent.convertToNodeSpaceAR(cc.v2(0, 0)).x - cursor.width/2.0;
-        const totalWidth = parent.width + cursor.width;
+        const totalWidth = this.rootBar.width + cursor.width;
         cursor.x = originX;
         cc.tween(cursor)
-            .by(1.5, {x: totalWidth})
+            .by(this._cursorMoveDuration, {x: totalWidth})
             .to(0, {x: originX})
             .repeatForever()
             .start()
@@ -147,11 +191,26 @@ cc.Class({
         }
         this._isAttackReady = false;
         this._stopSwordCursor();
-        this._showPlayerNormalAttack(44)
+        this._checkPlayerAttack()
             .then(() => {
                 this._hideSwordCursor();
                 this._completeAttack();
             });
+    },
+
+    _checkPlayerAttack () {
+        const criticalStart = this.criticalAttackBar.x - this.criticalAttackBar.width/2.0;
+        const criticalEnd = this.criticalAttackBar.x + this.criticalAttackBar.width/2.0;
+        const normalStart = -this.normalAttackBar.width/2.0;
+        const normalEnd = this.normalAttackBar.width/2.0;
+        const cursorX = this.swordCursor.x;
+        if (cursorX >= criticalStart && cursorX <= criticalEnd) {
+            return this._showPlayerCriticalAttack(66);
+        } else if (cursorX >= normalStart && cursorX <= normalEnd) {
+            return this._showPlayerNormalAttack(44);
+        } else {
+            return this._showPlayerMiss();
+        }
     },
 
     _showPlayerMiss () {
@@ -175,7 +234,7 @@ cc.Class({
 
     _showPlayerCriticalAttack (num) {
         this.node.emit('player-attack', num);
-        this._showMonsterHurtAction();
+        this._showMonsterHurtAction(true);
         this._showCriticalAttackSign();
         this._showCriticalSign();
         return this._showPlayerAttackNumber(num);
@@ -200,13 +259,14 @@ cc.Class({
         });
     },
 
-    _showMonsterHurtAction () {
+    _showMonsterHurtAction (isCritical) {
         return new Promise(resolve => {
+            const duration = isCritical ? 12/30 : 4/30;
             this.monster.node.color = cc.color(236, 57, 57);
             cc.tween(this.monster.node)
                 .by(4/30, {x: -16})
                 .by(4/30, {x: 16})
-                .then(cc.tintTo(4/30, 255, 255, 255))
+                .then(cc.tintTo(duration, 255, 255, 255))
                 .call(resolve)
                 .start();
         });
@@ -287,7 +347,7 @@ cc.Class({
             label.node.opacity = 255;
             cc.tween(label.node)
                 .show()
-                .by(20/30, {y: deltaY})
+                .by(16/30, {y: deltaY})
                 .delay(4/30)
                 .to(8/30, {opacity: 0})
                 .hide()
@@ -299,17 +359,17 @@ cc.Class({
 
     _showPlayerMissSign () {
         const sign = this.spriteAtlas.getSpriteFrame('Miss');
-        return this._showSpecialSign(sign, 148);
+        return this._showSpecialSign(sign, 200);
     },
 
     _showMonsterMissSign () {
         const sign = this.spriteAtlas.getSpriteFrame('Miss');
-        return this._showSpecialSign(sign, -148);
+        return this._showSpecialSign(sign, -200);
     },
 
     _showCriticalSign () {
         const sign = this.spriteAtlas.getSpriteFrame('Critical');
-        return this._showSpecialSign(sign, 148);
+        return this._showSpecialSign(sign, 200);
     },
 
     _showSpecialSign (sign, deltaY) {
@@ -320,7 +380,7 @@ cc.Class({
             this.specialSign.node.opacity = 255;
             cc.tween(this.specialSign.node)
                 .show()
-                .by(12/30, {y: deltaY})
+                .by(16/30, {y: deltaY})
                 .delay(3/30)
                 .to(4/30, {opacity: 0})
                 .hide()
