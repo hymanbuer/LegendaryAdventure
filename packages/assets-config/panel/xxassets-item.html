@@ -1,0 +1,88 @@
+<dom-module id="xxassets-item">
+    <style>
+        :host {
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        #item {
+            height: 28px;
+            text-align: left;
+            line-height: 28px;
+
+            margin-top: 2px;
+            margin-bottom: 2px;
+            border: 1px solid #2b2626;
+
+            position: relative;
+            flex-direction: row;
+            display: flex;
+            font-size: 1.0rem;
+            overflow: hidden;
+            align-items: center;
+
+            background-color: #393939;
+        }
+
+        /* #item:focus {
+            border: 1px solid rgb(0, 174, 255);
+        } */
+
+        .label {
+            font-weight: bolder;
+            margin-left: 4px;
+            margin-right: 4px;
+            color: bisque;
+        }
+    
+        #idInput {
+            min-width: 312px;
+        }
+
+        #assets {
+            margin-right: 4px;
+            margin-left: auto;
+
+            position: relative;
+            flex-direction: row;
+            display: flex;
+        }
+
+        #types {
+            position: relative;
+            flex-direction: row;
+            display: flex;
+            align-items: center;
+            width: 80px;
+        }
+
+        .icon {
+            width: 18px;
+            height: 18px;
+            flex: none;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: 50% 50%;
+            margin-right: 2px;
+        }
+
+        :host[selected] > #item {
+            border: 1px solid rgb(0, 174, 255);
+        }
+
+    </style>
+
+    <template>
+        <div id="item" class="fit" tabindex="-1" on-focus="_onFocus" on-blur="_onBlur">
+            <span class="label">ID:</span>
+            <ui-input id="idInput" placeholder="enter assets id..." tabindex="-1" 
+                on-focus="_onFocus" on-blur="_onBlur" on-confirm="_onIdConfirm"></ui-input>
+            <div id="assets" on-click="onClickAssets">
+                <span class="label">Assets:</span>
+                <div id="types"></div>
+            </div>
+        </div>
+    </template>
+
+    <script type="text/javascript" src="xxassets-item.js"></script>
+</dom-module>

@@ -4,7 +4,7 @@ const TalkType = cc.Enum({
     Task: -1,
 });
 
-const UiTalk = cc.Class({
+const PanelTalk = cc.Class({
     extends: cc.Component,
 
     statics: {
@@ -39,6 +39,12 @@ const UiTalk = cc.Class({
         this.title.string = this.talkTitle;
         this.text.string = '';
         this.accept.active = false;
+    },
+
+    run (title, talkList, type) {
+        this.talkTitle = title;
+        this.talkList = talkList;
+        this.talkType = type;
     },
 
     start () {

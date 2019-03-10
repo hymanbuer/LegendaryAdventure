@@ -2,12 +2,16 @@
 const DataCenter = require('DataCenter');
 const Resources = require('Resources');
 
-const UiGetItem = cc.Class({
+const PanelGetItem = cc.Class({
     extends: cc.Component,
 
     properties: {
         text: cc.Label,
         icon: cc.Sprite,
+    },
+
+    run (gid, message) {
+        this.setItem(gid, message);
     },
 
     setItem (gid, message) {

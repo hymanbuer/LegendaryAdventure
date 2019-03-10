@@ -1,20 +1,15 @@
 
-const UiManager = require('UiManager');
-const UiTalk = require('UiTalk');
+const PanelManager = require('PanelManager');
+const PanelTalk = require('PanelTalk');
 const Bag = require('Bag');
 const TaskState = require('TaskState');
 const MapState = require('MapState');
-const UiGetItemDialog = require('UiGetItemDialog');
+const PanelGetItemDialog = require('PanelGetItemDialog');
 
-function showTalk(title, talkList, type = UiTalk.TalkType.Normal) {
-    return new Promise((resolve, reject) => {
-        UiManager.instance.showUi('prefabs/ui_talk').then(ui => {
-            const uiTalk = ui.getComponent(UiTalk);
-            uiTalk.talkTitle = title;
-            uiTalk.talkList = talkList;
-            uiTalk.talkType = type;
-            ui.ondestroy = ()=> resolve(true);
-        }, reject);
+function showTalk(title, talkList, type = PanelTalk.TalkType.Normal) {
+    return new Promise(resolve => {
+        return PanelManager.instance.openPanel('talk', title, talkList, type)
+            .then(() => PanelManager.instance.onPanelClosed('talk', () => resolve(true)));
     });
 }
 
@@ -40,7 +35,7 @@ class EventTask {
         if (this.state === 0) {
             this.state = 1;
             TaskState.instance.setTaskState(this.event.ID, 1);
-            return showTalk(this.title, this.event.TASK, UiTalk.TalkType.Task);
+            return showTalk(this.title, this.event.TASK, PanelTalk.TalkType.Task);
         } else if (this.state === 1) {
             if (Bag.instance.getNumOfItem(this.event.TASKNEEDED) > 0) {
                 this.state = 2;
@@ -64,15 +59,12 @@ class EventAward {
     }
 
     fire (trigger) {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             trigger.node.destroy();
             Bag.instance.addItem(this.awardGid);
 
-            UiManager.instance.showUi('prefabs/ui_get_item_dialog').then(ui => {
-                const dialog = ui.getComponent(UiGetItemDialog);
-                dialog.setItem(this.awardGid, this.message);
-                ui.ondestroy = ()=> resolve(false);
-            }, reject);
+            return PanelManager.instance.openPanel('get_item_dialog', this.awardGid, this.message)
+                .then(() => PanelManager.instance.onPanelClosed('get_item_dialog', () => resolve(true)));
         });
     }
 }

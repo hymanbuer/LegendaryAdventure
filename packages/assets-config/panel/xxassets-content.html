@@ -1,0 +1,30 @@
+<link rel="import" href="xxassets-item.html">
+
+<dom-module id="xxassets-content">
+    <style>
+        :host {
+            display: block;
+            box-sizing: border-box;
+            position: relative;
+            min-width: 100px;
+            min-height: 100px;
+        }
+
+        #content {
+            padding: 1px 5px;
+            border: 1px solid #171717;
+            overflow-x: hidden;
+            overflow-y: auto;
+
+            box-shadow: inset 0 0 8px 2px rgba(0, 0, 0, 0.2);
+            background: #333;
+        }
+    </style>
+
+    <template>
+        <div id="content" class="fit" on-scroll="_onScroll">
+        </div>
+    </template>
+
+    <script type="text/javascript" src="xxassets-content.js"></script>
+</dom-module>

@@ -1,0 +1,48 @@
+{
+  "name": "assets-config",
+  "version": "0.0.1",
+  "description": "Editting ids for assets.",
+  "author": "Jingfeng Li",
+  "main": "main.js",
+  "main-menu": {
+    "i18n:MAIN_MENU.package.title/Assets Config": {
+      "message": "assets-config:open"
+    }
+  },
+  "panel": {
+    "main": "panel/panel.html",
+    "ui": "polymer",
+    "type": "dockable",
+    "popable": true,
+    "title": "assets-config",
+    "width": 512,
+    "height": 768,
+    "min-width": 512,
+    "min-height": 256,
+    "shortcuts": {
+      "ctrl+s": "onSaveCurrentFile",
+      "ctrl+o": "onOpenFileInExplorer",
+      "ctrl+n": "onNewFile",
+      "ctrl+a": "onSelectAllItems",
+      "#contents": {
+        "del": "onDeleteCurrentSelected"
+      }
+    }
+  },
+  "profiles": {
+    "local": {
+      "last-opened-files": [],
+      "last-edit-file": "",
+      "last-open-path": ""
+    }
+  },
+  "runtime-resource": {
+    "path": "runtime-assets",
+    "name": "assets"
+  },
+  "reload": {
+    "ignore": [
+      "runtime-assets/**/*"
+    ]
+  }
+}

@@ -1,0 +1,79 @@
+<link rel="import" href="packages://ui-kit/widget/index.html">
+<link rel="import" href="xxassets-content.html">
+<link rel="import" href="tag-file.html">
+
+<dom-module id="assets-config">
+    <style>
+        :host {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #none {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #view {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #search {
+            margin-left: auto;
+            margin-right: 2px;
+            width: 256px;
+        }
+
+        .container {
+            position: relative;
+        }
+
+        #fileTags {
+            display: flex;
+            flex-direction: row;
+            background-color: rgb(37, 37, 38);
+            margin-top: 0;
+            border: none;
+        }
+    </style>
+
+    <template>
+        <div id="none" class="fit" hidden>
+            <div>
+                <ui-button class="green" on-click="_onClickCreate">Create</ui-button>
+                <ui-button class="blue" on-click="_onClickOpen">Open</ui-button>
+            </div>
+            <div>
+                <p>Drag your file here to open it</p>
+            </div>
+        </div>
+
+        <div id="view" class="fit">
+            <div id="fileTags" on-dblclick="_onDoubelClickTagsBar">
+            </div>
+
+            <editor-toolbar>
+                <editor-input id="search" input-value="{{searchPattern}}" title="Search specific id"
+                    placeholder="Search..." on-confirm="_onSearchConfirm" on-clear="_onClear">
+                </editor-input>
+                <ui-button id="searchTypeBtn" on-click="_onSearchTypeBtnClick" class="transparent" title="Search ids">
+                    <i class="fa fa-search"></i>
+                </ui-button>
+            </editor-toolbar>
+    
+            <div class="container flex-1">
+                <div id="contents" class="fit"></div>
+                <xxassets-content id="searchResult" class="fit" droppable="" hidden></xxassets-content>
+            </div>
+    
+            <editor-toolbar>
+                <span id="tips" class="flex-1">{{tipsText}}</span>
+            </editor-toolbar>
+        </div>
+    </template>
+
+    <script src="panel.js" type="text/javascript"></script>
+</dom-module>

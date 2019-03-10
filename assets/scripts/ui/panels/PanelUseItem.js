@@ -10,6 +10,12 @@ cc.Class({
         icon: cc.Sprite,
     },
 
+    run (useMethod, text, icon) {
+        this.useMethod = useMethod;
+        this.text.string = text;
+        this.icon.spriteFrame = icon;
+    },
+
     onClick () {
         this.node.destroy();
     },

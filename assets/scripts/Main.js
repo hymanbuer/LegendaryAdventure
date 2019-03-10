@@ -2,6 +2,7 @@
 const setting = require('GameSetting');
 const profile = require('GameProfile');
 const AudioManager = require('AudioManager');
+const Assets = require('Assets');
 
 const Main = cc.Class({
     extends: cc.Component,
@@ -12,6 +13,7 @@ const Main = cc.Class({
 
     properties: {
         maskPrefab: cc.Prefab,
+        assetsConfig: cc.JsonAsset,
     },
 
     onLoad () {
@@ -56,6 +58,7 @@ const Main = cc.Class({
     _init () {
         setting.load();
         profile.load();
+        Assets.addAssetsConfig(this.assetsConfig.json);
     },
 
     _addMask () {

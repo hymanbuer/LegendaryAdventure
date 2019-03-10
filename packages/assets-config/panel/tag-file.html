@@ -1,0 +1,72 @@
+<dom-module id="tag-file">
+    <style>
+        :host {
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin-left: 0;
+        }
+        :host:first-child {
+            margin-left: 0;
+        }
+
+        #root {
+            height: 28px;
+            text-align: center;
+            line-height: 28px;
+
+            border-right: 1px solid #2b2626;
+
+            position: relative;
+            flex-direction: row;
+            display: flex;
+            font-size: 1.0rem;
+            overflow: hidden;
+            align-items: center;
+        }
+        span.icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        #iconTag {
+            margin-left: 6px;
+            background-image: url("unpack://static/icon/assets/json.png")
+        }
+
+        #filename {
+            margin-left: 4px;
+            min-width: 48px;
+            text-align: left;
+        }
+
+        .state {
+            width: 16px;
+            margin-left: 6px;
+            margin-right: 4px;
+        }
+
+        .inactive {
+            color: rgb(128, 128, 128);
+            background-color: rgb(45, 45, 45);
+        }
+
+        .active {
+            color: rgb(218, 218, 218);
+            background-color: rgb(30, 30, 30);
+        }
+
+    </style>
+
+    <template>
+        <div id="root" class$="{{_rootClass(active)}}" on-mouseover="_onOverTag" on-mouseout="_onOutTag" on-click="_onClickTag" on-dblclick="_onDblClickTag">
+            <span class="icon" id="iconTag"></span>
+            <span id="filename">{{filenameText}}</span>
+            <div class="state">
+                <span class="icon" id="iconClose" title="Close" on-mouseover="_onOverIcon" on-mouseout="_onOutIcon" on-click="_onClickClose" hidden><i class="fa fa-close"></i></span>
+                <span class="icon" id="iconChange" on-mouseover="_onOverIcon" on-mouseout="_onOutIcon" hidden><i class="fa fa-circle"></i></span>
+            </div>
+        </div>
+    </template>
+
+    <script type="text/javascript" src="tag-file.js"></script>
+</dom-module>

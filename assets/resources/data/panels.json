@@ -7,8 +7,9 @@
     },
 
     "panels": {
-        "setting": {
-            "uuid": "ae279a29-f819-4041-9685-2c504e05dd34"
+        "get_item": {
+            "singleton": false,
+            "blockInput": false
         }
     }
 }

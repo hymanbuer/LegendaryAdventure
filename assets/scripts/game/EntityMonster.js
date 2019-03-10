@@ -1,7 +1,7 @@
 
 const BaseEntity = require('BaseEntity');
-const UiManager = require('UiManager');
-const UiGoFight = require('UiGoFight');
+const PanelManager = require('PanelManager');
+const PanelGoFight = require('PanelGoFight');
 const MapState = require('MapState');
 
 cc.Class({
@@ -23,14 +23,12 @@ cc.Class({
 
     doBeforeEnter () {
         return new Promise((resolve, reject) => {
-            UiManager.instance.showUi('prefabs/ui_gofight').then(ui => {
-                const uiGoFight = ui.getComponent(UiGoFight);
-                uiGoFight.init(this.floorId, this.gid);
-                ui.ondestroy = ()=> {
+            return PanelManager.instance.openPanel('gofight', this.floorId, this.gid)
+                .then(() => PanelManager.instance.onPanelClosed('gofight', () => {
                     this.node.destroy();
-                };
-                resolve(false);
-            }, reject);
+                    resolve(false);
+                }))
+                .catch(reject);
         });
     },
 });

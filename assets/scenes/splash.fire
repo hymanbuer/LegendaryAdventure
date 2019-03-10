@@ -20,7 +20,7 @@
         "__id__": 8
       }
     ],
-    "_active": true,
+    "_active": false,
     "_level": 0,
     "_components": [],
     "_prefab": null,
@@ -44,8 +44,8 @@
     },
     "_scale": {
       "__type__": "cc.Vec3",
-      "x": 0.45560496203642936,
-      "y": 0.45560496203642936,
+      "x": 0.564436630463936,
+      "y": 0.564436630463936,
       "z": 1
     },
     "_quat": {
@@ -140,6 +140,9 @@
     "_enabled": true,
     "maskPrefab": {
       "__uuid__": "5a66d236-6ee4-40ef-b0fb-b7531bc3aa93"
+    },
+    "assetsConfig": {
+      "__uuid__": "216fc36c-f36d-48f2-ba91-661c22de5357"
     },
     "_id": "e7S4YeWvNNgrht2sJJa25/"
   },

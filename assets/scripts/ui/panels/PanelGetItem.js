@@ -5,7 +5,7 @@ const Resources = require('Resources');
 const startY = -406;
 const spaceY = 88;
 
-const UiGetItem = cc.Class({
+const PanelGetItem = cc.Class({
     extends: cc.Component,
 
     statics: {
@@ -18,15 +18,19 @@ const UiGetItem = cc.Class({
     },
 
     onLoad () {
-        UiGetItem.showingCount += 1;
-        this.node.y = startY + (UiGetItem.showingCount - 1)*spaceY;
+        PanelGetItem.showingCount += 1;
+        this.node.y = startY + (PanelGetItem.showingCount - 1)*spaceY;
         this.scheduleOnce(()=> {
             this.node.destroy();
         }, 2.0);
     },
 
     onDestroy () {
-        UiGetItem.showingCount -= 1;
+        PanelGetItem.showingCount -= 1;
+    },
+
+    run (gid) {
+        this.setItem(gid);
     },
 
     setItem (gid) {

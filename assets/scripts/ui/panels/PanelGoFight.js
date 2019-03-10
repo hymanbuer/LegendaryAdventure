@@ -15,7 +15,7 @@ cc.Class({
         title: cc.Label,
     },
 
-    init (floorId, gid) {
+    run (floorId, gid) {
         const data = DataCenter.instance.getMonster(gid);
         this.title.string = data.NAME;
         this.text.string = data.MESSAGE;
@@ -25,7 +25,7 @@ cc.Class({
         this.battle.spriteFrame = Resources.instance.getSmallBattleBg(floorId);
         this.monster.spriteFrame = Resources.instance.getSmallMonster(floorId, gid);
     },
-
+    
     onClickClose () {
         this.node.destroy();
     },

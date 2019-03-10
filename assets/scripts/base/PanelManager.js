@@ -1,6 +1,15 @@
 
 const LoaderHelper = require('CCLoaderHelper');
 const AudioManager = require('AudioManager');
+const Assets = require('Assets');
+
+function callComponentsFunc(node, funcName, ...args) {
+    for (let comp of node.getComponents(cc.Component)) {
+        if (typeof comp[funcName] == 'function') {
+            comp[funcName].call(comp, ...args);
+        }
+    }
+}
 
 const PanelManager = cc.Class({
     extends: cc.Component,
@@ -27,18 +36,13 @@ const PanelManager = cc.Class({
 
     openPanel (name, ...args) {
         const config = this._getPanelConfig(name);
-        if (!config || !config.uuid) {
-            const msg = !config ? `can not find ${name}'s config` : `${name} should specify uuid`;
-            return Promise.reject(msg);
-        }
-
         if (config.singleton) {
             const root = this._findPanel(name);
             if (root) {
                 if (root.panel) {
-                    root.panel.emit('run', ...args);
+                    callComponentsFunc(root.panel, 'run', ...args);
                 } else {
-                    root.once('panel-loaded', panel => panel.emit('run', ...args));
+                    root.once('panel-loaded', panel => callComponentsFunc(panel, 'run', ...args));
                 }
                 return Promise.resolve(root.id);
             }
@@ -72,7 +76,10 @@ const PanelManager = cc.Class({
         }
         this.scheduleOnce(addLoadingTips, 0.05);
     
-        return LoaderHelper.loadResByUuid(config.uuid).then(prefab => {
+        const assetId = config.assetId || name;
+        const promise = config.uuid ? LoaderHelper.loadResByUuid(config.uuid)
+                            : Assets.load(assetId);
+        return promise.then(prefab => {
             let uiMask;
             if (!config.isHideMask && this.uiMaskPrefab) {
                 uiMask = cc.instantiate(this.uiMaskPrefab);
@@ -81,9 +88,9 @@ const PanelManager = cc.Class({
 
             const panel = cc.instantiate(prefab);
             panel.parent = root;
-            panel.emit('run', ...args);
+            callComponentsFunc(panel, 'run', ...args);
             if (uiMask) {
-                uiMask.on('touchend', () => panel.emit('touch-mask'));
+                uiMask.on('touchend', () => callComponentsFunc(panel, 'onTouchMask'));
             }
             root.panel = panel;
             root.emit('panel-loaded', panel);
@@ -119,9 +126,7 @@ const PanelManager = cc.Class({
     closePanel (name) {
         for (let panel of this._panelMap.values()) {
             if (panel.name === name) {
-                this._panelMap.delete(panel.id);
-                panel.destroy();
-                this.node.emit('panel-closed', name, panel.id);
+                this._removePanel(panel);
             }
         }
     },
@@ -129,9 +134,7 @@ const PanelManager = cc.Class({
     closePanelById (panelId) {
         const panel = this._panelMap.get(panelId);
         if (panel) {
-            this._panelMap.delete(panelId);
-            panel.destroy();
-            this.node.emit('panel-closed', panel.name, panel.id);
+            this._removePanel(panel);
         }
     },
 
@@ -153,7 +156,21 @@ const PanelManager = cc.Class({
         }
     },
 
+    onPanelClosed (name, callback) {
+        const panel = this._findPanel(name);
+        if (panel && typeof callback == 'function') {
+            panel.on('closed', callback);
+        }
+    },
+
     //////////////////////////////////////////////////////////////////
+
+    _removePanel (panel) {
+        this._panelMap.delete(panel.id);
+        panel.destroy();
+        panel.emit('closed');
+        this.node.emit('panel-closed', panel.name, panel.id);
+    },
 
     _findPanel (name) {
         for (let panel of this._panelMap.values()) {
@@ -173,7 +190,7 @@ const PanelManager = cc.Class({
         });
 
         const panels = this.panelConfig.json.panels || {};
-        const info = panels[name];
+        const info = panels[name] || {};
         if (info) {
             cc.js.addon(info, defaultConfig);
         }

@@ -1,7 +1,7 @@
 
-const setting = require('GameSetting');
 const profile = require('GameProfile');
 const Main = require('Main');
+const PanelManager = require('PanelManager');
 
 cc.Class({
     extends: cc.Component,
@@ -37,8 +37,7 @@ cc.Class({
     },
 
     onClickAbout () {
-        const node = cc.instantiate(this.uiAboutPrefab);
-        this.node.addChild(node);
+        PanelManager.instance.openPanel('credits');
     },
 
     onClickExit () {
