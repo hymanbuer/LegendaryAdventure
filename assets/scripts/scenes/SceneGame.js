@@ -28,7 +28,7 @@ cc.Class({
         const lastFloor = profile.lastFloor;
         this.mask.active = true;
         DataCenter.instance.init()
-            .then(()=> this._changeFloor(lastFloor.id, true, lastFloor.upSymbo));
+            .then(()=> this._changeFloor(lastFloor.id, true, lastFloor.upSymbol));
     },
 
     onChangeFloor (event) {
