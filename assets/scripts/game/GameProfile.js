@@ -16,7 +16,7 @@ proto.save = function () {
 
 proto.reset = function () {
     this.wasShowOpening = false;
-    this.lastFloor = {id: 0, symbole: 'a'};
+    this.lastFloor = {id: 0};
 };
 
 module.exports = new GameProfile();

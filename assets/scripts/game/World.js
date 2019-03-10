@@ -122,7 +122,8 @@ cc.Class({
         this._npcViewConfigMap = EntityViewConfig.createNpcMap(this.itemAtlas);
         this._itemViewConfigMap = EntityViewConfig.createItemMap(this.itemAtlas);
 
-        return this.initFloor(floorId, isUp, symbol);
+        return this.initFloor(floorId, isUp, symbol)
+            .then(() => this._hero.faceUp(false));
     },
 
     initFloor (floorId, isUp, symbol) {
@@ -150,11 +151,13 @@ cc.Class({
                 })
             })
             .then(() => {
-                let startGrid = isUp ? this.getDownGrid(symbol) : this.getUpGrid(symbol);
                 if (floorId == 0) {
-                    startGrid = this.getUpGrid(symbol);
+                    this._placeHeroAt(this.getUpGrid(symbol));
+                } else {
+                    const startGrid = isUp ? this.getDownGrid(symbol) : this.getUpGrid(symbol);
+                    this._placeHeroAt(startGrid);
                 }
-                this._placeHeroAt(startGrid);
+                this._hero.faceUp(isUp);
             });
     },
 
@@ -200,16 +203,16 @@ cc.Class({
         return this._search && this._search(start, target);
     },
 
-    getUpGrid (symbol = 'a') {
+    getUpGrid (symbol) {
         for (const obj of this._upGrids) {
-            if (obj.symbol === symbol) return obj.upGrid;
+            if (!symbol || obj.symbol === symbol) return obj.upGrid;
         }
         return null;
     },
 
-    getDownGrid (symbol = 'a') {
+    getDownGrid (symbol) {
         for (const obj of this._downGrids) {
-            if (obj.symbol === symbol) return obj.downGrid;
+            if (!symbol || obj.symbol === symbol) return obj.downGrid;
         }
         return null;
     },
@@ -228,8 +231,8 @@ cc.Class({
         }
 
         const path = this.searchPath(this._hero.grid, grid);
+        this._showTargetAnimation(grid);
         if (path && path.length > 0) {
-            this._showTargetAnimation(grid);
             this._hero.followPath(path);
         }
     },
@@ -339,7 +342,7 @@ cc.Class({
         }
     },
 
-    _placeHeroAt (grid) {
+    _placeHeroAt (grid, isUp) {
         const node = cc.instantiate(this.heroPrefab)
         node.parent = this.node;
         this._hero = node.getComponent('CharacterControl');

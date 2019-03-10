@@ -69,6 +69,11 @@ cc.Class({
         walkNext(0);
     },
 
+    faceUp (isUp) {
+        this._direction = isUp ? Direction.North : Direction.South;
+        this._updateAnimation();
+    },
+
     placeAt (target) {
         this.grid = target;
         this.node.position = this.world.getPositionAt(target);

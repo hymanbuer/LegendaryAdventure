@@ -30,7 +30,7 @@ cc.Class({
         DataCenter.instance.init()
             .then(()=> this._loadBackground(lastFloor.id))
             .then(()=> Resources.instance.init(lastFloor.id))
-            .then(()=> this.world.init(lastFloor.id, true, lastFloor.symbol))
+            .then(()=> this.world.init(lastFloor.id, true, lastFloor.upSymbol))
             .then(()=> {
                 this.hud.changeSite(lastFloor.id);
                 this._maskOut();
@@ -47,7 +47,10 @@ cc.Class({
                 this.hud.changeSite(exit.floorId);
                 this._maskOut();
 
-                profile.lastFloor = {id: exit.floorId, symbol: exit.symbol};
+                profile.lastFloor = {id: exit.floorId};
+                if (exit.isUp) {
+                    profile.lastFloor.upSymbol = exit.symbol;
+                }
                 profile.save();
             });
     },
