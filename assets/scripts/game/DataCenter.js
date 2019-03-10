@@ -1,5 +1,4 @@
 
-const LoaderHelper = require('CCLoaderHelper');
 const maxFloors = 105;
 
 const DataCenter = cc.Class({
@@ -23,24 +22,18 @@ const DataCenter = cc.Class({
 
     init () {
         return new Promise((resolve, reject) => {
-            let count = 0;
-            const complete = ()=> {
-                count += 1;
-                if (count === 3) resolve();
-            }
-
-            LoaderHelper.loadResByUrl('data/Event').then(res => {
-                this._handleEvent(res.json)
-                complete();
-            }, reject);
-            LoaderHelper.loadResByUrl('data/Monster').then(res => {
-                this._handleMonster(res.json)
-                complete();
-            }, reject);
-            LoaderHelper.loadResByUrl('data/Player').then(res => {
-                this._handlePlayer(res.json)
-                complete();
-            }, reject);
+            const urls = ['data/Event', 'data/Monster', 'data/Player'];
+            const handlers = [this._handleEvent, this._handleMonster, this._handlePlayer];
+            cc.loader.loadResArray(urls, cc.JsonAsset, (err, assets) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    for (let i = 0; i < assets.length; i++) {
+                        handlers[i].call(this, assets[i].json);
+                    }
+                    resolve();
+                }
+            });
         });
     },
 
@@ -56,9 +49,9 @@ const DataCenter = cc.Class({
         return this._monsterMap.get(gid);
     },
 
-    _handleEvent (res) {
+    _handleEvent (obj) {
         this._eventMapList = new Array(maxFloors);
-        const FLOORS = res.FLOOR;
+        const FLOORS = obj.FLOOR;
         for (let i = 0; i < FLOORS.length; i++) {
             const floorId = Number.parseInt(FLOORS[i].ID);
             let eventMap = this._eventMapList[floorId];
@@ -78,13 +71,13 @@ const DataCenter = cc.Class({
         }
     },
 
-    _handlePlayer (res) {
+    _handlePlayer (obj) {
 
     },
 
-    _handleMonster (res) {
+    _handleMonster (obj) {
         this._monsterMap = new Map();
-        for (const monster of res) {
+        for (const monster of obj) {
             const gid = Number.parseInt(monster.ID);
             this._monsterMap.set(gid, monster);
         }

@@ -15,6 +15,9 @@ const Main = cc.Class({
     },
 
     onLoad () {
+        if (Main.instance) {
+            return;
+        }
         Main.instance = this;
         this._init();
         this._addMask();
@@ -22,12 +25,18 @@ const Main = cc.Class({
     },
 
     onDestroy () {
+        if (Main.instance !== this) {
+            return;
+        }
         Main.instance = null;
         cc.game.removePersistRootNode(this.node);
         cc.game.removePersistRootNode(this.mask);
     },
 
     start () {
+        if (Main.instance !== this) {
+            return;
+        }
         AudioManager.instance.muteAudio = !setting.isAudioOn;
     },
 

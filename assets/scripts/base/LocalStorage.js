@@ -19,24 +19,31 @@ function prefixKey(key) {
 }
 
 exports.setItem = function (key, value) {
-    if (!key || value === undefined)
-        throw new Error(`invalid key or value: ${key}, ${value}`);
-
+    if (!key || value === undefined) {
+        return;
+    }
+    
     value = JSON.stringify(value);
     value = openEncrypt ? encrypt(value) : value;
     cc.sys.localStorage.setItem(prefixKey(key), value);
 };
 
 exports.getItem = function (key, defaultValue) {
-    if (!key)
-        throw new Error(`invalid key: ${key}`);
+    if (!key) {
+        return defaultValue;
+    }
 
     let value = cc.sys.localStorage.getItem(prefixKey(key));
-    if (!value)
+    if (!value) {
         return defaultValue;
+    }
 
-    value = openEncrypt ? decrypt(value) : value;
-    return JSON.parse(value);
+    try {
+        value = openEncrypt ? decrypt(value) : value;
+        return JSON.parse(value);
+    } catch (err) {
+        return defaultValue
+    }
 }
 
 exports.removeItem = function (key) {

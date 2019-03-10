@@ -56,12 +56,7 @@ cc.Class({
             .then(()=> {
                 this.hud.changeSite(floorId);
                 this._maskOut();
-
-                profile.lastFloor = {id: floorId};
-                if (isUp) {
-                    profile.lastFloor.upSymbol = symbol;
-                }
-                profile.save();
+                this._saveLastFloor(floorId, isUp, symbol);
             });
     },
 
@@ -92,5 +87,13 @@ cc.Class({
             this.bg.removeAllChildren();
             this.bg.addChild(node);
         });
+    },
+
+    _saveLastFloor (floorId, isUp, symbol) {
+        profile.lastFloor = {id: floorId};
+        if (isUp) {
+            profile.lastFloor.upSymbol = symbol;
+        }
+        profile.save();
     },
 });
