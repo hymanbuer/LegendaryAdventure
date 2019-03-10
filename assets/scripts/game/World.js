@@ -109,21 +109,23 @@ cc.Class({
         monsterPrefab: cc.Prefab,
         itemPrefab: cc.Prefab,
         triggerPrefab: cc.Prefab,
+        heroPrefab: cc.Prefab,
     },
 
     onLoad () {
         this.node.on('standopen', this.onStandOpen, this);
         this.node.on('addentity', this.onAddEntity, this);
+        this.node.on('touchstart', this.onTouchWorld, this);
     },
 
-    init (floorId) {
+    init (floorId, isUp, symbol) {
         this._npcViewConfigMap = EntityViewConfig.createNpcMap(this.itemAtlas);
         this._itemViewConfigMap = EntityViewConfig.createItemMap(this.itemAtlas);
 
-        return this.initFloor(floorId);
+        return this.initFloor(floorId, isUp, symbol);
     },
 
-    initFloor (floorId) {
+    initFloor (floorId, isUp, symbol) {
         const sceneId = Math.min(maxSceneId, Math.floor(floorId/10));
         const tilesetUrl = 'sheets/tilesets/' + tilesetNames[sceneId];
         const atlasUrl = 'sheets/monsters/' + monsterAtlasNames[sceneId];
@@ -147,7 +149,13 @@ cc.Class({
                     }, reject);
                 })
             })
-            .then(() => this.getDownGrid() || this.getUpGrid());
+            .then(() => {
+                let startGrid = isUp ? this.getDownGrid(symbol) : this.getUpGrid(symbol);
+                if (floorId == 0) {
+                    startGrid = this.getUpGrid(symbol);
+                }
+                this._placeHeroAt(startGrid);
+            });
     },
 
     getMapSize () {
@@ -208,6 +216,40 @@ cc.Class({
 
     getLogicLayer () {
         return this.node;
+    },
+
+    onTouchWorld (event) {
+        const touch = event.touch;
+        const pos = this.node.convertToNodeSpaceAR(touch.getLocation());
+        const grid = this.getGridAt(pos);
+        if (!this.isReachable(grid)) {
+            this._showForbidAnimation(grid);
+            return;
+        }
+
+        const path = this.searchPath(this._hero.grid, grid);
+        if (path && path.length > 0) {
+            this._showTargetAnimation(grid);
+            this._hero.followPath(path);
+        }
+    },
+
+    _showForbidAnimation (grid) {
+        this._showAnimation(grid, 'prefabs/game/gb_stop');
+    },
+
+    _showTargetAnimation (grid) {
+        this._showAnimation(grid, 'prefabs/game/gb_target');
+    },
+
+    _showAnimation (grid, prefabPath) {
+        LoaderHelper.loadResByUrl(prefabPath, cc.Prefab).then(prefab => {
+            const node = cc.instantiate(prefab);
+            node.position = this.getPositionAt(grid);
+            node.zIndex = cc.macro.MAX_ZINDEX;
+            node.getComponent(cc.Animation).on('finished', node.destroy, node);
+            this.node.addChild(node);
+        });
     },
 
     onBeforeEnter (grid) {
@@ -295,6 +337,14 @@ cc.Class({
                 if (base.gid === gid) return entity;
             }
         }
+    },
+
+    _placeHeroAt (grid) {
+        const node = cc.instantiate(this.heroPrefab)
+        node.parent = this.node;
+        this._hero = node.getComponent('CharacterControl');
+        this._hero.world = this;
+        this._hero.placeAt(grid);
     },
 
     _init (tmxAsset) {
