@@ -1,5 +1,6 @@
 
 const profile = require('GameProfile');
+const Main = require('Main');
 
 cc.Class({
     extends: cc.Component,
@@ -19,17 +20,15 @@ cc.Class({
 
         this.currentIndex += 1;
         if (this.currentIndex >= this.storySpriteFrames.length) {
-            this.scheduleOnce(this.gotoGameScene, 0.5);
+            this._gotoGameScene();
         } else {
             this.story.spriteFrame = this.storySpriteFrames[this.currentIndex];
         }
     },
 
-    gotoGameScene () {
+    _gotoGameScene () {
         profile.wasShowOpening = true;
         profile.save();
-        this.story.node.runAction(cc.sequence(cc.fadeOut(0.5), cc.callFunc(()=> {
-            cc.director.loadScene('game');
-        })));
+        Main.instance.transition('game', 0.5, 0);
     },
 });

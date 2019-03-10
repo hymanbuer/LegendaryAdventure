@@ -28,31 +28,13 @@ cc.Class({
         const lastFloor = profile.lastFloor;
         this.mask.active = true;
         DataCenter.instance.init()
-            .then(()=> this._loadBackground(lastFloor.id))
-            .then(()=> Resources.instance.init(lastFloor.id))
-            .then(()=> this.world.init(lastFloor.id, true, lastFloor.upSymbol))
-            .then(()=> {
-                this.hud.changeSite(lastFloor.id);
-                this._maskOut();
-            });
+            .then(()=> this._changeFloor(lastFloor.id, true, lastFloor.upSymbo));
     },
 
     onChangeFloor (event) {
         const exit = event.detail;
         this._maskIn()
-            .then(()=> Resources.instance.init(exit.floorId))
-            .then(()=> this._loadBackground(exit.floorId))
-            .then(()=> this.world.initFloor(exit.floorId, exit.isUp, exit.symbol))
-            .then(()=> {
-                this.hud.changeSite(exit.floorId);
-                this._maskOut();
-
-                profile.lastFloor = {id: exit.floorId};
-                if (exit.isUp) {
-                    profile.lastFloor.upSymbol = exit.symbol;
-                }
-                profile.save();
-            });
+            .then(()=> this._changeFloor(exit.floorId, exit.isUp, exit.symbol));
     },
 
     onUpdateNumItems (event) {
@@ -64,6 +46,23 @@ cc.Class({
 
     onClickSetting () {
         PanelManager.instance.openPanel('setting');
+    },
+
+    _changeFloor (floorId, isUp, symbol) {
+        return Promise.resolve()
+            .then(()=> Resources.instance.init(floorId))
+            .then(()=> this._loadBackground(floorId))
+            .then(()=> this.world.initFloor(floorId, isUp, symbol))
+            .then(()=> {
+                this.hud.changeSite(floorId);
+                this._maskOut();
+
+                profile.lastFloor = {id: floorId};
+                if (isUp) {
+                    profile.lastFloor.upSymbol = symbol;
+                }
+                profile.save();
+            });
     },
 
     _maskIn () {

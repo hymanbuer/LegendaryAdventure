@@ -116,14 +116,9 @@ cc.Class({
         this.node.on('standopen', this.onStandOpen, this);
         this.node.on('addentity', this.onAddEntity, this);
         this.node.on('touchstart', this.onTouchWorld, this);
-    },
 
-    init (floorId, isUp, symbol) {
         this._npcViewConfigMap = EntityViewConfig.createNpcMap(this.itemAtlas);
         this._itemViewConfigMap = EntityViewConfig.createItemMap(this.itemAtlas);
-
-        return this.initFloor(floorId, isUp, symbol)
-            .then(() => this._hero.faceUp(false));
     },
 
     initFloor (floorId, isUp, symbol) {
@@ -153,11 +148,12 @@ cc.Class({
             .then(() => {
                 if (floorId == 0) {
                     this._placeHeroAt(this.getUpGrid(symbol));
+                    this._hero.faceUp(false);
                 } else {
                     const startGrid = isUp ? this.getDownGrid(symbol) : this.getUpGrid(symbol);
                     this._placeHeroAt(startGrid);
+                    this._hero.faceUp(isUp);
                 }
-                this._hero.faceUp(isUp);
             });
     },
 

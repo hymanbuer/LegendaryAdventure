@@ -33,7 +33,7 @@ cc.Class({
     },
 
     onClickContinueGame () {
-        Main.instance.transition('game');
+        Main.instance.transition('game', 0.5, 0);
     },
 
     onClickAbout () {
