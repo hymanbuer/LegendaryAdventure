@@ -1045,15 +1045,9 @@
     "pressedSprite": {
       "__uuid__": "38680a9b-db38-48e2-ac4e-38fe8d80a980"
     },
-    "_N$hoverSprite": {
-      "__uuid__": "38680a9b-db38-48e2-ac4e-38fe8d80a980"
-    },
-    "hoverSprite": {
-      "__uuid__": "38680a9b-db38-48e2-ac4e-38fe8d80a980"
-    },
-    "_N$disabledSprite": {
-      "__uuid__": "38680a9b-db38-48e2-ac4e-38fe8d80a980"
-    },
+    "_N$hoverSprite": null,
+    "hoverSprite": null,
+    "_N$disabledSprite": null,
     "_N$target": {
       "__id__": 21
     },
@@ -1309,15 +1303,9 @@
     "pressedSprite": {
       "__uuid__": "21765399-f9c2-44bf-ad07-6f8b7d2d849b"
     },
-    "_N$hoverSprite": {
-      "__uuid__": "21765399-f9c2-44bf-ad07-6f8b7d2d849b"
-    },
-    "hoverSprite": {
-      "__uuid__": "21765399-f9c2-44bf-ad07-6f8b7d2d849b"
-    },
-    "_N$disabledSprite": {
-      "__uuid__": "21765399-f9c2-44bf-ad07-6f8b7d2d849b"
-    },
+    "_N$hoverSprite": null,
+    "hoverSprite": null,
+    "_N$disabledSprite": null,
     "_N$target": {
       "__id__": 26
     },
@@ -1573,15 +1561,9 @@
     "pressedSprite": {
       "__uuid__": "25e65fd9-28dc-45d4-b372-88e4e1edba0a"
     },
-    "_N$hoverSprite": {
-      "__uuid__": "25e65fd9-28dc-45d4-b372-88e4e1edba0a"
-    },
-    "hoverSprite": {
-      "__uuid__": "25e65fd9-28dc-45d4-b372-88e4e1edba0a"
-    },
-    "_N$disabledSprite": {
-      "__uuid__": "25e65fd9-28dc-45d4-b372-88e4e1edba0a"
-    },
+    "_N$hoverSprite": null,
+    "hoverSprite": null,
+    "_N$disabledSprite": null,
     "_N$target": {
       "__id__": 31
     },
@@ -1746,15 +1728,9 @@
     "pressedSprite": {
       "__uuid__": "52235384-184a-457e-a30d-1476ecbc1627"
     },
-    "_N$hoverSprite": {
-      "__uuid__": "52235384-184a-457e-a30d-1476ecbc1627"
-    },
-    "hoverSprite": {
-      "__uuid__": "52235384-184a-457e-a30d-1476ecbc1627"
-    },
-    "_N$disabledSprite": {
-      "__uuid__": "52235384-184a-457e-a30d-1476ecbc1627"
-    },
+    "_N$hoverSprite": null,
+    "hoverSprite": null,
+    "_N$disabledSprite": null,
     "_N$target": {
       "__id__": 36
     },
@@ -1923,15 +1899,9 @@
     "pressedSprite": {
       "__uuid__": "bf28f8c7-57eb-475b-8889-cfb27bc7f048"
     },
-    "_N$hoverSprite": {
-      "__uuid__": "bf28f8c7-57eb-475b-8889-cfb27bc7f048"
-    },
-    "hoverSprite": {
-      "__uuid__": "bf28f8c7-57eb-475b-8889-cfb27bc7f048"
-    },
-    "_N$disabledSprite": {
-      "__uuid__": "bf28f8c7-57eb-475b-8889-cfb27bc7f048"
-    },
+    "_N$hoverSprite": null,
+    "hoverSprite": null,
+    "_N$disabledSprite": null,
     "_N$target": {
       "__id__": 39
     },
@@ -1942,8 +1912,8 @@
     "target": {
       "__id__": 13
     },
-    "component": "SceneGame",
-    "_componentId": "",
+    "component": "",
+    "_componentId": "3fbe6R14aVGU7b4sS/SqbGW",
     "handler": "onClickSetting",
     "customEventData": ""
   },
@@ -3176,15 +3146,9 @@
     "pressedSprite": {
       "__uuid__": "1ea2dd2e-ccb3-4f42-a6a5-3a9b3e04785c"
     },
-    "_N$hoverSprite": {
-      "__uuid__": "1ea2dd2e-ccb3-4f42-a6a5-3a9b3e04785c"
-    },
-    "hoverSprite": {
-      "__uuid__": "1ea2dd2e-ccb3-4f42-a6a5-3a9b3e04785c"
-    },
-    "_N$disabledSprite": {
-      "__uuid__": "1ea2dd2e-ccb3-4f42-a6a5-3a9b3e04785c"
-    },
+    "_N$hoverSprite": null,
+    "hoverSprite": null,
+    "_N$disabledSprite": null,
     "_N$target": {
       "__id__": 67
     },

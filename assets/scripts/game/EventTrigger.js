@@ -1,13 +1,12 @@
 
-const PanelManager = require('PanelManager');
 const PanelTalk = require('PanelTalk');
 const PanelGetItemDialog = require('PanelGetItemDialog');
 const Game = require('Game');
 
 function showTalk(title, talkList, type = PanelTalk.TalkType.Normal) {
     return new Promise(resolve => {
-        return PanelManager.instance.openPanel('talk', title, talkList, type)
-            .then(() => PanelManager.instance.onPanelClosed('talk', () => resolve(true)));
+        return Game.openPanel('talk', title, talkList, type)
+            .then(() => Game.onPanelClosed('talk', () => resolve(true)));
     });
 }
 
@@ -61,8 +60,8 @@ class EventAward {
             trigger.node.destroy();
             Game.bag.addItem(this.awardGid);
 
-            return PanelManager.instance.openPanel('get_item_dialog', this.awardGid, this.message)
-                .then(() => PanelManager.instance.onPanelClosed('get_item_dialog', () => resolve(true)));
+            return Game.openPanel('get_item_dialog', this.awardGid, this.message)
+                .then(() => Game.onPanelClosed('get_item_dialog', () => resolve(true)));
         });
     }
 }

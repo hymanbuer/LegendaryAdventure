@@ -1,6 +1,5 @@
 
 const BaseEntity = require('BaseEntity');
-const PanelManager = require('PanelManager');
 const PanelNotice = require('PanelNotice');
 const PanelUseItem = require('PanelUseItem');
 const EntityView = require('EntityView');
@@ -55,12 +54,12 @@ cc.Class({
                 };
                 const text = data.MESSAGE || data.ASKMESSAGE;
                 const icon = Game.res.getSpriteFrame(data.ITEMNEEDED);
-                PanelManager.instance.openPanel('use_item', useMethod, text, icon)
-                    .then(() => PanelManager.instance.onPanelClosed('use_item', () => resolve(false)))
+                Game.openPanel('use_item', useMethod, text, icon)
+                    .then(() => Game.onPanelClosed('use_item', () => resolve(false)))
                     .catch(reject);
             } else {
-                PanelManager.instance.openPanel('notice').then(() => {
-                    PanelManager.instance.onPanelClosed('notice', () => resolve(false));
+                Game.openPanel('notice').then(() => {
+                    Game.onPanelClosed('notice', () => resolve(false));
                 }, reject);
             }
         }

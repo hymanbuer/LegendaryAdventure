@@ -5,6 +5,8 @@ const MapState = require('MapState');
 const TaskState = require('TaskState');
 const Resources = require('Resources');
 
+const PanelManager = require('PanelManager');
+
 const Game = cc.Class({
     extends: cc.Component,
 
@@ -36,6 +38,7 @@ const Game = cc.Class({
     },
 });
 
+/////// game
 cc.js.get(Game, 'dataCenter', function () {
     return Game.instance.getComponent(DataCenter);
 });
@@ -51,3 +54,14 @@ cc.js.get(Game, 'taskState', function () {
 cc.js.get(Game, 'res', function () {
     return Game.instance.getComponent(Resources);
 });
+
+/////// base
+cc.js.get(Game, 'panel', function () {
+    return PanelManager.instance;
+});
+Game.openPanel = function (...args) {
+    return PanelManager.instance.openPanel(...args);
+}
+Game.onPanelClosed = function (...args) {
+    return PanelManager.instance.onPanelClosed(...args);
+}

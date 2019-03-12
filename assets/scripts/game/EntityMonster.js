@@ -1,6 +1,5 @@
 
 const BaseEntity = require('BaseEntity');
-const PanelManager = require('PanelManager');
 const PanelGoFight = require('PanelGoFight');
 const Game = require('Game');
 
@@ -23,8 +22,8 @@ cc.Class({
 
     doBeforeEnter () {
         return new Promise((resolve, reject) => {
-            return PanelManager.instance.openPanel('gofight', this.floorId, this.gid)
-                .then(() => PanelManager.instance.onPanelClosed('gofight', () => {
+            return Game.openPanel('gofight', this.floorId, this.gid)
+                .then(() => Game.onPanelClosed('gofight', () => {
                     this.node.destroy();
                     resolve(false);
                 }))

@@ -1,7 +1,7 @@
 
 const profile = require('GameProfile');
 const Main = require('Main');
-const PanelManager = require('PanelManager');
+const Game = require('Game');
 
 cc.Class({
     extends: cc.Component,
@@ -37,7 +37,7 @@ cc.Class({
     },
 
     onClickAbout () {
-        PanelManager.instance.openPanel('credits');
+        Game.openPanel('credits');
     },
 
     onClickExit () {

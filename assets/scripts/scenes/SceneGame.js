@@ -3,7 +3,6 @@ const LoaderHelper = require('CCLoaderHelper');
 const Game = require('Game');
 const World = require('World');
 const HudControl = require('HudControl');
-const PanelManager = require('PanelManager');
 
 const profile = require('GameProfile');
 
@@ -43,7 +42,7 @@ cc.Class({
     },
 
     onClickSetting () {
-        PanelManager.instance.openPanel('setting');
+        Game.openPanel('setting');
     },
 
     _changeFloor (floorId, isUp, symbol) {
