@@ -35,8 +35,6 @@ const Game = cc.Class({
         this._bag = new Bag();
         this._mapState = new MapState();
         this._taskState = new TaskState();
-        this._dataCenter = this.getComponent(DataCenter);
-        this._res = this.getComponent(Resources);
     },
 });
 
@@ -55,7 +53,7 @@ Game.onPanelClosed = function (...args) {
 /////// game
 
 cc.js.get(Game, 'dataCenter', function () {
-    return Game.instance._dataCenter;
+    return Game.instance.getComponent(DataCenter);
 });
 cc.js.get(Game, 'bag', function () {
     return Game.instance._bag;
@@ -67,7 +65,7 @@ cc.js.get(Game, 'taskState', function () {
     return Game.instance._taskState;
 });
 cc.js.get(Game, 'res', function () {
-    return Game.instance._res;
+    return Game.instance.getComponent(Resources);
 });
 
 ////// common
