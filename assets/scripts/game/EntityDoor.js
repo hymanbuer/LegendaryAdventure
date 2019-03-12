@@ -37,10 +37,6 @@ cc.Class({
                     Game.bag.removeItem(data.ITEMNEEDED);
                     Game.mapState.removeEntity(this.floorId, this.grid);
 
-                    const event = new cc.Event.EventCustom('useitem', true);
-                    event.detail = data.ITEMNEEDED;
-                    this.node.dispatchEvent(event);
-
                     const state = this.getComponent(EntityView).play('open');
                     if (state) {
                         state.on('lastframe', ()=> {

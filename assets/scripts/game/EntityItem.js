@@ -22,11 +22,7 @@ cc.Class({
         Game.bag.addItem(this.gid);
         Game.openPanel('get_item', this.gid)
         this.node.destroy();
-
-        const event = new cc.Event.EventCustom('getitem', true);
-        event.detail = this.gid;
-        this.node.dispatchEvent(event);
-
+        
         return Promise.resolve(true);
     },
 });
