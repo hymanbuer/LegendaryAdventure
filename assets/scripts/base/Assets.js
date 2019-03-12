@@ -32,52 +32,6 @@ for (let key in assettype2name) {
     name2assettype[value] = key;
 }
 
-let assetsConfigList = [];
-
-function getAssetConfig(id) {
-    if (typeof id !== 'string') return null;
-
-    const index = id.indexOf(':');
-    let packageName;
-    if (index !== -1) {
-        packageName = id.substring(0, index);
-        id = substring(index + 1);
-    }
-
-    for (let assetsConfig of assetsConfigList) {
-        if (!packageName || assetsConfig.name === packageName) {
-            return assetsConfig.assets[id];
-        }
-    }
-    return null;
-}
-
-function getConfig(id, type) {
-    const assetConfig = getAssetConfig(id);
-    if (!assetConfig) return null;
-
-    if (type === undefined) {
-        return assetConfig[0];
-    }
-
-    const target = getType(type);
-    for (let config of assetConfig) {
-        if (target === getType(config.type)) {
-            return config;
-        }
-    }
-
-    return null;
-}
-
-function getType(type) {
-    if (typeof type === 'string') {
-        type = name2assettype[type] || type;
-        type = cc.js.getClassByName(type);
-    }
-    return type;
-}
-
 function getResByUuid (uuid) {
     const url = cc.AssetLibrary.getLibUrlNoExt(uuid) + '.json';
     return cc.loader.getRes(url);
@@ -97,35 +51,103 @@ function loadResByUuid (uuid) {
 /**
  * 游戏中所有需用用到的资源均使用get或load获取，以便统一检查代码中使用资源的情况
  */
-module.exports = {
+const Assets = cc.Class({
+    extends: cc.Component,
+
+    statics: {
+        instance: null,
+    },
+
+    properties: {
+        assetsConfigList: [cc.JsonAsset],
+    },
+
+    onLoad () {
+        Assets.instance = this;
+        this._assetsConfigList = [];
+        for (let asset of this.assetsConfigList) {
+            this.addAssetsConfig(asset.json);
+        }
+    },
+
+    onDestroy () {
+        Assets.instance = null;
+    },
+
     addAssetsConfig: function (config) {
-        assetsConfigList.push(config);
+        this._assetsConfigList.push(config);
     },
 
     removeAssetsConfig: function (name) {
         if (typeof name === 'object')
             name = name.name;
 
-        for (let i = 0; i < assetsConfigList.length; i++) {
-            if (assetsConfigList[i].name === name) {
-                return assetsConfigList.splice(i, 1);
+        for (let i = 0; i < this._assetsConfigList.length; i++) {
+            if (this._assetsConfigList[i].name === name) {
+                return this._assetsConfigList.splice(i, 1);
             }
         }
     },
 
     clearAssetsConfig: function () {
-        assetsConfigList = [];
+        this._assetsConfigList = [];
     },
 
     get: function (id, type) {
-        const config = getConfig(id, type);
+        const config = this._getConfig(id, type);
         if (!config) return null;
         else return getResByUuid(config.uuid);
     },
 
     load: function (id, type) {
-        const config = getConfig(id, type);
+        const config = this._getConfig(id, type);
         if (!config) return Promise.reject(`${id} ${type} don't exist`);
         else return loadResByUuid(config.uuid);
     },
-};
+
+    /////////////////////////////
+
+    _getConfig: function (id, type) {
+        const assetsConfig = this._getAssetsConfig(id);
+        if (!assetsConfig) return null;
+    
+        if (type === undefined) {
+            return assetsConfig[0];
+        }
+    
+        const target = this._getType(type);
+        for (let config of assetsConfig) {
+            if (target === this._getType(config.type)) {
+                return config;
+            }
+        }
+    
+        return null;
+    },
+
+    _getAssetsConfig: function (id) {
+        if (typeof id !== 'string') return null;
+    
+        const index = id.indexOf(':');
+        let packageName;
+        if (index !== -1) {
+            packageName = id.substring(0, index);
+            id = substring(index + 1);
+        }
+    
+        for (let assetsConfig of this._assetsConfigList) {
+            if (!packageName || assetsConfig.name === packageName) {
+                return assetsConfig.assets[id];
+            }
+        }
+        return null;
+    },
+
+    _getType: function (type) {
+        if (typeof type === 'string') {
+            type = name2assettype[type] || type;
+            type = cc.js.getClassByName(type);
+        }
+        return type;
+    },
+});

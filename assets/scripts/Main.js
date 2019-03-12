@@ -13,7 +13,6 @@ const Main = cc.Class({
 
     properties: {
         maskPrefab: cc.Prefab,
-        assetsConfig: cc.JsonAsset,
     },
 
     onLoad () {
@@ -22,7 +21,7 @@ const Main = cc.Class({
         }
         Main.instance = this;
         this._init();
-        this._addMask();
+        cc.game.addPersistRootNode(this.mask);
         cc.game.addPersistRootNode(this.node);
     },
 
@@ -58,12 +57,11 @@ const Main = cc.Class({
     _init () {
         setting.load();
         profile.load();
-        Assets.addAssetsConfig(this.assetsConfig.json);
+        this._addMask();
     },
 
     _addMask () {
         this.mask = cc.instantiate(this.maskPrefab);
         this.mask.parent = this.node.parent;
-        cc.game.addPersistRootNode(this.mask);
     },
 });

@@ -78,7 +78,7 @@ const PanelManager = cc.Class({
     
         const assetId = config.assetId || name;
         const promise = config.uuid ? LoaderHelper.loadResByUuid(config.uuid)
-                            : Assets.load(assetId);
+                            : Assets.instance.load(assetId);
         return promise.then(prefab => {
             let uiMask;
             if (!config.isHideMask && this.uiMaskPrefab) {
