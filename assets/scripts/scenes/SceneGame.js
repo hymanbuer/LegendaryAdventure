@@ -17,7 +17,7 @@ cc.Class({
     },
 
     onLoad () {
-        this.node.on('changefloor', this.onChangeFloor, this);
+        this.world.node.on('change-floor', this.onChangeFloor, this);
     },
 
     start () {
@@ -28,8 +28,7 @@ cc.Class({
             .then(() => this._maskOut());
     },
 
-    onChangeFloor (event) {
-        const exit = event.detail;
+    onChangeFloor (exit) {
         this._maskIn()
             .then(() => this._changeFloor(exit.floorId, exit.isUp, exit.symbol))
             .then(() => this._maskOut());

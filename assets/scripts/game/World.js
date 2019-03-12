@@ -37,7 +37,6 @@ const triggerGidSet = new Set([
     408,
 ]);
 
-const maxSceneId = 9;
 const tilesetNames = [
     'TiledMapOne',
     'TiledMapTwo',
@@ -122,29 +121,11 @@ cc.Class({
     },
 
     initFloor (floorId, isUp, symbol) {
-        const sceneId = Math.min(maxSceneId, Math.floor(floorId/10));
-        const tilesetUrl = 'sheets/tilesets/' + tilesetNames[sceneId];
-        const atlasUrl = 'sheets/monsters/' + monsterAtlasNames[sceneId];
         this._floorId = floorId;
         this.node.removeAllChildren();
         this.node.removeAllChildren();
 
-        return LoaderHelper.loadResByUrl(tilesetUrl, cc.SpriteAtlas)
-            .then((asset)=> {
-                this._mapTileset = asset;
-                return LoaderHelper.loadResByUrl(atlasUrl, cc.SpriteAtlas)
-            })
-            .then((asset)=> {
-                this._monsterViewConfigMap = EntityViewConfig.createMonsterMap(asset);
-                return new Promise((resolve, reject) => {
-                    const mapUrl = `maps/FL${fixedNumber(this._floorId, 3)}`;
-                    const p = LoaderHelper.loadResByUrl(mapUrl, cc.TiledMapAsset);
-                    p.then(tmxAsset => {
-                        this._init(tmxAsset);
-                        resolve();
-                    }, reject);
-                })
-            })
+        return this._loadMapAssets(floorId)
             .then(() => {
                 if (floorId == 0) {
                     this._placeHeroAt(this.getUpGrid(symbol));
@@ -155,6 +136,35 @@ cc.Class({
                     this._hero.faceUp(isUp);
                 }
             });
+    },
+
+    _loadMapAssets (floorId) {
+        const sceneId = Game.getSceneId(floorId);
+        const urls = [];
+        const types = [];
+        urls.push(`maps/FL${fixedNumber(this._floorId, 3)}`);
+        types.push(cc.TiledMapAsset);
+        if (sceneId > 0) {
+            urls.push(`sheets/tilesets/${tilesetNames[sceneId - 1]}`);
+            types.push(cc.SpriteAtlas);
+            urls.push(`sheets/monsters/${monsterAtlasNames[sceneId - 1]}`);
+            types.push(cc.SpriteAtlas);
+        }
+        return new Promise((resolve, reject) => {
+            cc.loader.loadResArray(urls, types, (err, assets) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(assets);
+                }
+            });
+        }).then(assets => {
+            if (assets.length > 1) {
+                this._mapTileset = assets[1];
+                this._monsterViewConfigMap = EntityViewConfig.createMonsterMap(assets[2]);
+            }
+            this._init(assets[0]);
+        });
     },
 
     getMapSize () {
@@ -258,9 +268,7 @@ cc.Class({
     onAfterEnter (grid) {
         const exit = this._getExit(grid);
         if (exit) {
-            const event = new cc.Event.EventCustom('changefloor', true);
-            event.detail = exit;
-            this.node.dispatchEvent(event);
+            this.node.emit('change-floor', exit);
             return Promise.resolve(false);
         }
 

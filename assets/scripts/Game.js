@@ -1,11 +1,11 @@
 
+const PanelManager = require('PanelManager');
+
 const DataCenter = require('DataCenter');
 const Bag = require('Bag');
 const MapState = require('MapState');
 const TaskState = require('TaskState');
 const Resources = require('Resources');
-
-const PanelManager = require('PanelManager');
 
 const Game = cc.Class({
     extends: cc.Component,
@@ -38,7 +38,20 @@ const Game = cc.Class({
     },
 });
 
+/////// base
+
+cc.js.get(Game, 'panel', function () {
+    return PanelManager.instance;
+});
+Game.openPanel = function (...args) {
+    return PanelManager.instance.openPanel(...args);
+};
+Game.onPanelClosed = function (...args) {
+    return PanelManager.instance.onPanelClosed(...args);
+};
+
 /////// game
+
 cc.js.get(Game, 'dataCenter', function () {
     return Game.instance.getComponent(DataCenter);
 });
@@ -55,13 +68,20 @@ cc.js.get(Game, 'res', function () {
     return Game.instance.getComponent(Resources);
 });
 
-/////// base
-cc.js.get(Game, 'panel', function () {
-    return PanelManager.instance;
+////// common
+/**
+ * sceneId和floorId均从0开始计数
+ */
+
+cc.js.get(Game, 'maxSceneId', function () {
+    return 10;
 });
-Game.openPanel = function (...args) {
-    return PanelManager.instance.openPanel(...args);
-}
-Game.onPanelClosed = function (...args) {
-    return PanelManager.instance.onPanelClosed(...args);
-}
+
+Game.getSceneId = function (floorId) {
+    let sceneId = Math.floor(floorId / 10);
+    if (floorId % 10 !== 0) {
+        sceneId += 1;
+    }
+    cc.assert(sceneId <= 10, `floorId exceeds maxSceneId: ${sceneId}`);
+    return sceneId;
+};
