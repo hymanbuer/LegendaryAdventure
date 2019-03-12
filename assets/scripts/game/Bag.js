@@ -4,6 +4,8 @@ const infiniteItemSet = new Set([
 ]);
 
 const Bag = cc.Class({
+    mixins: [cc.EventTarget],
+
     ctor () {
         this._coins = 0;
         this._items = [];
@@ -23,6 +25,8 @@ const Bag = cc.Class({
             item.num += num;
         }
         cc.assert(item.num >= 0, `don't has enough item to be removed`);
+
+        this.emit('add-item', gid, num);
     },
 
     removeItem (gid, num = 1) {
@@ -33,6 +37,8 @@ const Bag = cc.Class({
 
         item.num -= num;
         cc.assert(item.num >= 0, `don't has enough item to be removed`);
+
+        this.emit('remove-item', gid, num);
     },
 
     getNumOfItem (gid) {

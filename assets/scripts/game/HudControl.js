@@ -29,6 +29,11 @@ cc.Class({
         bottom: cc.Node,
     },
 
+    onLoad () {
+        Game.bag.on('add-item', this.onItemChange, this);
+        Game.bag.on('remove-item', this.onItemChange, this);
+    },
+
     start () {
 
     },
@@ -41,6 +46,12 @@ cc.Class({
         const name = 'text_zonename' + (id + 1);
         this.siteName.spriteFrame = this.atlas.getSpriteFrame(name);
         this.siteFloor.string = ':' + fixedNumber(floorId, 2);
+    },
+
+    onItemChange (gid) {
+        if (gid == 155 || gid == 156 || gid == 157) {
+            this.updateNumKeys();
+        }
     },
 
     updateNumKeys () {

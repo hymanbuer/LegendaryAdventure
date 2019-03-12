@@ -18,27 +18,21 @@ cc.Class({
 
     onLoad () {
         this.node.on('changefloor', this.onChangeFloor, this);
-        this.node.on('getitem', this.onUpdateNumItems, this);
-        this.node.on('useitem', this.onUpdateNumItems, this);
     },
 
     start () {
         const lastFloor = profile.lastFloor;
         this.mask.active = true;
-        this._changeFloor(lastFloor.id, true, lastFloor.upSymbol);
+        this.mask.opacity = 255;
+        this._changeFloor(lastFloor.id, true, lastFloor.upSymbol)
+            .then(() => this._maskOut());
     },
 
     onChangeFloor (event) {
         const exit = event.detail;
         this._maskIn()
-            .then(()=> this._changeFloor(exit.floorId, exit.isUp, exit.symbol));
-    },
-
-    onUpdateNumItems (event) {
-        const gid = event.detail;
-        if (gid == 155 || gid == 156 || gid == 157) {
-            this.hud.updateNumKeys();
-        }
+            .then(() => this._changeFloor(exit.floorId, exit.isUp, exit.symbol))
+            .then(() => this._maskOut());
     },
 
     onClickSetting () {
@@ -52,7 +46,6 @@ cc.Class({
             .then(()=> this.world.initFloor(floorId, isUp, symbol))
             .then(()=> {
                 this.hud.changeSite(floorId);
-                this._maskOut();
                 this._saveLastFloor(floorId, isUp, symbol);
             });
     },
