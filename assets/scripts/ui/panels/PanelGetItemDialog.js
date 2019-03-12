@@ -1,6 +1,5 @@
 
-const DataCenter = require('DataCenter');
-const Resources = require('Resources');
+const Game = require('Game');
 
 const PanelGetItem = cc.Class({
     extends: cc.Component,
@@ -15,9 +14,9 @@ const PanelGetItem = cc.Class({
     },
 
     setItem (gid, message) {
-        const data = DataCenter.instance.getMonster(gid);
+        const data = Game.dataCenter.getMonster(gid);
         this.text.string = message || data.MESSAGE;
-        this.icon.spriteFrame = Resources.instance.getSpriteFrame(gid);
+        this.icon.spriteFrame = Game.res.getSpriteFrame(gid);
     },
 
     onClickConfirm () {

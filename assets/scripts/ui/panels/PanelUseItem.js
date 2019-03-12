@@ -1,7 +1,4 @@
 
-const DataCenter = require('DataCenter');
-const Resources = require('Resources');
-
 cc.Class({
     extends: cc.Component,
 

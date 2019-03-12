@@ -4,37 +4,16 @@ const maxFloors = 105;
 const DataCenter = cc.Class({
     extends: cc.Component,
 
-    statics: {
-        instance: null,
-    },
-
     properties: {
-        
+        eventConfig: cc.JsonAsset,
+        monsterConfig: cc.JsonAsset,
+        playerConfig: cc.JsonAsset,
     },
 
     onLoad () {
-        DataCenter.instance = this;
-    },
-
-    onDestroy () {
-        DataCenter.instance = null;
-    },
-
-    init () {
-        return new Promise((resolve, reject) => {
-            const urls = ['data/Event', 'data/Monster', 'data/Player'];
-            const handlers = [this._handleEvent, this._handleMonster, this._handlePlayer];
-            cc.loader.loadResArray(urls, cc.JsonAsset, (err, assets) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    for (let i = 0; i < assets.length; i++) {
-                        handlers[i].call(this, assets[i].json);
-                    }
-                    resolve();
-                }
-            });
-        });
+        this._handleEvent(this.eventConfig.json);
+        this._handleMonster(this.monsterConfig.json);
+        this._handlePlayer(this.playerConfig.json);
     },
 
     getEvent (floorId, gid) {

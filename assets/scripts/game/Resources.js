@@ -55,10 +55,6 @@ function fixedNumber(value, n) {
 const Resources = cc.Class({
     extends: cc.Component,
 
-    statics: {
-        instance: null,
-    },
-
     properties: {
         itemAtlas: cc.SpriteAtlas,
         commonAtlas: cc.SpriteAtlas,
@@ -66,11 +62,7 @@ const Resources = cc.Class({
     },
 
     onLoad () {
-        Resources.instance = this;
-    },
-
-    onDestroy () {
-        Resources.instance = null;
+        
     },
 
     init (floorId) {
@@ -79,7 +71,7 @@ const Resources = cc.Class({
 
     preloadMonsterAtlas (floorId) {
         const sceneId = getSceneId(floorId);
-        if (sceneId == 0) {
+        if (sceneId == 0 || this.monsterAtlasList[sceneId]) {
             return Promise.resolve();
         }
         

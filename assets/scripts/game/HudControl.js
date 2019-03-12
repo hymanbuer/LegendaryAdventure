@@ -1,5 +1,5 @@
 
-const Bag = require('Bag');
+const Game = require('Game');
 
 function fixedNumber(value, n) {
     const digits = [];
@@ -44,8 +44,8 @@ cc.Class({
     },
 
     updateNumKeys () {
-        this.numYellowKeys.string = Bag.instance.getNumOfItem(155);
-        this.numBlueKeys.string = Bag.instance.getNumOfItem(156);
-        this.numRedKeys.string = Bag.instance.getNumOfItem(157);
+        this.numYellowKeys.string = Game.bag.getNumOfItem(155);
+        this.numBlueKeys.string = Game.bag.getNumOfItem(156);
+        this.numRedKeys.string = Game.bag.getNumOfItem(157);
     },
 });

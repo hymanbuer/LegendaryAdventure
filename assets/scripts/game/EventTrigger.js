@@ -1,10 +1,8 @@
 
 const PanelManager = require('PanelManager');
 const PanelTalk = require('PanelTalk');
-const Bag = require('Bag');
-const TaskState = require('TaskState');
-const MapState = require('MapState');
 const PanelGetItemDialog = require('PanelGetItemDialog');
+const Game = require('Game');
 
 function showTalk(title, talkList, type = PanelTalk.TalkType.Normal) {
     return new Promise(resolve => {
@@ -28,21 +26,21 @@ class EventTask {
     constructor (event) {
         this.event = event;
         this.title = event.NAME;
-        this.state = TaskState.instance.getTaskState(event.ID);
+        this.state = Game.taskState.getTaskState(event.ID);
     }
 
     fire (trigger) {
         if (this.state === 0) {
             this.state = 1;
-            TaskState.instance.setTaskState(this.event.ID, 1);
+            Game.taskState.setTaskState(this.event.ID, 1);
             return showTalk(this.title, this.event.TASK, PanelTalk.TalkType.Task);
         } else if (this.state === 1) {
-            if (Bag.instance.getNumOfItem(this.event.TASKNEEDED) > 0) {
+            if (Game.bag.getNumOfItem(this.event.TASKNEEDED) > 0) {
                 this.state = 2;
-                TaskState.instance.setTaskState(this.event.ID, 2);
+                Game.taskState.setTaskState(this.event.ID, 2);
 
                 trigger.node.destroy();
-                MapState.instance.removeEntity(trigger.floorId, trigger.grid);
+                Game.mapState.removeEntity(trigger.floorId, trigger.grid);
 
                 return showTalk(this.title, this.event.TASKEND);
             } else {
@@ -61,7 +59,7 @@ class EventAward {
     fire (trigger) {
         return new Promise(resolve => {
             trigger.node.destroy();
-            Bag.instance.addItem(this.awardGid);
+            Game.bag.addItem(this.awardGid);
 
             return PanelManager.instance.openPanel('get_item_dialog', this.awardGid, this.message)
                 .then(() => PanelManager.instance.onPanelClosed('get_item_dialog', () => resolve(true)));
@@ -127,7 +125,7 @@ cc.Class({
             };
             this.node.dispatchEvent(event);
 
-            MapState.instance.setEntityState(this.floorId, this.grid, 406);
+            Game.mapState.setEntityState(this.floorId, this.grid, 406);
         }
     },
 });

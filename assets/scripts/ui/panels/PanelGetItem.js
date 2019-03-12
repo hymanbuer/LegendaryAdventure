@@ -1,6 +1,5 @@
 
-const DataCenter = require('DataCenter');
-const Resources = require('Resources');
+const Game = require('Game');
 
 const startY = -406;
 const spaceY = 88;
@@ -34,8 +33,8 @@ const PanelGetItem = cc.Class({
     },
 
     setItem (gid) {
-        const data = DataCenter.instance.getMonster(gid);
+        const data = Game.dataCenter.getMonster(gid);
         this.text.string = data.MESSAGE;
-        this.icon.spriteFrame = Resources.instance.getSpriteFrame(gid);
+        this.icon.spriteFrame = Game.res.getSpriteFrame(gid);
     },
 });

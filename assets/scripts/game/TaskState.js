@@ -1,22 +1,7 @@
 
-
 const TaskState = cc.Class({
-    extends: cc.Component,
-
-    statics: {
-        instance: null,
-    },
-
-    properties: {
-    },
-
-    onLoad () {
-        TaskState.instance = this;
+    ctor () {
         this._stateMap = new Map();
-    },
-
-    onDestroy () {
-        TaskState.instance = null;
     },
 
     getTaskState (gid) {

@@ -1,9 +1,7 @@
 
 const BaseEntity = require('BaseEntity');
 const PanelManager = require('PanelManager');
-const Bag = require('Bag');
 const PanelGetItem = require('PanelGetItem');
-const MapState = require('MapState');
 
 const EntityView = require('EntityView');
 

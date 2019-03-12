@@ -6,22 +6,8 @@ function gridKey(grid) {
 }
 
 const MapState = cc.Class({
-    extends: cc.Component,
-
-    statics: {
-        instance: null,
-    },
-
-    properties: {
-    },
-
-    onLoad () {
-        MapState.instance = this;
+    ctor () {
         this._mapStateList = new Array(maxFloors);
-    },
-
-    onDestroy () {
-        MapState.instance = null;
     },
 
     isEntityRemoved (floorId, grid) {

@@ -1,8 +1,7 @@
 
 const BaseEntity = require('BaseEntity');
 const PanelManager = require('PanelManager');
-const Bag = require('Bag');
-const MapState = require('MapState');
+const Game = require('Game');
 
 cc.Class({
     extends: BaseEntity,
@@ -20,8 +19,8 @@ cc.Class({
     },
 
     doAfterEnter () {
-        MapState.instance.removeEntity(this.floorId, this.grid);
-        Bag.instance.addItem(this.gid);
+        Game.mapState.removeEntity(this.floorId, this.grid);
+        Game.bag.addItem(this.gid);
         PanelManager.instance.openPanel('get_item', this.gid)
         this.node.destroy();
 

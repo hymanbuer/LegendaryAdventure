@@ -1,6 +1,5 @@
 
-const DataCenter = require('DataCenter');
-const Resources = require('Resources');
+const Game = require('Game');
 
 cc.Class({
     extends: cc.Component,
@@ -16,14 +15,14 @@ cc.Class({
     },
 
     run (floorId, gid) {
-        const data = DataCenter.instance.getMonster(gid);
+        const data = Game.dataCenter.getMonster(gid);
         this.title.string = data.NAME;
         this.text.string = data.MESSAGE;
         this.hp.string = data.HP;
         this.attack.string = data.ATT;
         this.defence.string = data.DEF;
-        this.battle.spriteFrame = Resources.instance.getSmallBattleBg(floorId);
-        this.monster.spriteFrame = Resources.instance.getSmallMonster(floorId, gid);
+        this.battle.spriteFrame = Game.res.getSmallBattleBg(floorId);
+        this.monster.spriteFrame = Game.res.getSmallMonster(floorId, gid);
     },
     
     onClickClose () {

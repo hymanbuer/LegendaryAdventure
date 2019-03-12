@@ -1,9 +1,8 @@
 
 const LoaderHelper = require('CCLoaderHelper');
+const Game = require('Game');
 const World = require('World');
-const DataCenter = require('DataCenter');
 const HudControl = require('HudControl');
-const Resources = require('Resources');
 const PanelManager = require('PanelManager');
 
 const profile = require('GameProfile');
@@ -27,8 +26,7 @@ cc.Class({
     start () {
         const lastFloor = profile.lastFloor;
         this.mask.active = true;
-        DataCenter.instance.init()
-            .then(()=> this._changeFloor(lastFloor.id, true, lastFloor.upSymbol));
+        this._changeFloor(lastFloor.id, true, lastFloor.upSymbol);
     },
 
     onChangeFloor (event) {
@@ -50,7 +48,7 @@ cc.Class({
 
     _changeFloor (floorId, isUp, symbol) {
         return Promise.resolve()
-            .then(()=> Resources.instance.init(floorId))
+            .then(()=> Game.res.init(floorId))
             .then(()=> this._loadBackground(floorId))
             .then(()=> this.world.initFloor(floorId, isUp, symbol))
             .then(()=> {

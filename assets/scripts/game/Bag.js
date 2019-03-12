@@ -4,22 +4,7 @@ const infiniteItemSet = new Set([
 ]);
 
 const Bag = cc.Class({
-    extends: cc.Component,
-
-    statics: {
-        instance: null,
-    },
-
-    onLoad () {
-        Bag.instance = this;
-        this.init();
-    },
-
-    onDestroy () {
-        Bag.instance = null;
-    },
-
-    init () {
+    ctor () {
         this._coins = 0;
         this._items = [];
         

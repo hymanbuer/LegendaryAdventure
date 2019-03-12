@@ -2,7 +2,7 @@
 const BaseEntity = require('BaseEntity');
 const PanelManager = require('PanelManager');
 const PanelGoFight = require('PanelGoFight');
-const MapState = require('MapState');
+const Game = require('Game');
 
 cc.Class({
     extends: BaseEntity,
@@ -16,8 +16,8 @@ cc.Class({
     },
 
     onDestroy () {
-        if (MapState.instance) {
-            MapState.instance.removeEntity(this.floorId, this.grid);
+        if (Game.mapState) {
+            Game.mapState.removeEntity(this.floorId, this.grid);
         }
     },
 

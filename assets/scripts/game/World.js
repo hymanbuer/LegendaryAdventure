@@ -1,7 +1,5 @@
 
 const LoaderHelper = require('CCLoaderHelper');
-const DataCenter = require('DataCenter');
-const MapState = require('MapState');
 
 const EntityViewConfig = require("EntityViewConfig");
 const EntityView = require('EntityView');
@@ -12,6 +10,8 @@ const EntityMonster = require('EntityMonster');
 const EntityItem = require('EntityItem');
 const EntityDoor = require('EntityDoor');
 const EntityTrigger = require('EntityTrigger');
+
+const Game = require('Game');
 
 const fourDirections = [
     {x: 0, y: -1},
@@ -290,7 +290,7 @@ cc.Class({
         const base = entity.getComponent(BaseEntity);
         const state = entity.getComponent(EntityView).play('open');
         state.on('lastframe', ()=> entity.destroy());
-        MapState.instance.removeEntity(base.floorId, base.grid);
+        Game.mapState.removeEntity(base.floorId, base.grid);
     },
 
     onAddEntity (event) {
@@ -383,7 +383,7 @@ cc.Class({
         for (let y = 0; y < this._mapSize.height; y++) {
             for (let x = 0; x < this._mapSize.width; x++) {
                 const gid = this._layerLogic.getTileGIDAt(x, y);
-                const state = MapState.instance.getEntityState(this._floorId, cc.v2(x, y));
+                const state = Game.mapState.getEntityState(this._floorId, cc.v2(x, y));
                 if (state === null) {
                     this._parseLogicGid(gid, x, y);
                 } else if (state === 0) {
@@ -440,7 +440,7 @@ cc.Class({
 
     _parseLogicGid (gid, x, y) {
         const checkAddEventTrigger = (gid, node) => {
-            const event = DataCenter.instance.getEvent(this._floorId, gid);
+            const event = Game.dataCenter.getEvent(this._floorId, gid);
             if (event) {
                 const trigger = node.addComponent(EventTrigger);
                 trigger.init(event);

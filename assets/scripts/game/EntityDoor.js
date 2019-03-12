@@ -3,11 +3,8 @@ const BaseEntity = require('BaseEntity');
 const PanelManager = require('PanelManager');
 const PanelNotice = require('PanelNotice');
 const PanelUseItem = require('PanelUseItem');
-const Bag = require('Bag');
-const DataCenter = require('DataCenter');
 const EntityView = require('EntityView');
-const Resources = require('Resources');
-const MapState = require('MapState');
+const Game = require('Game');
 
 cc.Class({
     extends: BaseEntity,
@@ -33,13 +30,13 @@ cc.Class({
     },
 
     _checkItemNeeded (resolve, reject) {
-        const data = DataCenter.instance.getMonster(this.gid);
+        const data = Game.dataCenter.getMonster(this.gid);
         if (data && data.ITEMNEEDED) {
-            if (Bag.instance.hasItem(data.ITEMNEEDED)) {
+            if (Game.bag.hasItem(data.ITEMNEEDED)) {
                 const useMethod = () => {
                     this._isRemoving = true;
-                    Bag.instance.removeItem(data.ITEMNEEDED);
-                    MapState.instance.removeEntity(this.floorId, this.grid);
+                    Game.bag.removeItem(data.ITEMNEEDED);
+                    Game.mapState.removeEntity(this.floorId, this.grid);
 
                     const event = new cc.Event.EventCustom('useitem', true);
                     event.detail = data.ITEMNEEDED;
@@ -57,7 +54,7 @@ cc.Class({
                     }
                 };
                 const text = data.MESSAGE || data.ASKMESSAGE;
-                const icon = Resources.instance.getSpriteFrame(data.ITEMNEEDED);
+                const icon = Game.res.getSpriteFrame(data.ITEMNEEDED);
                 PanelManager.instance.openPanel('use_item', useMethod, text, icon)
                     .then(() => PanelManager.instance.onPanelClosed('use_item', () => resolve(false)))
                     .catch(reject);
