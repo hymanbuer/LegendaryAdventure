@@ -121,6 +121,7 @@ cc.Class({
     },
 
     initFloor (floorId, isUp, symbol) {
+        const isFirstInit = this._floorId == undefined;
         this._floorId = floorId;
         this.node.removeAllChildren();
         this.node.removeAllChildren();
@@ -129,12 +130,11 @@ cc.Class({
             .then(() => {
                 if (floorId == 0) {
                     this._placeHeroAt(this.getUpGrid(symbol));
-                    this._hero.faceUp(false);
                 } else {
                     const startGrid = isUp ? this.getDownGrid(symbol) : this.getUpGrid(symbol);
                     this._placeHeroAt(startGrid);
-                    this._hero.faceUp(isUp);
                 }
+                this._hero.faceUp(!isFirstInit && isUp);
             });
     },
 
