@@ -1,5 +1,6 @@
 
 const PanelManager = require('PanelManager');
+const AnimationManager = require('AnimationManager');
 
 const DataCenter = require('DataCenter');
 const Bag = require('Bag');
@@ -49,6 +50,11 @@ Game.openPanel = function (...args) {
 Game.onPanelClosed = function (...args) {
     return PanelManager.instance.onPanelClosed(...args);
 };
+
+cc.js.get(Game, 'animation', function () {
+    return AnimationManager.instance;
+});
+
 
 /////// game
 

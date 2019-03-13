@@ -1,5 +1,5 @@
 
-const LoaderHelper = require('CCLoaderHelper');
+const Game = require('Game');
 const World = require('World');
 
 const Direction = cc.Enum({
@@ -146,50 +146,39 @@ cc.Class({
     _stand () {
         const clip = this._standClips[this._direction];
         this._motionState = MotionState.Stand;
-        if (clip.name !== this._animation.currentClip.name)
+        if (!this._animation.currentClip || clip.name !== this._animation.currentClip.name)
             this._animation.play(clip.name);
     },
 
     _walk () {
         const clip = this._walkClips[this._direction];
         this._motionState = MotionState.Walk;
-        if (clip.name !== this._animation.currentClip.name)
+        if (!this._animation.currentClip || clip.name !== this._animation.currentClip.name)
             this._animation.play(clip.name);
     },
 
     _initAnimation () {
+        const mode = cc.WrapMode.Loop;
+        const animation = Game.animation;
+        
         this._standClips = [];
-        this._standClips[Direction.East] = this._createClip('stand-east', 'cs', 4);
-        this._standClips[Direction.South] = this._createClip('stand-south', 'zs', 4);
-        this._standClips[Direction.West] = this._createClip('stand-west', 'cys', 4);
-        this._standClips[Direction.North] = this._createClip('stand-north', 'bs', 4);
+        this._standClips[Direction.East] = animation.getClip('walk_hr', mode);
+        this._standClips[Direction.South] = animation.getClip('walk_hb', mode);
+        this._standClips[Direction.West] = animation.getClip('walk_hl', mode);
+        this._standClips[Direction.North] = animation.getClip('walk_hf', mode);
         
         this._walkClips = [];
-        this._walkClips[Direction.East] = this._createClip('walk-east', 'cz', 8);
-        this._walkClips[Direction.South] = this._createClip('walk-south', 'zz', 8);
-        this._walkClips[Direction.West] = this._createClip('walk-west', 'cy', 8);
-        this._walkClips[Direction.North] = this._createClip('walk-north', 'bz', 8);
+        this._walkClips[Direction.East] = animation.getClip('walk_r', mode);
+        this._walkClips[Direction.South] = animation.getClip('walk_b', mode);
+        this._walkClips[Direction.West] = animation.getClip('walk_l', mode);
+        this._walkClips[Direction.North] = animation.getClip('walk_f', mode);
 
         this._animation = this.sprite.addComponent(cc.Animation);
         this._standClips.forEach(clip => this._animation.addClip(clip));
         this._walkClips.forEach(clip => this._animation.addClip(clip));
-        this._animation.play('stand-south');
+
+        this._animation.play('walk_hb');
         this._direction = Direction.South;
         this._motionState = MotionState.Stand;
-    },
-
-    _createClip (name, prefix, numFrames, start = 1, sample = 8) {
-        const frames = [];
-        const end = start + numFrames;
-        for (let i = start; i < end; ++i) {
-            const frameName = `${prefix}_${i}`;
-            frames.push(this.atlas.getSpriteFrame(frameName));
-        }
-
-        const clip = cc.AnimationClip.createWithSpriteFrames(frames, sample);
-        clip.name = name;
-        clip.wrapMode = cc.WrapMode.Loop;
-
-        return clip;
     },
 });

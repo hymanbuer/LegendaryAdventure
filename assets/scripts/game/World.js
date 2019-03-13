@@ -150,21 +150,14 @@ cc.Class({
             urls.push(`sheets/monsters/${monsterAtlasNames[sceneId - 1]}`);
             types.push(cc.SpriteAtlas);
         }
-        return new Promise((resolve, reject) => {
-            cc.loader.loadResArray(urls, types, (err, assets) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(assets);
+        return LoaderHelper.loadResArrayByUrl(urls, types)
+            .then(assets => {
+                if (assets.length > 1) {
+                    this._mapTileset = assets[1];
+                    this._monsterViewConfigMap = EntityViewConfig.createMonsterMap(assets[2]);
                 }
+                this._init(assets[0]);
             });
-        }).then(assets => {
-            if (assets.length > 1) {
-                this._mapTileset = assets[1];
-                this._monsterViewConfigMap = EntityViewConfig.createMonsterMap(assets[2]);
-            }
-            this._init(assets[0]);
-        });
     },
 
     getMapSize () {
@@ -221,10 +214,6 @@ cc.Class({
             if (!symbol || obj.symbol === symbol) return obj.downGrid;
         }
         return null;
-    },
-
-    getLogicLayer () {
-        return this.node;
     },
 
     onTouchWorld (event) {

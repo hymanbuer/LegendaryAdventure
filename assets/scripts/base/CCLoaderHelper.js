@@ -23,6 +23,29 @@ exports.loadResByUuid = function (uuid) {
     });
 };
 
+exports.loadResArrayByUrl = function (urls, types) {
+    return new Promise((resolve, reject) => {
+        cc.loader.loadResArray(urls, types, (err, assets) => {
+            if (err)
+                reject(err);
+            else
+                resolve(assets);
+        });
+    });
+};
+
+exports.loadResArrayByUuid = function (uuids) {
+    const resources = uuids.map(uuid => ({type: 'uuid', uuid: uuid}));
+    return new Promise((resolve, reject) => {
+        cc.loader.load(resources, (err, assets) => {
+            if (err)
+                reject(err);
+            else
+                resolve(assets);
+        });
+    });
+};
+
 exports.getResByUrl = function (url, type) {
     return cc.loader.getRes(url, type);
 };
