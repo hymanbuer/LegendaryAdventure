@@ -12,6 +12,7 @@ const EntityDoor = require('EntityDoor');
 const EntityTrigger = require('EntityTrigger');
 
 const Game = require('Game');
+const Utils = require('Utils')
 
 const fourDirections = [
     {x: 0, y: -1},
@@ -69,35 +70,9 @@ const EntityType = cc.Enum({
     Npc: -1,
 });
 
-function create2dArray(width, height, defaultValue) {
-    const ret = [];
-    for (let i = 0; i < height; i++) {
-        ret.push(new Array(width).fill(defaultValue));
-    }
-    return ret;
-}
-
-function fill2dArray(array, value) {
-    for (let i = 0; i < array.length; i++) {
-        for (let j = 0; j < array[0].length; j++) {
-            array[i][j] = value;
-        }
-    }
-}
 
 function isSameGrid(a, b) {
     return a.x === b.x && a.y === b.y;
-}
-
-function fixedNumber(value, n) {
-    const digits = [];
-    while (n > 0) {
-        digits.push(value % 10);
-        value = Math.floor(value / 10);
-        n -= 1;
-    }
-    digits.reverse();
-    return digits.join('');
 }
 
 cc.Class({
@@ -126,38 +101,18 @@ cc.Class({
         this.node.removeAllChildren();
         this.node.removeAllChildren();
 
-        return this._loadMapAssets(floorId)
-            .then(() => {
-                if (floorId == 0) {
-                    this._placeHeroAt(this.getUpGrid(symbol));
-                } else {
-                    const startGrid = isUp ? this.getDownGrid(symbol) : this.getUpGrid(symbol);
-                    this._placeHeroAt(startGrid);
-                }
-                this._hero.faceUp(!isFirstInit && isUp);
-            });
+        this._initMap(floorId);
+        this._initPlayer(floorId, isUp, symbol, isFirstInit);
     },
 
-    _loadMapAssets (floorId) {
-        const sceneId = Game.getSceneId(floorId);
-        const urls = [];
-        const types = [];
-        urls.push(`maps/FL${fixedNumber(this._floorId, 3)}`);
-        types.push(cc.TiledMapAsset);
-        if (sceneId > 0) {
-            urls.push(`sheets/tilesets/${tilesetNames[sceneId - 1]}`);
-            types.push(cc.SpriteAtlas);
-            urls.push(`sheets/monsters/${monsterAtlasNames[sceneId - 1]}`);
-            types.push(cc.SpriteAtlas);
+    _initPlayer (floorId, isUp, symbol, isFirstInit) {
+        if (floorId == 0) {
+            this._placeHeroAt(this.getUpGrid(symbol));
+        } else {
+            const startGrid = isUp ? this.getDownGrid(symbol) : this.getUpGrid(symbol);
+            this._placeHeroAt(startGrid);
         }
-        return LoaderHelper.loadResArrayByUrl(urls, types)
-            .then(assets => {
-                if (assets.length > 1) {
-                    this._mapTileset = assets[1];
-                    this._monsterViewConfigMap = EntityViewConfig.createMonsterMap(assets[2]);
-                }
-                this._init(assets[0]);
-            });
+        this._hero.faceUp(!isFirstInit && isUp);
     },
 
     getMapSize () {
@@ -343,14 +298,20 @@ cc.Class({
         this._hero.placeAt(grid);
     },
 
-    _init (tmxAsset) {
+    _initMap (floorId) {
+        const assets = Game.res.getMapAssets(floorId);
+        if (assets.hasMonster) {
+            this._tileset = assets.tileset;
+            this._monsterViewConfigMap = EntityViewConfig.createMonsterMap(assets.monsterAtlas);
+        }
+
         const node = new cc.Node();
         this.node.addChild(node);
         this._tiledMap = node.addComponent(cc.TiledMap);
-        this._tiledMap.tmxAsset = tmxAsset;
+        this._tiledMap.tmxAsset = assets.map;
         this._mapSize = this._tiledMap.getMapSize();
         this._tileSize = this._tiledMap.getTileSize();
-        this._entities = create2dArray(this._mapSize.width, this._mapSize.height)
+        this._entities = Utils.create2dArray(this._mapSize.width, this._mapSize.height)
         this._initLayers();
         this._initSearch();
     },
@@ -577,7 +538,7 @@ cc.Class({
                 const gid = layer.getTileGIDAt(x, y);
                 sprite.trim = cc.Sprite.Type.SIMPLE;
                 sprite.sizeMode = cc.Sprite.SizeMode.RAW;
-                sprite.spriteFrame = this._mapTileset.getSpriteFrame(gid.toString());
+                sprite.spriteFrame = this._tileset.getSpriteFrame(gid.toString());
                 tile.anchorX = 0;
                 tile.anchorY = 0;
                 tile.position = layer.getPositionAt(x, y);
@@ -608,10 +569,10 @@ cc.Class({
     _createSearch (getNeighbors) {
         const width = this._mapSize.width;
         const height = this._mapSize.height;
-        const visited = create2dArray(width, height, false);
+        const visited = Utils.create2dArray(width, height, false);
 
         function clear() {
-            fill2dArray(visited, false);
+            Utils.fill2dArray(visited, false);
         }
 
         function getPath(start, target) {
@@ -690,7 +651,7 @@ cc.Class({
             const s = [];
             for (let x = 0; x < this._mapSize.width; ++x) {
                 const gid = layer.getTileGIDAt(x, y);
-                s.push(fixedNumber(gid, 3));
+                s.push(Utils.fixedNumber(gid, 3));
             }
             str.push(s.join(' '));
         }

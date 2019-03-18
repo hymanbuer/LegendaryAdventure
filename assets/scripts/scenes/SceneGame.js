@@ -3,6 +3,7 @@ const LoaderHelper = require('CCLoaderHelper');
 const Game = require('Game');
 const World = require('World');
 const HudControl = require('HudControl');
+const Preface = require('Preface');
 
 const profile = require('GameProfile');
 
@@ -31,6 +32,7 @@ cc.Class({
     onChangeFloor (exit) {
         this._maskIn()
             .then(() => this._changeFloor(exit.floorId, exit.isUp, exit.symbol))
+            .then(() => this._checkShowPreface(exit.floorId, exit.isUp))
             .then(() => this._maskOut());
     },
 
@@ -39,14 +41,28 @@ cc.Class({
     },
 
     _changeFloor (floorId, isUp, symbol) {
-        return Promise.resolve()
-            .then(()=> Game.res.init(floorId))
-            .then(()=> this._loadBackground(floorId))
-            .then(()=> this.world.initFloor(floorId, isUp, symbol))
-            .then(()=> {
+        return Game.res.loadMapAssets(floorId)
+            .then(() => this._loadBackground(floorId))
+            .then(() => {
+                this.world.initFloor(floorId, isUp, symbol);
                 this.hud.changeSite(floorId);
                 this._saveLastFloor(floorId, isUp, symbol);
             });
+    },
+
+    _checkShowPreface (floorId, isUp) {
+        const config = Game.dataCenter.getPreface(floorId);
+        if (!config || !isUp) {
+            return;
+        }
+        return LoaderHelper.loadResByUrl('prefabs/game/preface').then(prefab => {
+            const node = cc.instantiate(prefab);
+            const preface = node.getComponent(Preface);
+            node.parent = this.node;
+            preface.title.spriteFrame = Game.res.getPrefaceTitleSpriteFrame(floorId);
+            preface.icon.spriteFrame = Game.res.getPrefaceIconSpriteFrame(floorId);
+            preface.text.string = config.text;
+        });
     },
 
     _maskIn () {

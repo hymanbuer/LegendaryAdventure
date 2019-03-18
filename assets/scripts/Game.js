@@ -2,11 +2,9 @@
 const PanelManager = require('PanelManager');
 const AnimationManager = require('AnimationManager');
 
-const DataCenter = require('DataCenter');
 const Bag = require('Bag');
 const MapState = require('MapState');
 const TaskState = require('TaskState');
-const Resources = require('Resources');
 
 const Game = cc.Class({
     extends: cc.Component,
@@ -59,7 +57,7 @@ cc.js.get(Game, 'animation', function () {
 /////// game
 
 cc.js.get(Game, 'dataCenter', function () {
-    return Game.instance.getComponent(DataCenter);
+    return Game.instance.getComponent('DataCenter');
 });
 cc.js.get(Game, 'bag', function () {
     return Game.instance._bag;
@@ -71,17 +69,13 @@ cc.js.get(Game, 'taskState', function () {
     return Game.instance._taskState;
 });
 cc.js.get(Game, 'res', function () {
-    return Game.instance.getComponent(Resources);
+    return Game.instance.getComponent('Resources');
+});
+cc.js.get(Game, 'config', function () {
+    return require('GameConfig');
 });
 
 ////// common
-/**
- * sceneId和floorId均从0开始计数
- */
-
-cc.js.get(Game, 'maxSceneId', function () {
-    return 10;
-});
 
 Game.getSceneId = function (floorId) {
     let sceneId = Math.floor(floorId / 10);

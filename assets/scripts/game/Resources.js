@@ -1,5 +1,7 @@
 
 const LoaderHelper = require('CCLoaderHelper');
+const Utils = require('Utils');
+const Game = require('Game');
 
 const spriteMap = new Map();
 spriteMap.set(151, 'Blood');
@@ -9,7 +11,6 @@ spriteMap.set(156, 'bluekey');
 spriteMap.set(157, 'redkey');
 spriteMap.set(159, 'mirror');
 
-const maxSceneId = 10;
 const tilesetNames = [
     'TiledMapOne',
     'TiledMapTwo',
@@ -35,21 +36,16 @@ const monsterAtlasNames = [
     'MonsterTen',
 ];
 
-function getSceneId(floorId) {
-    let sceneId = Math.floor(floorId / 10);
-    sceneId += floorId % 10 === 0 ? 0 : 1;
-    return sceneId;
+function getMapUrl(floorId) {
+    return `maps/FL${Utils.fixedNumber(floorId, 3)}`;
 }
 
-function fixedNumber(value, n) {
-    const digits = [];
-    while (n > 0) {
-        digits.push(value % 10);
-        value = Math.floor(value / 10);
-        n -= 1;
-    }
-    digits.reverse();
-    return digits.join('');
+function getTilesetUrl(sceneId) {
+    return `sheets/tilesets/${tilesetNames[sceneId - 1]}`;
+}
+
+function getMonsterAtlasUrl(sceneId) {
+    return `sheets/monsters/${monsterAtlasNames[sceneId - 1]}`;
 }
 
 const Resources = cc.Class({
@@ -58,27 +54,66 @@ const Resources = cc.Class({
     properties: {
         itemAtlas: cc.SpriteAtlas,
         commonAtlas: cc.SpriteAtlas,
-        monsterAtlasList: [cc.SpriteAtlas],
     },
 
     onLoad () {
-        
+        this._loadedFloorIds = new Map();
     },
 
-    init (floorId) {
-        return this.preloadMonsterAtlas(floorId);
-    },
-
-    preloadMonsterAtlas (floorId) {
-        const sceneId = getSceneId(floorId);
-        if (sceneId == 0 || this.monsterAtlasList[sceneId]) {
-            return Promise.resolve();
+    loadMapAssets (floorId) {
+        if (this._loadedFloorIds.has(floorId)) {
+            return Promise.resolve(this._loadedFloorIds.get(floorId));
         }
-        
-        const atlasUrl = 'sheets/monsters/' + monsterAtlasNames[sceneId - 1];
-        return LoaderHelper.loadResByUrl(atlasUrl, cc.SpriteAtlas).then(atlas => {
-            this.monsterAtlasList[sceneId] = atlas;
-        });
+
+        const sceneId = Game.getSceneId(floorId);
+        const urls = [];
+        const types = [];
+        const hasMonster = sceneId > 0;
+        urls.push(getMapUrl(floorId));
+        types.push(cc.TiledMapAsset);
+        if (hasMonster) {
+            urls.push(getTilesetUrl(sceneId));
+            types.push(cc.SpriteAtlas);
+            urls.push(getMonsterAtlasUrl(sceneId));
+            types.push(cc.SpriteAtlas);
+        }
+        return LoaderHelper.loadResArrayByUrl(urls, types)
+            .then(assets => {
+                const mapAssets = {
+                    map: assets[0],
+                    tileset: assets[1],
+                    monsterAtlas: assets[2],
+                    hasMonster: hasMonster,
+                };
+                this._loadedFloorIds.set(floorId, mapAssets);
+                return mapAssets;
+            });
+    },
+
+    getMapAssets (floorId) {
+        return this._loadedFloorIds.get(floorId);
+    },
+
+    getMapTileset (floorId) {
+        return this.getMapAssets(floorId).tileset;
+    },
+
+    getMonsterAtlas (floorId) {
+        return this.getMapAssets(floorId).monsterAtlas;
+    },
+
+    getPrefaceTitleSpriteFrame (floorId) {
+        const tileset = this.getMapTileset(floorId);
+        const sceneId = Game.getSceneId(floorId);
+        const name = `text_scene${sceneId}`;
+        return tileset.getSpriteFrame(name);
+    },
+
+    getPrefaceIconSpriteFrame (floorId) {
+        const tileset = this.getMapTileset(floorId);
+        const sceneId = Game.getSceneId(floorId);
+        const name = `img_sceneth${sceneId}`;
+        return tileset.getSpriteFrame(name);
     },
 
     getSpriteFrame (gid) {
@@ -88,7 +123,7 @@ const Resources = cc.Class({
     },
 
     getSmallBattleBg (floorId) {
-        const sceneId = getSceneId(floorId);
+        const sceneId = Game.getSceneId(floorId);
         return this.commonAtlas.getSpriteFrame('img_scenebattle' + sceneId);
     },
 
@@ -96,9 +131,8 @@ const Resources = cc.Class({
         if (gid < 226 || gid > 226+109) return null;
 
         const id = gid - 226;
-        const sceneId = getSceneId(floorId);
-        const atlas = this.monsterAtlasList[sceneId];
-        const name = `M_${fixedNumber(id, 2)}_00`;
+        const atlas = this.getMonsterAtlas(floorId);
+        const name = `M_${Utils.fixedNumber(id, 2)}_00`;
         return atlas ? atlas.getSpriteFrame(name) : null;
     },
 });

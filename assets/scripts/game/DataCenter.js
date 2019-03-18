@@ -1,4 +1,6 @@
 
+const Utils = require('Utils');
+
 const maxFloors = 105;
 
 const DataCenter = cc.Class({
@@ -26,6 +28,19 @@ const DataCenter = cc.Class({
     getMonster (gid) {
         gid = Number.parseInt(gid);
         return this._monsterMap.get(gid);
+    },
+
+    getPreface (floorId) {
+        const name = `FLOOR${Utils.fixedNumber(floorId, 2)}PERFACE`;
+        const config = this.eventConfig.json[name];
+        if (config && typeof config == 'object') {
+            return {
+                name: config.NAME,
+                title: config.TITLE,
+                text: config.MESSAGE,
+            };
+        }
+        return null;
     },
 
     _handleEvent (obj) {
