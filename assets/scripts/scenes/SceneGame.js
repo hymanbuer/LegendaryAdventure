@@ -25,7 +25,8 @@ cc.Class({
         const lastFloor = profile.lastFloor;
         this.mask.active = true;
         this.mask.opacity = 255;
-        this._changeFloor(lastFloor.id, true, lastFloor.upSymbol)
+        Game.res.init()
+            .then(() => this._changeFloor(lastFloor.id, true, lastFloor.upSymbol))
             .then(() => this._maskOut());
     },
 

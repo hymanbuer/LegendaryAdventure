@@ -11,6 +11,9 @@ const EntityItem = require('EntityItem');
 const EntityDoor = require('EntityDoor');
 const EntityTrigger = require('EntityTrigger');
 
+const CharacterControl = require('CharacterControl');
+const AnimationMotion = require('AnimationMotion');
+
 const Game = require('Game');
 const Utils = require('Utils')
 
@@ -184,6 +187,7 @@ cc.Class({
         this._showTargetAnimation(grid);
         if (path && path.length > 0) {
             this._hero.followPath(path);
+            // this._hero.followPath2(path.map(grid => this.getPositionAt(grid)));
         }
     },
 
@@ -290,12 +294,26 @@ cc.Class({
         }
     },
 
-    _placeHeroAt (grid, isUp) {
+    _placeHeroAt (grid) {
         const node = cc.instantiate(this.heroPrefab)
         node.parent = this.node;
-        this._hero = node.getComponent('CharacterControl');
+        this._hero = node.getComponent(CharacterControl);
         this._hero.world = this;
         this._hero.placeAt(grid);
+
+        const Direction = CharacterControl.Direction;
+        const motion = node.getComponent(AnimationMotion);
+        const mode = cc.WrapMode.Loop;
+        const animation = Game.animation;
+        motion.addStandClip(Direction.East, animation.getClip('walk_hr', mode));
+        motion.addStandClip(Direction.South, animation.getClip('walk_hb', mode));
+        motion.addStandClip(Direction.West, animation.getClip('walk_hl', mode));
+        motion.addStandClip(Direction.North, animation.getClip('walk_hf', mode));
+        motion.addWalkClip(Direction.East, animation.getClip('walk_r', mode));
+        motion.addWalkClip(Direction.South, animation.getClip('walk_b', mode));
+        motion.addWalkClip(Direction.West, animation.getClip('walk_l', mode));
+        motion.addWalkClip(Direction.North, animation.getClip('walk_f', mode));
+        motion.stand(Direction.South);
     },
 
     _initMap (floorId) {

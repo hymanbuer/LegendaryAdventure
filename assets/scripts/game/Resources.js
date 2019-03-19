@@ -60,6 +60,16 @@ const Resources = cc.Class({
         this._loadedFloorIds = new Map();
     },
 
+    init () {
+        const urls = [
+            'sheets/RoleAction',
+        ];
+        const types = [
+            cc.SpriteAtlas,
+        ];
+        return LoaderHelper.loadResArrayByUrl(urls, types);
+    },
+
     loadMapAssets (floorId) {
         if (this._loadedFloorIds.has(floorId)) {
             return Promise.resolve(this._loadedFloorIds.get(floorId));
