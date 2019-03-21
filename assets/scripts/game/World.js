@@ -309,9 +309,9 @@ cc.Class({
     _placeHeroAt (grid) {
         const node = cc.instantiate(this.heroPrefab)
         node.parent = this.node;
+        node.zIndex = grid.y;
+        node.position = this.getPositionAt(grid);
         this._hero = node.getComponent(CharacterControl);
-        this._hero.world = this;
-        this._hero.placeAt(grid);
 
         const Direction = CharacterControl.Direction;
         const motion = node.getComponent(AnimationMotion);

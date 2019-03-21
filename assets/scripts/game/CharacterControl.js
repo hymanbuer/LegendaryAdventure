@@ -17,7 +17,7 @@ const MoveState = cc.Enum({
 });
 
 const MOVE_TAG = 100;
-const EMPTY_FUNC = function () {};
+const MOVE_SPEED = 360;
 
 cc.Class({
     extends: cc.Component,
@@ -27,7 +27,17 @@ cc.Class({
     },
 
     properties: {
-
+        _moveSpeed: MOVE_SPEED,
+        moveSpeed: {
+            get () {
+                return this._moveSpeed;
+            },
+            set (value) {
+                if (typeof value == 'number' && value > 0) {
+                    this._moveSpeed = value;
+                }
+            }
+        }
     },
 
     onLoad () {
@@ -157,12 +167,6 @@ cc.Class({
         this.node.emit('character-rotate', direction);
     },
 
-    placeAt (target) {
-        this.grid = target;
-        this.node.position = this.world.getPositionAt(target);
-        this.node.zIndex = target.y;
-    },
-
     _rotateTo (target) {
         let direction = null;
         if (target.x > this.node.x) direction = Direction.East;
@@ -176,10 +180,9 @@ cc.Class({
     },
 
     _moveTo (target) {
-        const moveSpeed = 360;
         const start = cc.v2(this.node.x, this.node.y);
         const delta = target.sub(start);
-        const duration = delta.mag() / moveSpeed;
+        const duration = delta.mag() / this.moveSpeed;
         const move =  cc.moveTo(duration, target)
         this._walk();
         return move;
