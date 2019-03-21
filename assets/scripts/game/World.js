@@ -177,17 +177,17 @@ cc.Class({
     onTouchWorld (event) {
         const touch = event.touch;
         const pos = this.node.convertToNodeSpaceAR(touch.getLocation());
-        const grid = this.getGridAt(pos);
-        if (!this.isReachable(grid)) {
-            this._showForbidAnimation(grid);
+        const targetGrid = this.getGridAt(pos);
+        if (!this.isReachable(targetGrid)) {
+            this._showForbidAnimation(targetGrid);
             return;
         }
 
-        const path = this.searchPath(this._hero.grid, grid);
-        this._showTargetAnimation(grid);
+        const startGrid = this.getGridAt(this._hero.getNextPosition());
+        const path = this.searchPath(startGrid, targetGrid);
+        this._showTargetAnimation(targetGrid);
         if (path && path.length > 0) {
-            this._hero.followPath(path);
-            // this._hero.followPath2(path.map(grid => this.getPositionAt(grid)));
+            this._hero.followPath(path.map(grid => this.getPositionAt(grid)));
         }
     },
 
@@ -209,18 +209,46 @@ cc.Class({
         });
     },
 
-    onBeforeEnter (grid) {
-        return this._onEnterEvent(grid, true);
+
+    onBeforeEnterPosition (pos, passCallback) {
+        this._onEnterEvent(pos, true, passCallback);
     },
 
-    onAfterEnter (grid) {
+    onAfterEnterPosition (pos, passCallback) {
+        const grid = this.getGridAt(pos);
         const exit = this._getExit(grid);
+        this._hero.node.zIndex = grid.y;
         if (exit) {
             this.node.emit('change-floor', exit);
-            return Promise.resolve(false);
+            passCallback(false);
+        } else {
+            this._onEnterEvent(pos, false, passCallback);
+        }
+    },
+
+    _onEnterEvent (pos, isBefore, passCallback) {
+        const grid = this.getGridAt(pos);
+        if (!this._hasEntity(grid)) {
+            return passCallback(true);
         }
 
-        return this._onEnterEvent(grid, false);
+        const entity = this._entities[grid.y][grid.x];
+        if (entity) {
+            const base = entity.getComponent(BaseEntity);
+            cc.log(isBefore ? 'before enter:' : 'after enter:', base.gid);
+            if (isBefore) base.onBeforeEnter(passCallback);
+            else base.onAfterEnter(passCallback);
+        } else {
+            passCallback(true);
+        }
+    },
+
+    onAfterExitPosition (pos, passCallback) {
+        passCallback(true);
+    },
+
+    onBeforeExitPosition (pos, passCallback) {
+        passCallback(true);
     },
 
     onAfterExit (grid) {
@@ -255,22 +283,6 @@ cc.Class({
             this._layerLogic.setTileGIDAt(info.gid, info.x, info.y);
             this._parseLogicGid(info.gid, info.x, info.y);
         }, 0);
-    },
-
-    _onEnterEvent (grid, isBefore) {
-        if (this._hasEntity(grid)) {
-            return new Promise(resolve => {
-                const entity = this._entities[grid.y][grid.x];
-                if (entity) {
-                    const base = entity.getComponent(BaseEntity);
-                    cc.log(isBefore ? 'before enter:' : 'after enter:', base.gid);
-                    if (isBefore) base.onBeforeEnter(resolve);
-                    else base.onAfterEnter(resolve);
-                } else {
-                    resolve(true);
-                }
-            });
-        }
     },
 
     _getExit (pos, posY) {
@@ -314,6 +326,11 @@ cc.Class({
         motion.addWalkClip(Direction.West, animation.getClip('walk_l', mode));
         motion.addWalkClip(Direction.North, animation.getClip('walk_f', mode));
         motion.stand(Direction.South);
+
+        node.on('before-enter-position', this.onBeforeEnterPosition, this);
+        node.on('after-enter-position', this.onAfterEnterPosition, this);
+        node.on('before-exit-position', this.onBeforeExitPosition, this);
+        node.on('after-exit-position', this.onAfterExitPosition, this);
     },
 
     _initMap (floorId) {

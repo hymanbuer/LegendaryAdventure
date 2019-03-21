@@ -17,8 +17,7 @@ cc.Class({
     onBeforeEnter (resolve) {
         const eventTrigger = this.getComponent(EventTrigger);
         const p = eventTrigger ? eventTrigger.doBeforeEnter() : Promise.resolve();
-        p.then(()=> this.doBeforeEnter())
-         .then(resolve);
+        p.then(() => this.doBeforeEnter()).then(resolve);
     },
 
     onAfterEnter (resolve) {

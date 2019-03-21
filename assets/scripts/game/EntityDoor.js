@@ -51,7 +51,9 @@ cc.Class({
                 const text = data.MESSAGE || data.ASKMESSAGE;
                 const icon = Game.res.getSpriteFrame(data.ITEMNEEDED);
                 Game.openPanel('use_item', useMethod, text, icon)
-                    .then(() => Game.onPanelClosed('use_item', () => resolve(false)))
+                    .then(() => Game.onPanelClosed('use_item', () => {
+                        if (!this._isRemoving) resolve(false);
+                    }))
                     .catch(reject);
             } else {
                 Game.openPanel('notice').then(() => {
