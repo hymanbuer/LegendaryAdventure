@@ -6,23 +6,18 @@ cc.Class({
     extends: BaseEntity,
 
     properties: {
-        
+
     },
 
     onLoad () {
-
+        this.isBeforeEnterPass = true;
     },
 
-    doBeforeEnter () {
-        return Promise.resolve(true);
-    },
-
-    doAfterEnter () {
+    doAfterEnter (sender, callback) {
+        callback(null);
         Game.mapState.removeEntity(this.floorId, this.grid);
         Game.bag.addItem(this.gid);
         Game.openPanel('get_item', this.gid)
         this.node.destroy();
-        
-        return Promise.resolve(true);
     },
 });

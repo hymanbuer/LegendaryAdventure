@@ -5,8 +5,6 @@ const PanelGetItem = require('PanelGetItem');
 
 const EntityView = require('EntityView');
 
-
-
 cc.Class({
     extends: BaseEntity,
 
@@ -15,24 +13,20 @@ cc.Class({
     },
 
     onLoad () {
-
+        this.isBeforeEnterPass = true;
     },
 
-    doBeforeEnter () {
-        return Promise.resolve(true);
-    },
-
-    doAfterEnter () {
+    doAfterEnter (sender, callback) {
         this.getComponent(EntityView).play('down');
         if (this.gid === 408) {
             this._trigger408();
         }
-        return Promise.resolve(true);
+        callback(null);
     },
 
-    doAfterExit () {
+    doAfterExit (sender, callback) {
         this.getComponent(EntityView).play('default');
-        return Promise.resolve(true);
+        callback(null);
     },
 
     _trigger408 () {

@@ -20,14 +20,12 @@ cc.Class({
         }
     },
 
-    doBeforeEnter () {
-        return new Promise((resolve, reject) => {
-            return Game.openPanel('gofight', this.floorId, this.gid)
-                .then(() => Game.onPanelClosed('gofight', () => {
-                    this.node.destroy();
-                    resolve(false);
-                }))
-                .catch(reject);
-        });
+    doBeforeEnter (sender, callback) {
+        Game.openPanel('gofight', this.floorId, this.gid)
+            .then(() => Game.onPanelClosed('gofight', () => {
+                this.node.destroy();
+                callback(null);
+            }))
+            .catch(callback);
     },
 });

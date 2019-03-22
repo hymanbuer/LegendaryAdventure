@@ -209,60 +209,41 @@ cc.Class({
         });
     },
 
-
-    onBeforeEnterPosition (pos, passCallback) {
-        this._onEnterEvent(pos, true, passCallback);
+    onBeforeEnterPosition (sender, pos, passCallback) {
+        this._onEntityEvent('onBeforeEnter', sender, pos, passCallback);
     },
 
-    onAfterEnterPosition (pos, passCallback) {
+    onAfterEnterPosition (sender, pos, passCallback) {
         const grid = this.getGridAt(pos);
         const exit = this._getExit(grid);
-        this._hero.node.zIndex = grid.y;
+        sender.node.zIndex = grid.y;
         if (exit) {
             this.node.emit('change-floor', exit);
             passCallback(false);
         } else {
-            this._onEnterEvent(pos, false, passCallback);
+            this._onEntityEvent('onAfterEnter', sender, pos, passCallback);
         }
     },
 
-    _onEnterEvent (pos, isBefore, passCallback) {
+    onAfterExitPosition (sender, pos, passCallback) {
+        this._onEntityEvent('onAfterExit', sender, pos, passCallback);
+    },
+
+    onBeforeExitPosition (sender, pos, passCallback) {
+        this._onEntityEvent('onBeforeExit', sender, pos, passCallback);
+    },
+
+    _onEntityEvent (eventName, sender, pos, passCallback) {
         const grid = this.getGridAt(pos);
         if (!this._hasEntity(grid)) {
             return passCallback(true);
         }
 
         const entity = this._entities[grid.y][grid.x];
-        if (entity) {
-            const base = entity.getComponent(BaseEntity);
-            cc.log(isBefore ? 'before enter:' : 'after enter:', base.gid);
-            if (isBefore) base.onBeforeEnter(passCallback);
-            else base.onAfterEnter(passCallback);
-        } else {
-            passCallback(true);
-        }
-    },
-
-    onAfterExitPosition (pos, passCallback) {
-        passCallback(true);
-    },
-
-    onBeforeExitPosition (pos, passCallback) {
-        passCallback(true);
-    },
-
-    onAfterExit (grid) {
-        if (this._hasEntity(grid)) {
-            return new Promise(resolve => {
-                const entity = this._entities[grid.y][grid.x];
-                if (entity) {
-                    const base = entity.getComponent(BaseEntity);
-                    cc.log('after exit:', base.gid);
-                    base.onAfterExit(resolve);
-                } else {
-                    resolve(true);
-                }
-            });
+        const base = entity.getComponent(BaseEntity);
+        cc.log(eventName, base.gid);
+        if (base[eventName]) {
+            base[eventName].call(base, sender, passCallback);
         }
     },
 
@@ -435,11 +416,22 @@ cc.Class({
         const checkAddEventTrigger = (gid, node) => {
             const event = Game.dataCenter.getEvent(this._floorId, gid);
             if (event) {
-                const trigger = node.addComponent(EventTrigger);
-                trigger.init(event);
-                trigger.gid = gid;
-                trigger.floorId = this._floorId;
-                trigger.grid = cc.v2(x, y);
+                const add = compName => {
+                    const trigger = node.addComponent(compName);
+                    trigger.init(event);
+                    trigger.gid = gid;
+                    trigger.floorId = this._floorId;
+                    trigger.grid = cc.v2(x, y);
+                };
+                if (event.TALK) {
+                    add('EventTalk');
+                }
+                if (event.TASK) {
+                    add('EventTask');
+                }
+                if (event.TASKAWARD) {
+                    add('EventAward');
+                }
             }
         };
 

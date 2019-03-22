@@ -61,6 +61,30 @@ cc.Class({
         stateFunc.call(this);
     },
 
+    faceUp (isUp) {
+        const direction = isUp ? Direction.North : Direction.South;
+        this.node.emit('character-rotate', direction);
+    },
+
+    getNextPosition () {
+        return this._movingPos && cc.v2(this._movingPos) || cc.v2(this.node.position);
+    },
+
+    followPath (path) {
+        this._path = path;
+        this._paused = false;
+    },
+
+    pausePath () {
+        this._paused = true;
+    },
+
+    resumePath () {
+        this._paused = false;
+    },
+
+    ///////////////////////////////
+
     _changeState (state) {
         if (state !== this._moveState) {
             this._moveState = state;
@@ -70,37 +94,44 @@ cc.Class({
     },
 
     _stateFuncStop () {
-        if (this._path.length > 0) {
+        if (!this._paused && this._path.length > 0) {
+            this._walk();
             this._changeState(MoveState.Moving);
         }
     },
 
     _stateFuncMoving () {
-        if (this.node.getActionByTag(MOVE_TAG) == null) {
-            this._movingPos = null;
-            if (this._nextPos != null) {
-                const action = this._moveTo(this._nextPos);
-                action.setTag(MOVE_TAG);
-                this.node.runAction(action);
-                this._movingPos = this._nextPos;
-                this._prevPos = cc.v2(this.node.position);
-                this._nextPos = null;
+        if (this._isMoving()) {
+            return;
+        }
+
+        this._movingPos = null;
+        if (this._paused) {
+            this._stand();
+            this._changeState(MoveState.Stop);
+            return;
+        }
+
+        if (this._nextPos != null) {
+            this.node.runAction(this._getMoveToAction(this._nextPos));
+            this._movingPos = this._nextPos;
+            this._prevPos = cc.v2(this.node.position);
+            this._nextPos = null;
+        } else {
+            if (this._prevPos != null) {
+                this._changeState(MoveState.AfterExit);
+            } else if (this._nextPos == null && this._path.length > 0) {
+                this._nextPos = this._path.shift();
+                this._changeState(MoveState.BeforeExit);
             } else {
-                if (this._prevPos != null) {
-                    this._changeState(MoveState.AfterExit);
-                } else if (this._nextPos == null && this._path.length > 0) {
-                    this._nextPos = this._path.shift();
-                    this._changeState(MoveState.BeforeExit);
-                } else {
-                    this._stand();
-                    this._changeState(MoveState.Stop);
-                }
+                this._stand();
+                this._changeState(MoveState.Stop);
             }
         }
     },
 
     _stateFuncTriggeringEvent () {
-        // do nothing
+        
     },
 
     _stateFuncAfterExit () {
@@ -126,12 +157,17 @@ cc.Class({
 
     ///////////////////////////
 
-    _stopPath () {
-        this._prevPos = null;
-        this._nextPos = null;
-        this._path = [];
-        this._stand();
-        this._changeState(MoveState.Stop);
+    _getMoveToAction (target) {
+        const start = cc.v2(this.node.x, this.node.y);
+        const delta = target.sub(start);
+        const duration = delta.mag() / this.moveSpeed;
+        const move =  cc.moveTo(duration, target);
+        move.setTag(MOVE_TAG);
+        return move;
+    },
+
+    _isMoving () {
+        return this.node.getActionByTag(MOVE_TAG) != null;
     },
 
     _triggerEvent (eventName, nextState, ...eventArgs) {
@@ -142,29 +178,19 @@ cc.Class({
                 if (isPass) {
                     this._changeState(nextState);
                 } else {
-                    this._stopPath();
+                    this._paused = true;
+                    this._nextPos = null;
+                    this._stand();
+                    this._changeState(MoveState.Stop);
                 }
             }
         };
         this._changeState(MoveState.TriggeringEvent);
         if (this.node.hasEventListener(eventName)) {
-            this.node.emit(eventName, ...eventArgs, callback);
+            this.node.emit(eventName, this, ...eventArgs, callback);
         } else {
             callback(true);
         }
-    },
-
-    getNextPosition () {
-        return this._movingPos && cc.v2(this._movingPos) || cc.v2(this.node.position);
-    },
-
-    followPath (path) {
-        this._path = path;
-    },
-
-    faceUp (isUp) {
-        const direction = isUp ? Direction.North : Direction.South;
-        this.node.emit('character-rotate', direction);
     },
 
     _rotateTo (target) {
@@ -177,15 +203,6 @@ cc.Class({
         if (direction != null) {
             this.node.emit('character-rotate', direction);
         }
-    },
-
-    _moveTo (target) {
-        const start = cc.v2(this.node.x, this.node.y);
-        const delta = target.sub(start);
-        const duration = delta.mag() / this.moveSpeed;
-        const move =  cc.moveTo(duration, target)
-        this._walk();
-        return move;
     },
 
     _stand () {
