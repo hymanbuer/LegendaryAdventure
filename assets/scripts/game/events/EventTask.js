@@ -32,8 +32,8 @@ cc.Class({
                 this.state = 2;
                 Game.taskState.setTaskState(this.event.ID, 2);
 
-                trigger.node.destroy();
-                Game.mapState.removeEntity(trigger.floorId, trigger.grid);
+                this.node.destroy();
+                Game.mapState.removeEntity(this.floorId, this.grid);
 
                 showTalk(this.title, this.event.TASKEND, TalkType.Normal, callback);
             } else {

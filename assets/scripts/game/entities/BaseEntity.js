@@ -1,9 +1,7 @@
 
-const EventTrigger = require('EventTrigger');
-
 cc.Class({
     extends: cc.Component,
-
+    
     properties: {
         gid: 0,
         floorId: 0,
@@ -15,23 +13,19 @@ cc.Class({
         isAfterExitPass: true,
     },
 
-    onBeforeEnter (sender, passCallback) {
-        passCallback(this.isBeforeEnterPass);
+    onBeforeEnter (sender) {
         this._handleEvent('doBeforeEnter', sender);
     },
 
-    onAfterEnter (sender, passCallback) {
-        passCallback(this.isAfterEnterPass);
+    onAfterEnter (sender) {
         this._handleEvent('doAfterEnter', sender);
     },
 
-    onBeforeExit (sender, passCallback) {
-        passCallback(this.isBeforeExitPass);
+    onBeforeExit (sender) {
         this._handleEvent('doBeforeExit', sender);
     },
 
-    onAfterExit (sender, passCallback) {
-        passCallback(this.isAfterExitPass);
+    onAfterExit (sender) {
         this._handleEvent('doAfterExit', sender);
     },
 
@@ -53,7 +47,7 @@ cc.Class({
 
     _handleEvent (handleName, sender) {
         const handlers = [];
-        const eventTriggeres = this.getComponents(EventTrigger);
+        const eventTriggeres = this.getComponents('EventTrigger');
         eventTriggeres.forEach(trigger => {
             handlers.push(trigger[handleName].bind(trigger, sender));
         });

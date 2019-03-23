@@ -1,33 +1,6 @@
 
 const exports = module.exports = {};
 
-exports.createMonsterMap = function(atlas) {
-    const framesMap = new Map();
-    for (const frame of atlas.getSpriteFrames()) {
-        if (frame.name.match(/MB/)) continue;
-
-        const match = frame.name.match(/\d+/);
-        const id = Number.parseInt(match[0]);
-        let frames = framesMap.get(id);
-        if (!frames) {
-            frames = [];
-            framesMap.set(id, frames);
-        }
-        frames.push(frame);
-    }
-
-    function get (id) {
-        const config = {};
-        config.name = 'default';
-        config.spriteFrames = framesMap.get(id);
-        return config;
-    }
-
-    return {
-        get,
-    };
-}
-
 exports.createNpcMap = function(atlas) {
     const framesMap = new Map();
     for (const frame of atlas.getSpriteFrames()) {

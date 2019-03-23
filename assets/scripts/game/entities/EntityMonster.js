@@ -1,17 +1,14 @@
 
 const BaseEntity = require('BaseEntity');
-const PanelGoFight = require('PanelGoFight');
 const Game = require('Game');
 
 cc.Class({
     extends: BaseEntity,
 
     properties: {
-        
     },
 
     onLoad () {
-
     },
 
     onDestroy () {
@@ -21,11 +18,10 @@ cc.Class({
     },
 
     doBeforeEnter (sender, callback) {
-        Game.openPanel('gofight', this.floorId, this.gid)
-            .then(() => Game.onPanelClosed('gofight', () => {
-                this.node.destroy();
-                callback(null);
-            }))
-            .catch(callback);
+        Game.openPanel('gofight', this.floorId, this.gid);
+        Game.onPanelClosed('gofight', () => {
+            this.node.destroy();
+            callback(null);
+        });
     },
 });

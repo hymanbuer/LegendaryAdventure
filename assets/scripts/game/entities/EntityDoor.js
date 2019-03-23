@@ -1,7 +1,5 @@
 
 const BaseEntity = require('BaseEntity');
-const PanelNotice = require('PanelNotice');
-const PanelUseItem = require('PanelUseItem');
 const EntityView = require('EntityView');
 const Game = require('Game');
 

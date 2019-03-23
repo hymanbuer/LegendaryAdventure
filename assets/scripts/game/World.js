@@ -41,31 +41,6 @@ const triggerGidSet = new Set([
     408,
 ]);
 
-const tilesetNames = [
-    'TiledMapOne',
-    'TiledMapTwo',
-    'TiledMapThree',
-    'TiledMapFour',
-    'TiledMapFive',
-    'TiledMapSix',
-    'TiledMapSeven',
-    'TiledMapEight',
-    'TiledMapNine',
-    'TiledMapTen',
-];
-const monsterAtlasNames = [
-    'MonsterOne',
-    'MonsterTwo',
-    'MonsterThree',
-    'MonsterFour',
-    'MonsterFive',
-    'MonsterSix',
-    'MonsterSeven',
-    'MonsterEight',
-    'MonsterNine',
-    'MonsterTen',
-];
-
 const EntityType = cc.Enum({
     Item: -1,
     Monster: -1,
@@ -101,9 +76,6 @@ cc.Class({
     initFloor (floorId, isUp, symbol) {
         const isFirstInit = this._floorId == undefined;
         this._floorId = floorId;
-        this.node.removeAllChildren();
-        this.node.removeAllChildren();
-
         this._initMap(floorId);
         this._initPlayer(floorId, isUp, symbol, isFirstInit);
     },
@@ -210,7 +182,7 @@ cc.Class({
     },
 
     onBeforeEnterPosition (sender, pos, passCallback) {
-        this._onEntityEvent('onBeforeEnter', sender, pos, passCallback);
+        this._onEntityEvent('BeforeEnter', sender, pos, passCallback);
     },
 
     onAfterEnterPosition (sender, pos, passCallback) {
@@ -221,16 +193,16 @@ cc.Class({
             this.node.emit('change-floor', exit);
             passCallback(false);
         } else {
-            this._onEntityEvent('onAfterEnter', sender, pos, passCallback);
+            this._onEntityEvent('AfterEnter', sender, pos, passCallback);
         }
     },
 
     onAfterExitPosition (sender, pos, passCallback) {
-        this._onEntityEvent('onAfterExit', sender, pos, passCallback);
+        this._onEntityEvent('AfterExit', sender, pos, passCallback);
     },
 
     onBeforeExitPosition (sender, pos, passCallback) {
-        this._onEntityEvent('onBeforeExit', sender, pos, passCallback);
+        this._onEntityEvent('BeforeExit', sender, pos, passCallback);
     },
 
     _onEntityEvent (eventName, sender, pos, passCallback) {
@@ -242,9 +214,10 @@ cc.Class({
         const entity = this._entities[grid.y][grid.x];
         const base = entity.getComponent(BaseEntity);
         cc.log(eventName, base.gid);
-        if (base[eventName]) {
-            base[eventName].call(base, sender, passCallback);
-        }
+        const handlerName = `on${eventName}`;
+        const passCheckName = `is${eventName}Pass`;
+        passCallback(base[passCheckName]);
+        base[handlerName].call(base, sender);
     },
 
     onStandOpen (event) {
@@ -318,40 +291,43 @@ cc.Class({
         const assets = Game.res.getMapAssets(floorId);
         if (assets.hasMonster) {
             this._tileset = assets.tileset;
-            this._monsterViewConfigMap = EntityViewConfig.createMonsterMap(assets.monsterAtlas);
+            this._monsterAtlas = assets.monsterAtlas;
         }
 
-        const node = new cc.Node();
-        this.node.addChild(node);
-        this._tiledMap = node.addComponent(cc.TiledMap);
+        const tiledMap = new cc.Node();
+        this.node.removeAllChildren();
+        this.node.addChild(tiledMap);
+        this._tiledMap = tiledMap.addComponent(cc.TiledMap);
         this._tiledMap.tmxAsset = assets.map;
+        tiledMap.active = false;
+
         this._mapSize = this._tiledMap.getMapSize();
         this._tileSize = this._tiledMap.getTileSize();
-        this._entities = Utils.create2dArray(this._mapSize.width, this._mapSize.height)
+        this._entities = Utils.create2dArray(this._mapSize.width, this._mapSize.height);
         this._initLayers();
         this._initSearch();
     },
 
     _initLayers () {
-        // origin tile layers
-        cc.log('------------------------ floor:', this._floorId);
-        this._layerLogic = this._tiledMap.getLayer('logic');
         this._layerFloor = this._tiledMap.getLayer('floor');
-        this._layerLogic.node.active = false;
-        this._layerFloor.node.active = false;
-        this._printLayer('floor', this._layerFloor);
-        this._printLayer('logic', this._layerLogic);
-
+        this._layerLogic = this._tiledMap.getLayer('logic');
+        if (CC_DEBUG) {
+            cc.log('------- floor:', this._floorId);
+            this._printLayer('floor', this._layerFloor);
+            this._printLayer('logic', this._layerLogic);
+        }
         this._initLayerFloor();
         this._initLayerLogic();
         this._initExits();
     },
 
     _initLayerFloor () {
+        
         this._initLayerTiles(this._layerFloor, true);
     },
 
     _initLayerLogic () {
+        this._layerLogic = this._tiledMap.getLayer('logic');
         this._initLayerTiles(this._layerLogic, false);
 
         for (let y = 0; y < this._mapSize.height; y++) {
@@ -374,24 +350,24 @@ cc.Class({
         this._exits = [];
         this._upGrids = [];
         this._downGrids = [];
+        this._spawnPoint = null;
         for (const properties of hero.getObjects()) {
             for (const key in properties) {
-                if (/FL/.test(key)) {
-                    const match = key.match(/\d+/);
-                    const id = Number.parseInt(match[0]);
-                    const exit = {};
-                    const symbol = properties[key];
-                    // spawn point
-                    if (symbol == 'z') {
-                        continue;
-                    }
+                if (!/FL/.test(key)) {
+                    continue;
+                }
 
-                    exit.nextFloorName = key;
-                    exit.grid = this.getGridAt(properties.x, properties.y);
-                    exit.floorId = id;
-                    exit.symbol = symbol;
+                const match = key.match(/\d+/);
+                const id = Number.parseInt(match[0]);
+                const exit = {};
+                const symbol = properties[key];
+                exit.grid = this.getGridAt(properties.x, properties.y);
+                exit.floorId = id;
+                exit.symbol = symbol;
+                if (symbol == 'z') {
+                    this._spawnPoint = exit;
+                } else {
                     this._exits.push(exit);
-
                     if (exit.floorId > this._floorId) {
                         const upGrid = cc.v2(exit.grid.x, exit.grid.y);
                         this._upGrids.push({upGrid, symbol});
@@ -408,8 +384,34 @@ cc.Class({
                 }
             }
         }
-        hero.node.destroy();
         cc.log('exits:', this._exits);
+    },
+
+    _initLayerTiles (layer, isFloor) {
+        if (this._floorId == 0) {
+            return;
+        }
+
+        for (let y = 0; y < this._mapSize.height; y++) {
+            for (let x = 0; x < this._mapSize.width; x++) {
+                const gid = layer.getTileGIDAt(x, y);
+                const spriteFrame = this._tileset.getSpriteFrame(gid.toString());
+                if (gid === 0 || spriteFrame == null) {
+                    continue;
+                }
+
+                const tile = new cc.Node();
+                const sprite = tile.addComponent(cc.Sprite);
+                sprite.trim = cc.Sprite.Type.SIMPLE;
+                sprite.sizeMode = cc.Sprite.SizeMode.RAW;
+                sprite.spriteFrame = spriteFrame;
+                tile.anchorX = 0;
+                tile.anchorY = 0;
+                tile.position = layer.getPositionAt(x, y);
+                tile.zIndex = isFloor ? 0 : y;
+                this.node.addChild(tile);
+            }
+        }
     },
 
     _parseLogicGid (gid, x, y) {
@@ -419,9 +421,6 @@ cc.Class({
                 const add = compName => {
                     const trigger = node.addComponent(compName);
                     trigger.init(event);
-                    trigger.gid = gid;
-                    trigger.floorId = this._floorId;
-                    trigger.grid = cc.v2(x, y);
                 };
                 if (event.TALK) {
                     add('EventTalk');
@@ -443,12 +442,10 @@ cc.Class({
             };
         };
 
-        if (gid >= 226 && gid <= 226+109) {
-            const id = gid - 226;
-            const viewConfig = this._monsterViewConfigMap.get(id);
+        if (Game.config.isBoss(gid) || Game.config.isMonster(gid)) {
             const monster = cc.instantiate(this.monsterPrefab);
             monster.position = this.getPositionAt(x, y);
-            monster.getComponent(EntityView).init(gid, viewConfig);
+            monster.getComponent('ViewMonster').init(gid, this._monsterAtlas);
             this.node.addChild(monster);
             this._entities[y][x] = monster;
             this._layerLogic.setTileGIDAt(0, x, y);
@@ -551,27 +548,6 @@ cc.Class({
             entity.gid = gid;
             entity.floorId = this._floorId;
             entity.grid = cc.v2(x, y);
-        }
-    },
-
-    _initLayerTiles (layer, isFloor) {
-        if (this._floorId == 0) {
-            return;
-        }
-        for (let y = 0; y < this._mapSize.height; y++) {
-            for (let x = 0; x < this._mapSize.width; x++) {
-                const tile = new cc.Node();
-                const sprite = tile.addComponent(cc.Sprite);
-                const gid = layer.getTileGIDAt(x, y);
-                sprite.trim = cc.Sprite.Type.SIMPLE;
-                sprite.sizeMode = cc.Sprite.SizeMode.RAW;
-                sprite.spriteFrame = this._tileset.getSpriteFrame(gid.toString());
-                tile.anchorX = 0;
-                tile.anchorY = 0;
-                tile.position = layer.getPositionAt(x, y);
-                tile.zIndex = isFloor ? 0 : y;
-                this.node.addChild(tile);
-            }
         }
     },
 
