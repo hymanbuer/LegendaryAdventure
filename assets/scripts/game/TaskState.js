@@ -1,4 +1,10 @@
 
+const State = cc.Enum({
+    New: 0,
+    Accepted: 1,
+    Finished: 2,
+});
+
 const TaskState = cc.Class({
     ctor () {
         this._stateMap = new Map();
@@ -6,7 +12,7 @@ const TaskState = cc.Class({
 
     getTaskState (gid) {
         gid = Number.parseInt(gid);
-        return this._stateMap.get(gid) || 0;
+        return this._stateMap.get(gid) || State.New;
     },
 
     setTaskState (gid, state) {
@@ -15,3 +21,5 @@ const TaskState = cc.Class({
         cc.log(this._stateMap);
     }
 });
+
+TaskState.TaskState = State;

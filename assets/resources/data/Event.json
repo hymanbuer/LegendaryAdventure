@@ -76,7 +76,8 @@
                     }
                 ],
                 "MESSAGE": "获得石中剑",
-                "TASKAWARD": "176"
+                "TASKAWARD": "176",
+                "ADDENTITY": "406"
             },
             {
                 "ID": "406",

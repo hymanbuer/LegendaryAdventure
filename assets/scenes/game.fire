@@ -53,8 +53,8 @@
     },
     "_scale": {
       "__type__": "cc.Vec3",
-      "x": 0.8555259515394953,
-      "y": 0.8555259515394953,
+      "x": 0.564436630463936,
+      "y": 0.564436630463936,
       "z": 1
     },
     "_quat": {
@@ -635,23 +635,26 @@
       "__id__": 18
     },
     "_enabled": true,
+    "heroPrefab": {
+      "__uuid__": "78df5517-580d-4e3c-99b9-5922edadc9c0"
+    },
     "monsterPrefab": {
       "__uuid__": "585c8666-453a-48fb-b9d1-d25d0fcfe2ac"
     },
     "itemPrefab": {
       "__uuid__": "b129fb6a-80ad-41d5-bef7-531ce3e3b2ba"
     },
-    "triggerPrefab": {
-      "__uuid__": "4772bcf5-4d79-43da-8946-4b45ba99e925"
-    },
-    "heroPrefab": {
-      "__uuid__": "78df5517-580d-4e3c-99b9-5922edadc9c0"
-    },
     "npcPrefab": {
       "__uuid__": "cffd07ed-e669-42f7-b920-97d55f9a69f8"
     },
     "doorPrefab": {
       "__uuid__": "ce7a762c-c72f-4c6c-969c-be97b15e30d2"
+    },
+    "triggerPrefab": {
+      "__uuid__": "4772bcf5-4d79-43da-8946-4b45ba99e925"
+    },
+    "staticItemPrefab": {
+      "__uuid__": "2e8baf92-32b5-49f2-9271-29579aebb1a5"
     },
     "_id": "74FwONhGtNUa5DhsFebfdT"
   },

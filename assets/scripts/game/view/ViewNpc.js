@@ -9,6 +9,12 @@ cc.Class({
     properties: {
         body: cc.Sprite,
         shadow: cc.Sprite,
+        bubble: cc.Node,
+        bubbleText: cc.Label,
+    },
+
+    onLoad () {
+        this.bubble.active = false;
     },
 
     init (gid) {
@@ -25,5 +31,11 @@ cc.Class({
             this.body.spriteFrame = Game.res.getItemSpriteFrame(bodyName);
             this.getComponent(cc.Animation).play();
         }
+    },
+
+    showBubble (text) {
+        this.bubble.active = true;
+        this.bubbleText.string = text;
+        this.getComponent(cc.Animation).play('bubble_scale');
     },
 });

@@ -163,19 +163,28 @@ cc.Class({
     },
 
     getSmallMonster (floorId, gid) {
-        if (gid < 226 || gid > 226+109) return null;
-
-        const id = gid - 226;
         const atlas = this.getMonsterAtlas(floorId);
-        const name = `M_${Utils.fixedNumber(id, 2)}_00`;
-        return atlas ? atlas.getSpriteFrame(name) : null;
-    },
-
-    getMonsterSpriteFrame (floorId, name) {
-        const atlas = this.getMonsterAtlas(floorId);
-        if (atlas) {
-            return atlas.getSpriteFrame(name);
+        if (atlas == null) {
+            return {feet: null, body: null, bodyClip: null};
         }
-        return null;
+
+        let index, prefix;
+        if (Game.config.isBoss(gid)) {
+            index = Game.config.getBossIndex(gid);
+            prefix = 'MB';
+        } else {
+            index = Game.config.getMonsterIndex(gid);
+            prefix = 'M';
+        }
+
+        const monster = {};
+        const feetName = `${prefix}_${Utils.fixedNumber(index, 2)}`;
+        const bodyName = `${feetName}_00`;
+        monster.feet = atlas.getSpriteFrame(feetName);
+        monster.body = atlas.getSpriteFrame(bodyName);
+        if (Game.animation.hasClipConfig(bodyName)) {
+            monster.bodyClip = Game.animation.getClip(bodyName, cc.WrapMode.Loop);
+        }
+        return monster;
     },
 });

@@ -1,7 +1,7 @@
 
 const Game = require('Game');
 
-const PanelGetItem = cc.Class({
+cc.Class({
     extends: cc.Component,
 
     properties: {

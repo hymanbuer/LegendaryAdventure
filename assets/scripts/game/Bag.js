@@ -13,6 +13,7 @@ const Bag = cc.Class({
         this.addItem(155, 5);
         this.addItem(156, 5);
         this.addItem(157, 5);
+        this.addItem(360, 1);
     },
 
     addItem (gid, num = 1) {

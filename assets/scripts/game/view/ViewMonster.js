@@ -13,26 +13,14 @@ cc.Class({
     },
 
     init (gid) {
-        let index, prefix;
-        if (Game.config.isBoss(gid)) {
-            index = Game.config.getBossIndex(gid);
-            prefix = 'MB';
-        } else {
-            index = Game.config.getMonsterIndex(gid);
-            prefix = 'M';
-        }
-
-        const feetName = `${prefix}_${Utils.fixedNumber(index, 2)}`;
-        this.feet.spriteFrame = Game.res.getMonsterSpriteFrame(this.floorId, feetName);
-
-        const bodyName = `${feetName}_00`;
-        if (Game.animation.hasClipConfig(bodyName)) {
-            const bodyClip = Game.animation.getClip(bodyName, cc.WrapMode.Loop);
+        const monster = Game.res.getSmallMonster(this.floorId, gid);
+        this.body.spriteFrame = monster.body;
+        this.feet.spriteFrame = monster.feet;
+        if (monster.bodyClip) {
             const animation = this.body.addComponent(cc.Animation);
-            animation.addClip(bodyClip);
-            animation.play(bodyClip.name);
+            animation.addClip(monster.bodyClip);
+            animation.play(monster.bodyClip.name);
         } else {
-            this.body.spriteFrame = Game.res.getMonsterSpriteFrame(this.floorId, bodyName);
             this.getComponent(cc.Animation).play();
         }
     },

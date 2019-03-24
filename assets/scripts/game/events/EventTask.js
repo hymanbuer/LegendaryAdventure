@@ -1,10 +1,11 @@
 
 const TalkType = require('PanelTalk').TalkType;
+const TaskState = require('TaskState').TaskState;
 const Game = require('Game');
 
 function showTalk(title, talkList, type, callback) {
     Game.openPanel('talk', title, talkList, type);
-    Game.onPanelClosed('talk', () => callback(null));
+    // Game.onPanelClosed('talk', () => callback(null));
 }
 
 cc.Class({
@@ -23,20 +24,23 @@ cc.Class({
     },
 
     doBeforeEnter (sender, callback) {
-        if (this.state === 0) {
-            this.state = 1;
-            Game.taskState.setTaskState(this.event.ID, 1);
-            showTalk(this.title, this.event.TASK, TalkType.Task, callback);
-        } else if (this.state === 1) {
+        if (this.state === TaskState.New) {
+            this.state = TaskState.Accepted;
+            Game.taskState.setTaskState(this.event.ID, TaskState.Accepted);
+            callback(`Task accepted: ${this.event.ID}`);
+            showTalk(this.title, this.event.TASK, TalkType.Task);
+        } else if (this.state === TaskState.Accepted) {
             if (Game.bag.getNumOfItem(this.event.TASKNEEDED) > 0) {
-                this.state = 2;
-                Game.taskState.setTaskState(this.event.ID, 2);
+                this.state = TaskState.Finished;
+                Game.taskState.setTaskState(this.event.ID, TaskState.Finished);
 
-                this.node.destroy();
-                Game.mapState.removeEntity(this.floorId, this.grid);
-
-                showTalk(this.title, this.event.TASKEND, TalkType.Normal, callback);
+                callback(null);
+                showTalk(this.title, this.event.TASKEND, TalkType.Normal, () => {
+                    Game.mapState.removeEntity(this.floorId, this.grid);
+                    this.node.destroy();
+                });
             } else {
+                callback(`Task proccessing: ${this.event.ID}`);
                 showTalk(this.title, this.event.TASKING, TalkType.Normal, callback);
             }
         }

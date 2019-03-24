@@ -1,8 +1,7 @@
 
 const Game = require('Game');
 
-const startY = -406;
-const spaceY = 88;
+const spaceY = 2;
 
 const PanelGetItem = cc.Class({
     extends: cc.Component,
@@ -18,7 +17,10 @@ const PanelGetItem = cc.Class({
 
     onLoad () {
         PanelGetItem.showingCount += 1;
-        this.node.y = startY + (PanelGetItem.showingCount - 1)*spaceY;
+        const widget = this.getComponent(cc.Widget);
+        const count = PanelGetItem.showingCount;
+        widget.bottom += count * this.node.height + (count-1) * spaceY;
+
         this.scheduleOnce(()=> {
             this.node.destroy();
         }, 2.0);

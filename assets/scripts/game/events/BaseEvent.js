@@ -7,17 +7,20 @@ cc.Class({
     properties: {
         gid: {
             get () {
-                return this.getComponent(BaseEntity).gid;
+                const entity = this.getComponent(BaseEntity);
+                return entity ? entity.gid : 0;
             }
         },
         floorId: {
             get () {
-                return this.getComponent(BaseEntity).floorId;
+                const entity = this.getComponent(BaseEntity);
+                return entity ? entity.floorId : 0;
             }
         },
         grid: {
             get () {
-                return this.getComponent(BaseEntity).grid;
+                const entity = this.getComponent(BaseEntity);
+                return entity ? entity.grid : cc.v2();
             }
         },
     },

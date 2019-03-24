@@ -529,8 +529,8 @@
     "target": {
       "__id__": 1
     },
-    "component": "UiTalk",
-    "_componentId": "",
+    "component": "",
+    "_componentId": "442e3jHsMRD+ahZWZ98dmjT",
     "handler": "onClickAccept",
     "customEventData": ""
   },

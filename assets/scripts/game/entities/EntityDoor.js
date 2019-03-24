@@ -48,7 +48,7 @@ cc.Class({
                 if (!this._isRemoving) callback(null);
             });
         } else {
-            Game.openPanel('notice');
+            Game.openPanel('notice', data.ANSWERMESSAGE);
             Game.onPanelClosed('notice', () => callback(null));
         }
     },

@@ -6,6 +6,10 @@ cc.Class({
         text: cc.Label,
     },
 
+    run (text) {
+        this.text.string = text;
+    },
+
     onClick () {
         this.node.destroy();
     },

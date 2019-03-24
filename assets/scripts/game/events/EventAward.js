@@ -14,14 +14,20 @@ cc.Class({
     init (event) {
         this.awardGid = Number.parseInt(event.TASKAWARD);
         this.message = event.MESSAGE;
+        if (event.ADDENTITY) {
+            this.delayDestroy = true;
+        }
     },
 
     doBeforeEnter (sender, callback) {
-        this.node.destroy();
-        Game.mapState.removeEntity(this.floorId, this.grid);
+        callback(null);
+
+        if (!this.delayDestroy) {
+            this.node.destroy();
+            Game.mapState.removeEntity(this.floorId, this.grid);
+        }
         Game.bag.addItem(this.awardGid);
 
         Game.openPanel('get_item_dialog', this.awardGid, this.message);
-        Game.onPanelClosed('get_item_dialog', () => callback(null));
     },
 });

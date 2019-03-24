@@ -6,7 +6,8 @@ cc.Class({
 
     properties: {
         battle: cc.Sprite,
-        monster: cc.Sprite,
+        body: cc.Sprite,
+        feet: cc.Sprite,
         hp: cc.Label,
         attack: cc.Label,
         defence: cc.Label,
@@ -21,8 +22,10 @@ cc.Class({
         this.hp.string = data.HP;
         this.attack.string = data.ATT;
         this.defence.string = data.DEF;
-        this.battle.spriteFrame = Game.res.getSmallBattleBg(floorId);
-        this.monster.spriteFrame = Game.res.getSmallMonster(floorId, gid);
+
+        const monster = Game.res.getSmallMonster(floorId, gid);
+        this.body.spriteFrame = monster.body;
+        this.feet.spriteFrame = monster.feet;
     },
     
     onClickClose () {

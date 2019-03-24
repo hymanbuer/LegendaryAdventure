@@ -46,14 +46,29 @@ cc.Class({
     },
 
     _handleEvent (handleName, sender) {
+        const wrap = handler => {
+            return callback => {
+                if (cc.isValid(this.node)) {
+                    handler(callback);
+                } else {
+                    callback('node has been removed');
+                }
+            };
+        };
+        
         const handlers = [];
-        const eventTriggeres = this.getComponents('BaseEvent');
-        eventTriggeres.forEach(trigger => {
-            handlers.push(trigger[handleName].bind(trigger, sender));
+        const events = this.getComponents('BaseEvent');
+        events.forEach(event => {
+            const handler = event[handleName].bind(event, sender);
+            handlers.push(wrap(handler));
         });
-        handlers.push(this[handleName].bind(this, sender));
+        handlers.push(wrap(this[handleName].bind(this, sender)));
         async.series(handlers, (err, results) => {
-            cc.log(handleName, err || '', results);
+            if (err) {
+                cc.warn(err);
+            } else {
+                cc.log(handleName, results);
+            }
         });
     },
 });
