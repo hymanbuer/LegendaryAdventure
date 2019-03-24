@@ -29,6 +29,7 @@ const monsterAtlasNames = [
 ];
 
 const specialMonsterIndexMap = {
+    [326]: 5,
     [327]: 107,
     [328]: 107,
 };
@@ -190,7 +191,7 @@ cc.Class({
         monster.feet = atlas.getSpriteFrame(feetName);
         monster.body = atlas.getSpriteFrame(bodyName);
         if (Game.animation.hasClipConfig(bodyName)) {
-            monster.bodyClip = Game.animation.getClip(bodyName, cc.WrapMode.Loop);
+            monster.bodyClip = Game.animation.getClipWithAtlas(atlas, bodyName, cc.WrapMode.Loop);
         }
         return monster;
     },

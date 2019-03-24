@@ -20,9 +20,13 @@ cc.Class({
     onKeyDown (event) {
         switch (event.keyCode) {
             case cc.macro.KEY.pageup:
+            case cc.macro.KEY.up:
+            case cc.macro.KEY.right:
                 this['up-floor']();
                 break;
             case cc.macro.KEY.pagedown:
+            case cc.macro.KEY.down:
+            case cc.macro.KEY.left:
                 this['down-floor']();
                 break;
         };

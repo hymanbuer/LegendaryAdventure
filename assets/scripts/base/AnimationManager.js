@@ -44,6 +44,11 @@ const AnimationManager = cc.Class({
         return createClip(atlas, config, clipName, wrapMode);
     },
 
+    getClipWithAtlas (atlas, clipName, wrapMode) {
+        const config = this._animationsConfig[clipName];
+        return createClip(atlas, config, clipName, wrapMode);
+    },
+
     loadClip (clipName, wrapMode) {
         const config = this._animationsConfig[clipName];
         return loader.loadResByUuid(config.uuid)

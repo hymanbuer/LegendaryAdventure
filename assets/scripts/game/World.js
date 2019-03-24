@@ -123,7 +123,12 @@ cc.Class({
     },
 
     setLogicTileGidAt (gid, posOrX, flagsOrY, flags) {
-        this._layerLogic.setTileGIDAt(gid, posOrX, flagsOrY, flags);
+        try {
+            this._layerLogic.setTileGIDAt(gid, posOrX, flagsOrY, flags);
+        } catch (err) {
+            cc.warn(err);
+            cc.warn(gid, posOrX, flagsOrY || '');
+        }
     },
 
     getLogicTileGidAt (pos, y) {
