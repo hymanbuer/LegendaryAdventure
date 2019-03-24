@@ -1,24 +1,15 @@
 
+const Game = require('Game');
 
 cc.Class({
     extends: cc.Component,
 
     properties: {
         sprite: cc.Sprite,
-        animation: cc.Animation,
         shadow: cc.Node,
     },
 
-    init (gid, clipsConfig, isShowShadow) {
-        this.gid = gid;
-
-        if (this.shadow)
-            this.shadow.active = !!isShowShadow;
-            
-        if (!clipsConfig) {
-            this.sprite.spriteFrame = null;
-            return;
-        };
+    init (gid) {
 
         if (!(clipsConfig instanceof Array))
             clipsConfig = [clipsConfig];

@@ -53,8 +53,8 @@
     },
     "_scale": {
       "__type__": "cc.Vec3",
-      "x": 1.0532759957094433,
-      "y": 1.0532759957094433,
+      "x": 0.8555259515394953,
+      "y": 0.8555259515394953,
       "z": 1
     },
     "_quat": {
@@ -345,6 +345,9 @@
     "commonAtlas": {
       "__uuid__": "eaf32319-8ef4-4620-ba6e-38f20da4a8a3"
     },
+    "resConfig": {
+      "__uuid__": "787e7ebb-1e1e-4789-8751-1a23f958f7a8"
+    },
     "_id": "27J1WHJBVKLqWIZv6Gt3/L"
   },
   {
@@ -632,9 +635,6 @@
       "__id__": 18
     },
     "_enabled": true,
-    "itemAtlas": {
-      "__uuid__": "e2a3ccdb-a4ee-4b50-9d7c-a5a63a1612db"
-    },
     "monsterPrefab": {
       "__uuid__": "585c8666-453a-48fb-b9d1-d25d0fcfe2ac"
     },
@@ -646,6 +646,12 @@
     },
     "heroPrefab": {
       "__uuid__": "78df5517-580d-4e3c-99b9-5922edadc9c0"
+    },
+    "npcPrefab": {
+      "__uuid__": "cffd07ed-e669-42f7-b920-97d55f9a69f8"
+    },
+    "doorPrefab": {
+      "__uuid__": "ce7a762c-c72f-4c6c-969c-be97b15e30d2"
     },
     "_id": "74FwONhGtNUa5DhsFebfdT"
   },

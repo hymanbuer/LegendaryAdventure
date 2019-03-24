@@ -1,12 +1,22 @@
 
 exports.fixedNumber = function (value, n) {
     const digits = [];
+    if (value === 0) {
+        digits.push(0);
+    } else {
+        while (value > 0) {
+            digits.push(value % 10);
+            value = Math.floor(value / 10);
+        }
+    }
+
+    n -= digits.length;
     while (n > 0) {
-        digits.push(value % 10);
-        value = Math.floor(value / 10);
+        digits.push(0);
         n -= 1;
     }
     digits.reverse();
+
     return digits.join('');
 };
 

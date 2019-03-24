@@ -39,6 +39,8 @@ const Game = cc.Class({
 
 /////// base
 
+Game.EMPTY_FUNC = function () {};
+
 cc.js.get(Game, 'panel', function () {
     return PanelManager.instance;
 });
@@ -69,7 +71,7 @@ cc.js.get(Game, 'taskState', function () {
     return Game.instance._taskState;
 });
 cc.js.get(Game, 'res', function () {
-    return Game.instance.getComponent('Resources');
+    return Game.instance.getComponent('GameRes');
 });
 cc.js.get(Game, 'config', function () {
     return require('GameConfig');

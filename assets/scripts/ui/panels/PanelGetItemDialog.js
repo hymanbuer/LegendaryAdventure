@@ -16,7 +16,7 @@ const PanelGetItem = cc.Class({
     setItem (gid, message) {
         const data = Game.dataCenter.getMonster(gid);
         this.text.string = message || data.MESSAGE;
-        this.icon.spriteFrame = Game.res.getSpriteFrame(gid);
+        this.icon.spriteFrame = Game.res.getItemSpriteFrameByGid(gid);
     },
 
     onClickConfirm () {

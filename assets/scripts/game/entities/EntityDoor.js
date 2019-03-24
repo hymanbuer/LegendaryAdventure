@@ -14,6 +14,15 @@ cc.Class({
 
     },
 
+    open (callback) {
+        if (this._isRemoving) {
+            return;
+        }
+        this._isRemoving = true;
+        Game.mapState.removeEntity(this.floorId, this.grid);
+        this.node.emit('open', callback);
+    },
+
     doBeforeEnter (sender, callback) {
         if (this._isRemoving) {
             callback(null);
@@ -30,32 +39,18 @@ cc.Class({
 
         if (Game.bag.hasItem(data.ITEMNEEDED)) {
             const useMethod = () => {
-                this._isRemoving = true;
                 Game.bag.removeItem(data.ITEMNEEDED);
-                Game.mapState.removeEntity(this.floorId, this.grid);
-
-                const state = this.getComponent(EntityView).play('open');
-                if (state) {
-                    state.on('lastframe', ()=> {
-                        this.node.destroy();
-                        callback(null);
-                    });
-                } else {
-                    this.node.destroy();
-                    callback(null);
-                }
+                this.open(callback);
             };
             const text = data.MESSAGE || data.ASKMESSAGE;
-            const icon = Game.res.getSpriteFrame(data.ITEMNEEDED);
-            Game.openPanel('use_item', useMethod, text, icon)
-                .then(() => Game.onPanelClosed('use_item', () => {
-                    if (!this._isRemoving) callback(null);
-                }))
-                .catch(callback);
+            const icon = Game.res.getItemSpriteFrameByGid(data.ITEMNEEDED);
+            Game.openPanel('use_item', useMethod, text, icon);
+            Game.onPanelClosed('use_item', () => {
+                if (!this._isRemoving) callback(null);
+            });
         } else {
-            Game.openPanel('notice').then(() => {
-                Game.onPanelClosed('notice', () => callback(null));
-            }, callback);
+            Game.openPanel('notice');
+            Game.onPanelClosed('notice', () => callback(null));
         }
     },
 });

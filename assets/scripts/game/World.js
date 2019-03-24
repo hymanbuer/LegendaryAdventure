@@ -1,10 +1,7 @@
 
 const LoaderHelper = require('CCLoaderHelper');
 
-const EntityViewConfig = require("EntityViewConfig");
 const EntityView = require('EntityView');
-
-const EventTrigger = require('EventTrigger');
 const BaseEntity = require('BaseEntity');
 const EntityMonster = require('EntityMonster');
 const EntityItem = require('EntityItem');
@@ -24,23 +21,6 @@ const fourDirections = [
     {x: 1, y: 0},
 ];
 
-const itemGidSet = new Set([
-    151, 153, 154, 155, 156, 157, 158, 159, 401,
-]);
-const doorGidSet = new Set([
-    351, 352, 353, 354, 355, 356, 357, 358, 359,
-    410, 411, 412, 413, 414, 415,
-    360, 403, 404, 821, 1001,
-]);
-const otherGidSet = new Set([
-    405, // 插着石中剑的石头
-    406, // 拨了石中剑的石头
-    409,
-]);
-const triggerGidSet = new Set([
-    408,
-]);
-
 const EntityType = cc.Enum({
     Item: -1,
     Monster: -1,
@@ -57,20 +37,16 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        itemAtlas: cc.SpriteAtlas,
         monsterPrefab: cc.Prefab,
         itemPrefab: cc.Prefab,
         triggerPrefab: cc.Prefab,
         heroPrefab: cc.Prefab,
+        npcPrefab: cc.Prefab,
+        doorPrefab: cc.Prefab,
     },
 
     onLoad () {
-        this.node.on('standopen', this.onStandOpen, this);
-        this.node.on('addentity', this.onAddEntity, this);
         this.node.on('touchstart', this.onTouchWorld, this);
-
-        this._npcViewConfigMap = EntityViewConfig.createNpcMap(this.itemAtlas);
-        this._itemViewConfigMap = EntityViewConfig.createItemMap(this.itemAtlas);
     },
 
     initFloor (floorId, isUp, symbol) {
@@ -220,23 +196,15 @@ cc.Class({
         base[handlerName].call(base, sender);
     },
 
-    onStandOpen (event) {
-        const openGid = event.detail;
+    onTriggerEnter (sender) {
+        const openGid = sender.gid + 1;
         const entity = this._findEntity(openGid);
         if (!entity) return;
 
         const base = entity.getComponent(BaseEntity);
-        const state = entity.getComponent(EntityView).play('open');
-        state.on('lastframe', ()=> entity.destroy());
-        Game.mapState.removeEntity(base.floorId, base.grid);
-    },
-
-    onAddEntity (event) {
-        this.scheduleOnce(()=> {
-            const info = event.detail;
-            this._layerLogic.setTileGIDAt(info.gid, info.x, info.y);
-            this._parseLogicGid(info.gid, info.x, info.y);
-        }, 0);
+        if (base.open) {
+            base.open();
+        }
     },
 
     _getExit (pos, posY) {
@@ -459,11 +427,27 @@ cc.Class({
             entity.floorId = this._floorId;
             entity.grid = cc.v2(x, y);
 
-        } else if ((gid >= 1 && gid <= 22) || (gid >= 101 && gid <= 108)) {
-            const viewConfig = this._npcViewConfigMap.get(gid);
-            const npc = cc.instantiate(this.monsterPrefab);
+        } else if (Game.config.isItem(gid)) {
+            const item = cc.instantiate(this.itemPrefab);
+            item.position = this.getPositionAt(x, y);
+            item.getComponent('ViewItem').init(gid);
+            this.node.addChild(item);
+            this._entities[y][x] = item;
+            this._layerLogic.setTileGIDAt(0, x, y);
+
+            checkAddEventTrigger(gid, item);
+            overideDestroy(item);
+            item.zIndex = y;
+
+            const entity = item.addComponent(EntityItem);
+            entity.gid = gid;
+            entity.floorId = this._floorId;
+            entity.grid = cc.v2(x, y);
+
+        } else if (Game.config.isNpc(gid)) {
+            const npc = cc.instantiate(this.npcPrefab);
             npc.position = this.getPositionAt(x, y);
-            npc.getComponent(EntityView).init(gid, viewConfig);
+            npc.getComponent('ViewNpc').init(gid);
             this.node.addChild(npc);
             this._entities[y][x] = npc;
             this._layerLogic.setTileGIDAt(0, x, y);
@@ -478,29 +462,10 @@ cc.Class({
             entity.floorId = this._floorId;
             entity.grid = cc.v2(x, y);
 
-        } else if (itemGidSet.has(gid)) {
-            const viewConfig = this._itemViewConfigMap.get(gid);
-            const item = cc.instantiate(this.itemPrefab);
+        } else if (Game.config.isDoor(gid)) {
+            const item = cc.instantiate(this.doorPrefab);
             item.position = this.getPositionAt(x, y);
-            item.getComponent(EntityView).init(gid, viewConfig);
-            this.node.addChild(item);
-            this._entities[y][x] = item;
-            this._layerLogic.setTileGIDAt(0, x, y);
-
-            checkAddEventTrigger(gid, item);
-            overideDestroy(item);
-            item.zIndex = y;
-
-            const entity = item.addComponent(EntityItem);
-            entity.gid = gid;
-            entity.floorId = this._floorId;
-            entity.grid = cc.v2(x, y);
-
-        } else if (doorGidSet.has(gid)) {
-            const viewConfig = this._itemViewConfigMap.get(gid);
-            const item = cc.instantiate(this.triggerPrefab);
-            item.position = this.getPositionAt(x, y);
-            item.getComponent(EntityView).init(gid, viewConfig);
+            item.getComponent('ViewDoor').init(gid);
             this.node.addChild(item);
             this._entities[y][x] = item;
             this._layerLogic.setTileGIDAt(0, x, y);
@@ -514,11 +479,10 @@ cc.Class({
             entity.floorId = this._floorId;
             entity.grid = cc.v2(x, y);
 
-        } else if (otherGidSet.has(gid)) {
-            const viewConfig = this._itemViewConfigMap.get(gid);
+        } else if (Game.config.isStaticItem(gid)) {
             const item = cc.instantiate(this.itemPrefab);
             item.position = this.getPositionAt(x, y);
-            item.getComponent(EntityView).init(gid, viewConfig);
+            item.getComponent('ViewItem').init(gid);
             this.node.addChild(item);
             this._entities[y][x] = item;
             this._layerLogic.setTileGIDAt(0, x, y);
@@ -531,11 +495,11 @@ cc.Class({
             entity.gid = gid;
             entity.floorId = this._floorId;
             entity.grid = cc.v2(x, y);
-        } else if (triggerGidSet.has(gid)) {
-            const viewConfig = this._itemViewConfigMap.get(gid);
-            const item = cc.instantiate(this.itemPrefab);
+
+        } else if (Game.config.isTrigger(gid)) {
+            const item = cc.instantiate(this.triggerPrefab);
             item.position = this.getPositionAt(x, y);
-            item.getComponent(EntityView).init(gid, viewConfig);
+            item.getComponent('ViewTrigger').init(gid);
             this.node.addChild(item);
             this._entities[y][x] = item;
             this._layerLogic.setTileGIDAt(0, x, y);
@@ -548,6 +512,8 @@ cc.Class({
             entity.gid = gid;
             entity.floorId = this._floorId;
             entity.grid = cc.v2(x, y);
+
+            item.on('trigger-enter', this.onTriggerEnter, this);
         }
     },
 

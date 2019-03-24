@@ -3,14 +3,6 @@ const LoaderHelper = require('CCLoaderHelper');
 const Utils = require('Utils');
 const Game = require('Game');
 
-const spriteMap = new Map();
-spriteMap.set(151, 'Blood');
-spriteMap.set(153, 'redgem');
-spriteMap.set(155, 'yellowkey');
-spriteMap.set(156, 'bluekey');
-spriteMap.set(157, 'redkey');
-spriteMap.set(159, 'mirror');
-
 const tilesetNames = [
     'TiledMapOne',
     'TiledMapTwo',
@@ -48,15 +40,20 @@ function getMonsterAtlasUrl(sceneId) {
     return `sheets/monsters/${monsterAtlasNames[sceneId - 1]}`;
 }
 
-const Resources = cc.Class({
+cc.Class({
     extends: cc.Component,
 
     properties: {
         itemAtlas: cc.SpriteAtlas,
         commonAtlas: cc.SpriteAtlas,
+        resConfig: cc.JsonAsset,
     },
 
     onLoad () {
+        const config = this.resConfig.json;
+        this._itemNameMap = config.itemNameMap;
+        this._clipNameMap = config.clipNameMap;
+        this._triggerClipNameMap = config.triggerClipNameMap;
         this._loadedFloorIds = new Map();
     },
 
@@ -126,10 +123,38 @@ const Resources = cc.Class({
         return tileset.getSpriteFrame(name);
     },
 
-    getSpriteFrame (gid) {
-        gid = Number.parseInt(gid);
-        const name = spriteMap.get(gid);
+    getItemSpriteFrame (name) {
         return this.itemAtlas.getSpriteFrame(name);
+    },
+
+    getItemSpriteFrameByGid (gid) {
+        // gid = Number.parseInt(gid);
+        const name = this._itemNameMap[gid];
+        return this.itemAtlas.getSpriteFrame(name);
+    },
+
+    getClipByGid (gid) {
+        const name = this._clipNameMap[gid];
+        if (Game.animation.hasClipConfig(name)) {
+            return Game.animation.getClip(name);
+        }
+        return null;
+    },
+
+    getTriggerClips (gid) {
+        const config = this._triggerClipNameMap[gid];
+        if (config == null) {
+            return {};
+        }
+
+        const clips = {};
+        if (Game.animation.hasClipConfig(config.enter)) {
+            clips.enter = Game.animation.getClip(config.enter);
+        }
+        if (Game.animation.hasClipConfig(config.exit)) {
+            clips.exit = Game.animation.getClip(config.exit);
+        }
+        return clips;
     },
 
     getSmallBattleBg (floorId) {

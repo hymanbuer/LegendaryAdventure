@@ -22,3 +22,44 @@ exports.isMonster = function (gid) {
 exports.getMonsterIndex = function (gid) {
     return gid - 226;
 };
+
+const itemRanges = [
+    [39, 50], [64, 75], [89, 100], [114, 125], [139, 193],
+];
+const itemSet = new Set();
+itemRanges.forEach(range => {
+    for (let i = range[0]; i < range[1]; i++) {
+        itemSet.add(i);
+    }
+});
+exports.isItem = function (gid) {
+    return itemSet.has(gid);
+};
+
+exports.isNpc = function (gid) {
+    return (gid >= 1 && gid <= 22) || (gid >= 101 && gid <= 107);
+};
+
+exports.isPrincess = function (gid) {
+    return gid >= 1 && gid <= 22;
+};
+
+const doorSet = new Set([
+    351, 352, 353, 354, 355, 356, 357, 358, 359,
+    410, 411, 412, 413, 414, 415,
+    360, 403, 404, 409, 821, 1001,
+]);
+exports.isDoor = function (gid) {
+    return doorSet.has(gid);
+};
+
+const staticSet = new Set([
+    405, 406, 416, 417, 418, 421, 422, 423,
+]);
+exports.isStaticItem = function (gid) {
+    return staticSet.has(gid);
+};
+
+exports.isTrigger = function (gid) {
+    return gid === 408;
+};
