@@ -22,10 +22,11 @@ cc.Class({
         this.hp.string = data.HP;
         this.attack.string = data.ATT;
         this.defence.string = data.DEF;
-
+        
         const monster = Game.res.getSmallMonster(floorId, gid);
         this.body.spriteFrame = monster.body;
         this.feet.spriteFrame = monster.feet;
+        this.battle.spriteFrame = Game.res.getSmallBattleBg(floorId);
     },
     
     onClickClose () {

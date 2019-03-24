@@ -34,14 +34,14 @@ cc.Class({
                 this.state = TaskState.Finished;
                 Game.taskState.setTaskState(this.event.ID, TaskState.Finished);
 
+                Game.mapState.removeEntity(this.floorId, this.grid);
+                this.node.destroy();
+
                 callback(null);
-                showTalk(this.title, this.event.TASKEND, TalkType.Normal, () => {
-                    Game.mapState.removeEntity(this.floorId, this.grid);
-                    this.node.destroy();
-                });
+                showTalk(this.title, this.event.TASKEND, TalkType.Normal);
             } else {
                 callback(`Task proccessing: ${this.event.ID}`);
-                showTalk(this.title, this.event.TASKING, TalkType.Normal, callback);
+                showTalk(this.title, this.event.TASKING, TalkType.Normal);
             }
         }
     },

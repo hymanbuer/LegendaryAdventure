@@ -2,9 +2,7 @@
 const PanelManager = require('PanelManager');
 const AnimationManager = require('AnimationManager');
 
-const Bag = require('Bag');
-const MapState = require('MapState');
-const TaskState = require('TaskState');
+const GameConfig = require('GameConfig');
 
 const Game = cc.Class({
     extends: cc.Component,
@@ -31,6 +29,9 @@ const Game = cc.Class({
     },
 
     _init () {
+        const Bag = require('Bag');
+        const MapState = require('MapState');
+        const TaskState = require('TaskState'); 
         this._bag = new Bag();
         this._mapState = new MapState();
         this._taskState = new TaskState();
@@ -74,7 +75,7 @@ cc.js.get(Game, 'res', function () {
     return Game.instance.getComponent('GameRes');
 });
 cc.js.get(Game, 'config', function () {
-    return require('GameConfig');
+    return GameConfig;
 });
 
 ////// common

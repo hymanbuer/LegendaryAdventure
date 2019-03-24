@@ -31,10 +31,15 @@ cc.Class({
     },
 
     onChangeFloor (exit) {
+        if (this._isChangingFloor) {
+            return;
+        }
+        this._isChangingFloor = true;
         this._maskIn()
             .then(() => this._changeFloor(exit.floorId, exit.isUp, exit.symbol))
             .then(() => this._checkShowPreface(exit.floorId, exit.isUp))
-            .then(() => this._maskOut());
+            .then(() => this._maskOut())
+            .then(() => this._isChangingFloor = false);
     },
 
     onClickSetting () {

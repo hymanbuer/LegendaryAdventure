@@ -28,6 +28,11 @@ const monsterAtlasNames = [
     'MonsterTen',
 ];
 
+const specialMonsterIndexMap = {
+    [327]: 107,
+    [328]: 107,
+};
+
 function getMapUrl(floorId) {
     return `maps/FL${Utils.fixedNumber(floorId, 3)}`;
 }
@@ -128,7 +133,6 @@ cc.Class({
     },
 
     getItemSpriteFrameByGid (gid) {
-        // gid = Number.parseInt(gid);
         const name = this._itemNameMap[gid];
         return this.itemAtlas.getSpriteFrame(name);
     },
@@ -170,11 +174,14 @@ cc.Class({
 
         let index, prefix;
         if (Game.config.isBoss(gid)) {
-            index = Game.config.getBossIndex(gid);
+            index = gid - 126;
             prefix = 'MB';
         } else {
-            index = Game.config.getMonsterIndex(gid);
+            index = gid - 226;
             prefix = 'M';
+        }
+        if (specialMonsterIndexMap[gid]) {
+            index = specialMonsterIndexMap[gid];
         }
 
         const monster = {};

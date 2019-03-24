@@ -7,20 +7,16 @@ cc.js.get(exports, 'maxSceneId', function () {
     return 10;
 });
 
+cc.js.get(exports, 'maxFloors', function () {
+    return 105;
+});
+
 exports.isBoss = function (gid) {
     return gid >= 126 && gid <= 134;
 };
 
-exports.getBossIndex = function (gid) {
-    return gid - 126;
-};
-
 exports.isMonster = function (gid) {
     return gid >= 226 && gid <= 329;
-};
-
-exports.getMonsterIndex = function (gid) {
-    return gid - 226;
 };
 
 const itemRanges = [
@@ -56,7 +52,8 @@ exports.isDoor = function (gid) {
 };
 
 const staticSet = new Set([
-    401, 402, 405, 406, 416, 417, 418, 421, 422, 423,
+    401, 402, 405, 406, 416, 417, 418, 419, 421, 422, 423,
+    23, 24,
 ]);
 exports.isStaticItem = function (gid) {
     return staticSet.has(gid);

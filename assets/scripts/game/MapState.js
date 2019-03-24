@@ -1,13 +1,13 @@
 
-const maxFloors = 105;
+const GameConfig = require('GameConfig')
 
 function gridKey(grid) {
     return `${grid.x}, ${grid.y}`;
 }
 
-const MapState = cc.Class({
+cc.Class({
     ctor () {
-        this._mapStateList = new Array(maxFloors);
+        this._mapStateList = new Array(GameConfig.maxFloors);
     },
 
     isEntityRemoved (floorId, grid) {

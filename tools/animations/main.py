@@ -44,7 +44,11 @@ def main():
 	for plist in plists_element:
 		filename = plist.text.strip()
 		tmp = read_framename_to_filename(filename)
-		framename_to_filename.update(tmp)
+		# framename_to_filename.update(tmp)
+		for framename in tmp:
+			if framename not in framename_to_filename:
+				framename_to_filename[framename] = tmp[framename]
+				
 
 	animation_dict = {}
 	for animation in animations_element:
