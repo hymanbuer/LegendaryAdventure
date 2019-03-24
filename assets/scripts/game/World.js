@@ -1,7 +1,6 @@
 
 const LoaderHelper = require('CCLoaderHelper');
 
-const EntityView = require('EntityView');
 const BaseEntity = require('BaseEntity');
 const EntityMonster = require('EntityMonster');
 const EntityItem = require('EntityItem');
@@ -257,10 +256,7 @@ cc.Class({
 
     _initMap (floorId) {
         const assets = Game.res.getMapAssets(floorId);
-        if (assets.hasMonster) {
-            this._tileset = assets.tileset;
-            this._monsterAtlas = assets.monsterAtlas;
-        }
+        this._tileset = assets.tileset;
 
         const tiledMap = new cc.Node();
         this.node.removeAllChildren();
@@ -406,14 +402,20 @@ cc.Class({
             const oldDestroy = node.destroy;
             node.destroy = () => {
                 oldDestroy.call(node, ...arguments);
-                this._removeEntity(x, y, node);
+                this._removeEntity(x, y);
+                Game.mapState.removeEntity(this._floorId, cc.v2(x, y));
             };
         };
 
         if (Game.config.isBoss(gid) || Game.config.isMonster(gid)) {
             const monster = cc.instantiate(this.monsterPrefab);
+            const entity = monster.addComponent(EntityMonster);
+            entity.gid = gid;
+            entity.floorId = this._floorId;
+            entity.grid = cc.v2(x, y);
+
             monster.position = this.getPositionAt(x, y);
-            monster.getComponent('ViewMonster').init(gid, this._monsterAtlas);
+            monster.getComponent('ViewMonster').init(gid);
             this.node.addChild(monster);
             this._entities[y][x] = monster;
             this._layerLogic.setTileGIDAt(0, x, y);
@@ -421,11 +423,6 @@ cc.Class({
             checkAddEventTrigger(gid, monster);
             overideDestroy(monster);
             monster.zIndex = y;
-
-            const entity = monster.addComponent(EntityMonster);
-            entity.gid = gid;
-            entity.floorId = this._floorId;
-            entity.grid = cc.v2(x, y);
 
         } else if (Game.config.isItem(gid)) {
             const item = cc.instantiate(this.itemPrefab);
@@ -593,7 +590,7 @@ cc.Class({
         return !!this._entities[pos.y][pos.x];
     },
 
-    _removeEntity (x, y, node) {
+    _removeEntity (x, y) {
         this._entities[y][x] = null;
     },
 

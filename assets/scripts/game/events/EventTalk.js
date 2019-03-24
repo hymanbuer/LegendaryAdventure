@@ -3,7 +3,7 @@ const TalkType = require('PanelTalk').TalkType;
 const Game = require('Game');
 
 cc.Class({
-    extends: require('EventTrigger'),
+    extends: require('BaseEvent'),
 
     properties: {
     },

@@ -170,4 +170,12 @@ cc.Class({
         const name = `M_${Utils.fixedNumber(id, 2)}_00`;
         return atlas ? atlas.getSpriteFrame(name) : null;
     },
+
+    getMonsterSpriteFrame (floorId, name) {
+        const atlas = this.getMonsterAtlas(floorId);
+        if (atlas) {
+            return atlas.getSpriteFrame(name);
+        }
+        return null;
+    },
 });

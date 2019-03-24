@@ -1,6 +1,5 @@
 
 const BaseEntity = require('BaseEntity');
-const EntityView = require('EntityView');
 const Game = require('Game');
 
 cc.Class({

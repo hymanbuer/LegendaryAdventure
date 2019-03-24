@@ -4,7 +4,7 @@ const Game = require('Game');
 const Utils = require('Utils')
 
 cc.Class({
-    extends: cc.Component,
+    extends: require('BaseView'),
 
     properties: {
         body: cc.Sprite,
@@ -12,7 +12,7 @@ cc.Class({
         shadow: cc.Sprite,
     },
 
-    init (gid, atlas) {
+    init (gid) {
         let index, prefix;
         if (Game.config.isBoss(gid)) {
             index = Game.config.getBossIndex(gid);
@@ -23,7 +23,7 @@ cc.Class({
         }
 
         const feetName = `${prefix}_${Utils.fixedNumber(index, 2)}`;
-        this.feet.spriteFrame = atlas.getSpriteFrame(feetName);
+        this.feet.spriteFrame = Game.res.getMonsterSpriteFrame(this.floorId, feetName);
 
         const bodyName = `${feetName}_00`;
         if (Game.animation.hasClipConfig(bodyName)) {
@@ -32,7 +32,7 @@ cc.Class({
             animation.addClip(bodyClip);
             animation.play(bodyClip.name);
         } else {
-            this.body.spriteFrame = atlas.getSpriteFrame(bodyName);
+            this.body.spriteFrame = Game.res.getMonsterSpriteFrame(this.floorId, bodyName);
             this.getComponent(cc.Animation).play();
         }
     },

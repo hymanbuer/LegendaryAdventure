@@ -3,7 +3,7 @@
 const Game = require('Game');
 
 cc.Class({
-    extends: cc.Component,
+    extends: require('BaseView'),
 
     properties: {
         body: cc.Sprite,

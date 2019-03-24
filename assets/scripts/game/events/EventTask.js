@@ -8,7 +8,7 @@ function showTalk(title, talkList, type, callback) {
 }
 
 cc.Class({
-    extends: require('EventTrigger'),
+    extends: require('BaseEvent'),
 
     properties: {
     },

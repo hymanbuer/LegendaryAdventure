@@ -3,7 +3,7 @@
 const Game = require('Game');
 
 cc.Class({
-    extends: require('EventTrigger'),
+    extends: require('BaseEvent'),
 
     properties: {
     },
@@ -18,6 +18,7 @@ cc.Class({
 
     doBeforeEnter (sender, callback) {
         this.node.destroy();
+        Game.mapState.removeEntity(this.floorId, this.grid);
         Game.bag.addItem(this.awardGid);
 
         Game.openPanel('get_item_dialog', this.awardGid, this.message);

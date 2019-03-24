@@ -1,7 +1,7 @@
 
 cc.Class({
     extends: cc.Component,
-    
+
     properties: {
         gid: 0,
         floorId: 0,
@@ -47,7 +47,7 @@ cc.Class({
 
     _handleEvent (handleName, sender) {
         const handlers = [];
-        const eventTriggeres = this.getComponents('EventTrigger');
+        const eventTriggeres = this.getComponents('BaseEvent');
         eventTriggeres.forEach(trigger => {
             handlers.push(trigger[handleName].bind(trigger, sender));
         });
