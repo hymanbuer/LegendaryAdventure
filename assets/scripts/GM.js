@@ -63,7 +63,7 @@ cc.Class({
         }
         this.sceneGame.onChangeFloor({
             floorId: lastFloor.id - 1,
-            isUp: true,
+            isUp: false,
         });
     },
 });

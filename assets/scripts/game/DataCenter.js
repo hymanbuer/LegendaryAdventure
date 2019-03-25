@@ -1,9 +1,8 @@
 
 const Utils = require('Utils');
+const GameConfig = require('GameConfig');
 
-const maxFloors = 105;
-
-const DataCenter = cc.Class({
+cc.Class({
     extends: cc.Component,
 
     properties: {
@@ -44,7 +43,7 @@ const DataCenter = cc.Class({
     },
 
     _handleEvent (obj) {
-        this._eventMapList = new Array(maxFloors);
+        this._eventMapList = new Array(GameConfig.maxFloors);
         const FLOORS = obj.FLOOR;
         for (let i = 0; i < FLOORS.length; i++) {
             const floorId = Number.parseInt(FLOORS[i].ID);

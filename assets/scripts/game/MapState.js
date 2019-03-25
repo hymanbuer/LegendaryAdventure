@@ -1,5 +1,5 @@
 
-const GameConfig = require('GameConfig')
+const GameConfig = require('GameConfig');
 
 function gridKey(grid) {
     return `${grid.x}, ${grid.y}`;

@@ -1,13 +1,14 @@
 
 const Game = require('Game');
 
-const spaceY = 2;
+const SPACE_Y = 0;
+const ORIGIN_BOTTOM = 16;
 
-const PanelGetItem = cc.Class({
+const Panel = cc.Class({
     extends: cc.Component,
 
     statics: {
-        showingCount: 0,
+        showingList: [],
     },
 
     properties: {
@@ -16,18 +17,16 @@ const PanelGetItem = cc.Class({
     },
 
     onLoad () {
-        PanelGetItem.showingCount += 1;
-        const widget = this.getComponent(cc.Widget);
-        const count = PanelGetItem.showingCount;
-        widget.bottom += count * this.node.height + (count-1) * spaceY;
-
+        Panel.showingList.push(this);
+        this._updateLayout();
         this.scheduleOnce(()=> {
             this.node.destroy();
         }, 2.0);
     },
 
     onDestroy () {
-        PanelGetItem.showingCount -= 1;
+        Panel.showingList.shift();
+        this._updateLayout();
     },
 
     run (gid) {
@@ -38,5 +37,13 @@ const PanelGetItem = cc.Class({
         const data = Game.dataCenter.getMonster(gid);
         this.text.string = data.MESSAGE;
         this.icon.spriteFrame = Game.res.getItemSpriteFrameByGid(gid);
+    },
+
+    _updateLayout () {
+        const height = this.node.height;
+        Panel.showingList.forEach((item, i) => {
+            const widget = item.getComponent(cc.Widget);
+            widget.bottom = ORIGIN_BOTTOM + i*(height+SPACE_Y);
+        });
     },
 });

@@ -61,8 +61,7 @@ cc.Class({
         stateFunc.call(this);
     },
 
-    faceUp (isUp) {
-        const direction = isUp ? Direction.North : Direction.South;
+    headingTo (direction) {
         this.node.emit('character-rotate', direction);
     },
 

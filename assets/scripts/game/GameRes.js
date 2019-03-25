@@ -1,7 +1,8 @@
 
 const LoaderHelper = require('CCLoaderHelper');
 const Utils = require('Utils');
-const Game = require('Game');
+const GameConfig = require('GameConfig');
+const AnimationManager = require('AnimationManager');
 
 const tilesetNames = [
     'TiledMapOne',
@@ -29,9 +30,16 @@ const monsterAtlasNames = [
 ];
 
 const specialMonsterIndexMap = {
+    [313]: 107,
     [326]: 5,
     [327]: 107,
     [328]: 107,
+};
+const specialBodyNameMap = {
+    [102]: 'P_102_00',
+    [103]: 'P103_00',
+    [109]: 'P_109_00',
+    [111]: 'P_109_00',
 };
 
 function getMapUrl(floorId) {
@@ -63,6 +71,10 @@ cc.Class({
         this._loadedFloorIds = new Map();
     },
 
+    start () {
+        this._animation = AnimationManager.instance;
+    },
+
     init () {
         const urls = [
             'sheets/RoleAction',
@@ -78,7 +90,7 @@ cc.Class({
             return Promise.resolve(this._loadedFloorIds.get(floorId));
         }
 
-        const sceneId = Game.getSceneId(floorId);
+        const sceneId = GameConfig.getSceneId(floorId);
         const urls = [];
         const types = [];
         const hasMonster = sceneId > 0;
@@ -117,14 +129,14 @@ cc.Class({
 
     getPrefaceTitleSpriteFrame (floorId) {
         const tileset = this.getMapTileset(floorId);
-        const sceneId = Game.getSceneId(floorId);
+        const sceneId = GameConfig.getSceneId(floorId);
         const name = `text_scene${sceneId}`;
         return tileset.getSpriteFrame(name);
     },
 
     getPrefaceIconSpriteFrame (floorId) {
         const tileset = this.getMapTileset(floorId);
-        const sceneId = Game.getSceneId(floorId);
+        const sceneId = GameConfig.getSceneId(floorId);
         const name = `img_sceneth${sceneId}`;
         return tileset.getSpriteFrame(name);
     },
@@ -140,8 +152,8 @@ cc.Class({
 
     getClipByGid (gid) {
         const name = this._clipNameMap[gid];
-        if (Game.animation.hasClipConfig(name)) {
-            return Game.animation.getClip(name);
+        if (this._animation.hasClipConfig(name)) {
+            return this._animation.getClip(name);
         }
         return null;
     },
@@ -153,17 +165,17 @@ cc.Class({
         }
 
         const clips = {};
-        if (Game.animation.hasClipConfig(config.enter)) {
-            clips.enter = Game.animation.getClip(config.enter);
+        if (this._animation.hasClipConfig(config.enter)) {
+            clips.enter = this._animation.getClip(config.enter);
         }
-        if (Game.animation.hasClipConfig(config.exit)) {
-            clips.exit = Game.animation.getClip(config.exit);
+        if (this._animation.hasClipConfig(config.exit)) {
+            clips.exit = this._animation.getClip(config.exit);
         }
         return clips;
     },
 
     getSmallBattleBg (floorId) {
-        const sceneId = Game.getSceneId(floorId);
+        const sceneId = GameConfig.getSceneId(floorId);
         return this.commonAtlas.getSpriteFrame('img_scenebattle' + sceneId);
     },
 
@@ -174,10 +186,10 @@ cc.Class({
         }
 
         let index, prefix;
-        if (Game.config.isBoss(gid)) {
+        if (gid >= 126 && gid <= 134) {
             index = gid - 126;
             prefix = 'MB';
-        } else {
+        } else if (gid >= 226 && gid <= 329) {
             index = gid - 226;
             prefix = 'M';
         }
@@ -185,13 +197,19 @@ cc.Class({
             index = specialMonsterIndexMap[gid];
         }
 
+        let feetName = '', bodyName = '';
+        if (index != undefined) {
+            feetName = `${prefix}_${Utils.fixedNumber(index, 2)}`;
+            bodyName = `${feetName}_00`;
+        } else if (specialBodyNameMap[gid]) {
+            bodyName = specialBodyNameMap[gid];
+        }
+
         const monster = {};
-        const feetName = `${prefix}_${Utils.fixedNumber(index, 2)}`;
-        const bodyName = `${feetName}_00`;
         monster.feet = atlas.getSpriteFrame(feetName);
         monster.body = atlas.getSpriteFrame(bodyName);
-        if (Game.animation.hasClipConfig(bodyName)) {
-            monster.bodyClip = Game.animation.getClipWithAtlas(atlas, bodyName, cc.WrapMode.Loop);
+        if (this._animation.hasClipConfig(bodyName)) {
+            monster.bodyClip = this._animation.getClipWithAtlas(atlas, bodyName, cc.WrapMode.Loop);
         }
         return monster;
     },

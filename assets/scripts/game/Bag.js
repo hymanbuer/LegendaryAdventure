@@ -3,7 +3,7 @@ const infiniteItemSet = new Set([
     176, 177, 178, 179, 180, 181,
 ]);
 
-const Bag = cc.Class({
+cc.Class({
     mixins: [cc.EventTarget],
 
     ctor () {

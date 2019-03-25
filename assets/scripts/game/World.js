@@ -5,6 +5,7 @@ const BaseEntity = require('BaseEntity');
 const BaseView = require('BaseView');
 const CharacterControl = require('CharacterControl');
 const AnimationMotion = require('AnimationMotion');
+const Direction = CharacterControl.Direction;
 
 const Game = require('Game');
 const Utils = require('Utils')
@@ -15,6 +16,22 @@ const fourDirections = [
     {x: -1, y: 0},
     {x: 1, y: 0},
 ];
+
+const specialExitOffset = {
+    default: {
+        up: {x: 0, y: -1},
+        down: {x: 0, y: 1},
+    },
+
+    [69]: {
+        down: {x: -1, y: 0},
+    },
+
+    [86]: {
+        up: {x: 0, y: -1},
+        down: {x: 0, y: -1},
+    },
+};
 
 const EntityType = {
     Invalid: -1,
@@ -27,7 +44,6 @@ const EntityType = {
 };
 
 const checkTypeFuncs = [
-    ['isBoss', EntityType.Monster],
     ['isMonster', EntityType.Monster],
     ['isItem', EntityType.Item],
     ['isNpc', EntityType.Npc],
@@ -97,7 +113,11 @@ cc.Class({
             const startGrid = isUp ? this.getDownGrid(symbol) : this.getUpGrid(symbol);
             this._placeHeroAt(startGrid);
         }
-        this._hero.faceUp(!isFirstInit && isUp);
+        if (isFirstInit || !isUp) {
+            this._hero.headingTo(Direction.South);
+        } else {
+            this._hero.headingTo(Direction.North);
+        }
     },
 
     getMapSize () {
@@ -149,14 +169,14 @@ cc.Class({
 
     getUpGrid (symbol) {
         for (const obj of this._upGrids) {
-            if (!symbol || obj.symbol === symbol) return obj.upGrid;
+            if (!symbol || obj.symbol === symbol) return obj.grid;
         }
         return null;
     },
 
     getDownGrid (symbol) {
         for (const obj of this._downGrids) {
-            if (!symbol || obj.symbol === symbol) return obj.downGrid;
+            if (!symbol || obj.symbol === symbol) return obj.grid;
         }
         return null;
     },
@@ -282,7 +302,6 @@ cc.Class({
         node.position = this.getPositionAt(grid);
         this._hero = node.getComponent(CharacterControl);
 
-        const Direction = CharacterControl.Direction;
         const motion = node.getComponent(AnimationMotion);
         const mode = cc.WrapMode.Loop;
         const animation = Game.animation;
@@ -379,24 +398,34 @@ cc.Class({
                 if (symbol == 'z') {
                     this._spawnPoint = exit;
                 } else {
-                    this._exits.push(exit);
+                    const standGrid = {grid: cc.v2(exit.grid), symbol: symbol};
                     if (exit.floorId > this._floorId) {
-                        const upGrid = cc.v2(exit.grid.x, exit.grid.y);
-                        this._upGrids.push({upGrid, symbol});
-                        exit.grid.y -= 1;
+                        this._upGrids.push(standGrid);
                         exit.isUp = true;
-                        this.setLogicTileGidAt(0, exit.grid);
                     } else if (exit.floorId < this._floorId) {
-                        const downGrid = cc.v2(exit.grid.x, exit.grid.y);
-                        this._downGrids.push({downGrid, symbol});
-                        exit.grid.y += 1;
+                        this._downGrids.push(standGrid);
                         exit.isDown = true;
-                        this.setLogicTileGidAt(0, exit.grid);
+                    } else {
+                        this._upGrids.push(standGrid);
+                        this._downGrids.push(standGrid);
                     }
+                    this._checkExitOffset(exit);
+                    this._exits.push(exit);
+                    this.setLogicTileGidAt(0, exit.grid);
                 }
             }
         }
         cc.log('exits:', this._exits);
+    },
+
+    _checkExitOffset (exit) {
+        const defaultOffset = specialExitOffset.default;
+        const offsetConfig = specialExitOffset[this._floorId] || defaultOffset;
+        const up = offsetConfig.up || defaultOffset.up;
+        const down = offsetConfig.down || defaultOffset.down;
+        const offset = exit.isUp ? up : down;
+        exit.grid.x += offset.x;
+        exit.grid.y += offset.y;
     },
 
     _initLayerTiles (layer, isFloor) {

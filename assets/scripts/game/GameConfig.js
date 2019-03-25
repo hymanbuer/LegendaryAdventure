@@ -8,15 +8,24 @@ cc.js.get(exports, 'maxSceneId', function () {
 });
 
 cc.js.get(exports, 'maxFloors', function () {
-    return 105;
+    return 101;
 });
 
-exports.isBoss = function (gid) {
-    return gid >= 126 && gid <= 134;
+exports.getSceneId = function (floorId) {
+    let sceneId = Math.floor(floorId / 10);
+    if (floorId % 10 !== 0) {
+        sceneId += 1;
+    }
+    cc.assert(sceneId <= 10, `floorId exceeds maxSceneId: ${sceneId}`);
+    return sceneId;
 };
 
+const specialMonsterSet = new Set([
+    102, 103, 109, 110, 111,
+    126, 127, 128, 129, 130, 131, 132, 133, 134,
+]);
 exports.isMonster = function (gid) {
-    return gid >= 226 && gid <= 329;
+    return (gid >= 226 && gid <= 329) || specialMonsterSet.has(gid);
 };
 
 const itemRanges = [
@@ -34,8 +43,11 @@ exports.isItem = function (gid) {
     return itemSet.has(gid);
 };
 
+const specialNpcSet = new Set([
+    101, 104, 105, 106, 107,
+]);
 exports.isNpc = function (gid) {
-    return (gid >= 1 && gid <= 22) || (gid >= 101 && gid <= 107);
+    return (gid >= 1 && gid <= 22) || specialNpcSet.has(gid);
 };
 
 exports.isPrincess = function (gid) {

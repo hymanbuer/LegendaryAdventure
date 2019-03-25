@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="8" height="10" tilewidth="80" tileheight="80">
- <tileset firstgid="1" name="Tile" tilewidth="1" tileheight="1">
+<map version="1.0" tiledversion="2018.06.01" orientation="orthogonal" renderorder="right-down" width="8" height="10" tilewidth="80" tileheight="80" infinite="0" nextlayerid="4" nextobjectid="3">
+ <tileset firstgid="1" name="Tile" tilewidth="1" tileheight="1" tilecount="1" columns="1">
   <image source="Tile.png" width="1" height="1"/>
  </tileset>
-
- <layer name="floor" width="8" height="10">
+ <layer id="1" name="floor" width="8" height="10">
   <data encoding="base64" compression="zlib">
    eJzjY2Zg4COADzIh2IeZEBgm9osJv35S5fkJyD9E48cAsSAQa0PpOAL2XAfSN4D4JhN2+Q9AmgtIf8IhrwzEKkCsCsQAkSoUfQ==
   </data>
  </layer>
- <layer name="logic" width="8" height="10">
+ <layer id="2" name="logic" width="8" height="10">
   <data encoding="base64" compression="zlib">
    eJyrYGRgqMCD9zIxMFQB6f1A+hAQX0PCx6A0CIDo21D2TwjFcB/I/w5lg2iQvD0zAxyA5GdC2SD6C5D/DWoGiP4BNf8b1HwbZgjNwYjgT2fADtgZIWaC1HEyorqzgRGBrzEh1CHLz2JAyMNwNSOmfgDuNSuF
   </data>
  </layer>
- <objectgroup name="hero" width="8" height="10">
-  <object name="EXIT" x="99" y="186" width="43" height="43">
+ <objectgroup id="3" name="hero">
+  <object id="1" name="EXIT" x="99" y="186" width="43" height="43">
    <properties>
     <property name="FL049" value="a"/>
    </properties>
   </object>
-  <object name="EXIT" x="266" y="657" width="51" height="51">
+  <object id="2" name="EXIT" x="266" y="657" width="51" height="51">
    <properties>
-    <property name="FL048" value="a"/>
+    <property name="FL047" value="a"/>
    </properties>
   </object>
  </objectgroup>

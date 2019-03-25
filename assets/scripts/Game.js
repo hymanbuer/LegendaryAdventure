@@ -3,6 +3,9 @@ const PanelManager = require('PanelManager');
 const AnimationManager = require('AnimationManager');
 
 const GameConfig = require('GameConfig');
+const Bag = require('Bag');
+const MapState = require('MapState');
+const TaskState = require('TaskState'); 
 
 const Game = cc.Class({
     extends: cc.Component,
@@ -29,9 +32,6 @@ const Game = cc.Class({
     },
 
     _init () {
-        const Bag = require('Bag');
-        const MapState = require('MapState');
-        const TaskState = require('TaskState'); 
         this._bag = new Bag();
         this._mapState = new MapState();
         this._taskState = new TaskState();
@@ -80,11 +80,3 @@ cc.js.get(Game, 'config', function () {
 
 ////// common
 
-Game.getSceneId = function (floorId) {
-    let sceneId = Math.floor(floorId / 10);
-    if (floorId % 10 !== 0) {
-        sceneId += 1;
-    }
-    cc.assert(sceneId <= 10, `floorId exceeds maxSceneId: ${sceneId}`);
-    return sceneId;
-};
