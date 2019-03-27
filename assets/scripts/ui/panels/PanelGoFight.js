@@ -16,7 +16,7 @@ cc.Class({
     },
 
     run (floorId, gid) {
-        const data = Game.dataCenter.getMonster(gid);
+        const data = Game.data.getMonster(gid);
         this.title.string = data.NAME;
         this.text.string = data.MESSAGE;
         this.hp.string = data.HP;

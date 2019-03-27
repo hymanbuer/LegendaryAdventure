@@ -100,6 +100,10 @@ cc.Class({
     },
 
     initFloor (floorId, isUp, symbol) {
+        if (this._hero == null) {
+            this._hero = this._createHero();
+        }
+
         const isFirstInit = this._floorId == undefined;
         this._floorId = floorId;
         this._initMap(floorId);
@@ -107,17 +111,27 @@ cc.Class({
     },
 
     _initPlayer (floorId, isUp, symbol, isFirstInit) {
+        this._hero.node.parent = this.node;
+        this._hero.node.active = true;
+
+        let startGrid;
         if (floorId == 0) {
-            this._placeHeroAt(this.getUpGrid(symbol));
+            startGrid = this.getUpGrid(symbol);
         } else {
-            const startGrid = isUp ? this.getDownGrid(symbol) : this.getUpGrid(symbol);
-            this._placeHeroAt(startGrid);
+            startGrid = isUp ? this.getDownGrid(symbol) : this.getUpGrid(symbol);
         }
+        this._hero.node.zIndex = startGrid.y;
+        this._hero.node.position = this.getPositionAt(startGrid);
+
         if (isFirstInit || !isUp) {
             this._hero.headingTo(Direction.South);
         } else {
             this._hero.headingTo(Direction.North);
         }
+    },
+
+    getPlayer () {
+        return this._hero.node;
     },
 
     getMapSize () {
@@ -295,13 +309,8 @@ cc.Class({
         }
     },
 
-    _placeHeroAt (grid) {
+    _createHero () {
         const node = cc.instantiate(this.heroPrefab)
-        node.parent = this.node;
-        node.zIndex = grid.y;
-        node.position = this.getPositionAt(grid);
-        this._hero = node.getComponent(CharacterControl);
-
         const motion = node.getComponent(AnimationMotion);
         const mode = cc.WrapMode.Loop;
         const animation = Game.animation;
@@ -319,9 +328,14 @@ cc.Class({
         node.on('after-enter-position', this.onAfterEnterPosition, this);
         node.on('before-exit-position', this.onBeforeExitPosition, this);
         node.on('after-exit-position', this.onAfterExitPosition, this);
+
+        return node.getComponent(CharacterControl);
     },
 
     _initMap (floorId) {
+        this._hero.node.parent = this.node.parent;
+        this._hero.node.active = false;
+
         const assets = Game.res.getMapAssets(floorId);
         this._tileset = assets.tileset;
 
@@ -457,7 +471,7 @@ cc.Class({
 
     _parseLogicGid (gid, x, y) {
         const checkAddEventTrigger = (gid, node) => {
-            const event = Game.dataCenter.getEvent(this._floorId, gid);
+            const event = Game.data.getEvent(this._floorId, gid);
             if (event) {
                 const add = compName => {
                     const trigger = node.addComponent(compName);

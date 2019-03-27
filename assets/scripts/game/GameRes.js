@@ -213,4 +213,13 @@ cc.Class({
         }
         return monster;
     },
+
+    getSiteNameSpriteFrame (floorId) {
+        let id = 0;
+        if (floorId > 0) {
+            id = Math.floor(floorId / 10) + 1;
+        }
+        const name = 'text_zonename' + (id + 1);
+        return this.itemAtlas.getSpriteFrame(name);
+    },
 });

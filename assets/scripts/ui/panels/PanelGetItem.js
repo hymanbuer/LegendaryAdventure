@@ -34,7 +34,7 @@ const Panel = cc.Class({
     },
 
     setItem (gid) {
-        const data = Game.dataCenter.getMonster(gid);
+        const data = Game.data.getMonster(gid);
         this.text.string = data.MESSAGE;
         this.icon.spriteFrame = Game.res.getItemSpriteFrameByGid(gid);
     },

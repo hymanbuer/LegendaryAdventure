@@ -13,6 +13,22 @@ const CRITICAL_ATTACK_WIDTH = 56;
 const CRITICAL_TIMES = 1.5;
 const MISS_RATIO = 0.05;
 
+// this.resetBattleData({
+//     hp: 360,
+//     maxHp: 360,
+//     attack: 20,
+//     defence: 10,
+// }, {
+//     id: 226,
+//     name: '王宫卫士',
+//     hp: 360,
+//     maxHp: 360,
+//     attack: 18,
+//     defence: 8,
+//     criticalPos: 7,
+//     criticalLength: 1.2,
+//     cursorMoveDuration: 1.0,
+// });
 cc.Class({
     extends: cc.Component,
 
@@ -48,22 +64,6 @@ cc.Class({
     },
 
     start () {
-        this.resetBattleData({
-            hp: 360,
-            maxHp: 360,
-            attack: 20,
-            defence: 10,
-        }, {
-            id: 226,
-            name: '王宫卫士',
-            hp: 360,
-            maxHp: 360,
-            attack: 18,
-            defence: 8,
-            criticalPos: 7,
-            criticalLength: 1.2,
-            cursorMoveDuration: 1.0,
-        });
     },
 
     onEnable () {

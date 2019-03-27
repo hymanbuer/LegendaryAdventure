@@ -98,7 +98,11 @@ cc.Class({
     },
 
     _getAnimation () {
-        return this.target.getComponent(cc.Animation);
+        let animation = this.target.getComponent(cc.Animation);
+        if (animation == null) {
+            animation = this.target.addComponent(cc.Animation);
+        }
+        return animation;
     },
 
     _getStandName (direction) {

@@ -1,4 +1,6 @@
 
+const Game = require('Game');
+
 cc.Class({
     extends: cc.Component,
 
@@ -7,7 +9,18 @@ cc.Class({
         count: cc.Label,
     },
 
-    init (gid, num) {
+    start () {
+        this.getComponent(cc.Toggle).uncheck();
+    },
 
+    init (gid, num) {
+        this.icon.spriteFrame = Game.res.getItemSpriteFrameByGid(gid);
+        this.count.string = num.toString();
+        this.count.node.active = !Game.config.isInfiniteItem(gid);
+        this.gid = gid;
+    },
+
+    updateCount (num) {
+        this.count.string = num.toString();
     },
 });

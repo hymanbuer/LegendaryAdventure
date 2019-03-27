@@ -138,6 +138,12 @@ const PanelManager = cc.Class({
         }
     },
 
+    closeAllPanel () {
+        for (let panel of this._panelMap.values()) {
+            this._removePanel(panel);
+        }
+    },
+
     hasPanel (name) {
         return name ? !!this._findPanel(name) : this._panelMap.size > 0;
     },

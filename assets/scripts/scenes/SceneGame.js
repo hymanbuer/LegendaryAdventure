@@ -26,8 +26,16 @@ cc.Class({
         this.mask.active = true;
         this.mask.opacity = 255;
         Game.res.init()
-            .then(() => this._changeFloor(lastFloor.id, true, lastFloor.upSymbol))
+            .then(() => this._doChangeFloor(lastFloor.id, true, lastFloor.upSymbol))
+            .then(() => this.hud.observePlayerStatus(this.world.getPlayer()))
             .then(() => this._maskOut());
+    },
+
+    gotoFloor (floorId) {
+        this.onChangeFloor({
+            floorId: floorId,
+            isUp: false,
+        });
     },
 
     onChangeFloor (exit) {
@@ -36,7 +44,7 @@ cc.Class({
         }
         this._isChangingFloor = true;
         this._maskIn()
-            .then(() => this._changeFloor(exit.floorId, exit.isUp, exit.symbol))
+            .then(() => this._doChangeFloor(exit.floorId, exit.isUp, exit.symbol))
             .then(() => this._checkShowPreface(exit.floorId, exit.isUp))
             .then(() => this._maskOut())
             .then(() => this._isChangingFloor = false);
@@ -46,18 +54,19 @@ cc.Class({
         Game.openPanel('setting');
     },
 
-    _changeFloor (floorId, isUp, symbol) {
+    _doChangeFloor (floorId, isUp, symbol) {
         return Game.res.loadMapAssets(floorId)
             .then(() => this._loadBackground(floorId))
             .then(() => {
                 this.world.initFloor(floorId, isUp, symbol);
                 this.hud.changeSite(floorId);
                 this._saveLastFloor(floorId, isUp, symbol);
+                Game.closeAllPanel();
             });
     },
 
     _checkShowPreface (floorId, isUp) {
-        const config = Game.dataCenter.getPreface(floorId);
+        const config = Game.data.getPreface(floorId);
         if (!config || !isUp) {
             return;
         }

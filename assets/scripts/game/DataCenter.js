@@ -29,6 +29,11 @@ cc.Class({
         return this._monsterMap.get(gid);
     },
 
+    getItemInfo (gid) {
+        gid = Number.parseInt(gid);
+        return this._monsterMap.get(gid);
+    },
+
     getPreface (floorId) {
         const name = `FLOOR${Utils.fixedNumber(floorId, 2)}PERFACE`;
         const config = this.eventConfig.json[name];

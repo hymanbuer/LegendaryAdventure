@@ -20,6 +20,14 @@ exports.getSceneId = function (floorId) {
     return sceneId;
 };
 
+exports.getFirstFloorOfScene = function (sceneId) {
+    if (sceneId === 0) {
+        return 0;
+    } else {
+        return (sceneId-1)*10 + 1;
+    }
+};
+
 const specialMonsterSet = new Set([
     102, 103, 109, 110, 111,
     126, 127, 128, 129, 130, 131, 132, 133, 134,
@@ -80,4 +88,12 @@ const unknownSet = new Set([
 ]);
 exports.isUnknown = function (gid) {
     return unknownSet.has(gid);
+};
+
+const infiniteItemSet = new Set([
+    176, 177, 178, 179, 180, 181,
+    2001,
+]);
+exports.isInfiniteItem = function (gid) {
+    return infiniteItemSet.has(gid);
 };

@@ -31,14 +31,14 @@ cc.Class({
     },
 
     _checkItemNeeded (callback) {
-        const data = Game.dataCenter.getMonster(this.gid);
+        const data = Game.data.getMonster(this.gid);
         if (data == null || data.ITEMNEEDED == null) {
             return callback(null);
         }
 
         if (Game.bag.hasItem(data.ITEMNEEDED)) {
             const useMethod = () => {
-                Game.bag.removeItem(data.ITEMNEEDED);
+                Game.bag.reduceItem(data.ITEMNEEDED);
                 this.open(callback);
             };
             const text = data.MESSAGE || data.ASKMESSAGE;

@@ -51,6 +51,9 @@ Game.openPanel = function (...args) {
 Game.onPanelClosed = function (...args) {
     return PanelManager.instance.onPanelClosed(...args);
 };
+Game.closeAllPanel = function (...args) {
+    return PanelManager.instance.closeAllPanel(...args);
+};
 
 cc.js.get(Game, 'animation', function () {
     return AnimationManager.instance;
@@ -59,7 +62,7 @@ cc.js.get(Game, 'animation', function () {
 
 /////// game
 
-cc.js.get(Game, 'dataCenter', function () {
+cc.js.get(Game, 'data', function () {
     return Game.instance.getComponent('DataCenter');
 });
 cc.js.get(Game, 'bag', function () {
