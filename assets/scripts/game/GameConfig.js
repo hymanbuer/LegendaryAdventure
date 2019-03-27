@@ -28,6 +28,15 @@ exports.getFirstFloorOfScene = function (sceneId) {
     }
 };
 
+const sceneNames = [
+    '前厅', 
+    '王宫', '花园', '海城', '墓地', '森林', 
+    '雪原', '洞窟', '机械', '天空', '魔域',
+];
+exports.getSceneName = function (sceneId) {
+    return sceneNames[sceneId];
+};
+
 const specialMonsterSet = new Set([
     102, 103, 109, 110, 111,
     126, 127, 128, 129, 130, 131, 132, 133, 134,

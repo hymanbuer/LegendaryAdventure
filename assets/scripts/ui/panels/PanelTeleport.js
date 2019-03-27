@@ -10,8 +10,7 @@ cc.Class({
     },
 
     start () {
-        const lastFloor = profile.lastFloor;
-        const maxOpenSceneId = Game.config.getSceneId(lastFloor.id);
+        const maxOpenSceneId = Game.config.getSceneId(profile.maxFloorId);
         this.stores.children.forEach((store, i) => {
             const isOpen = i <= maxOpenSceneId;
             store.getComponent(cc.Button).interactable = isOpen;
@@ -27,6 +26,14 @@ cc.Class({
         const sceneId = Number.parseInt(event.target.name);
         const floorId = Game.config.getFirstFloorOfScene(sceneId);
         const sceneGame = cc.director.getScene().getComponentInChildren('SceneGame');
-        sceneGame.gotoFloor(floorId);
+
+        const sceneName = Game.config.getSceneName(sceneId);
+        const tips = `确定前往${sceneName}吗?`;
+        Game.openPanel('notice', tips, {
+            hasCancel: true,
+            confirmHandler: function () {
+                sceneGame.gotoFloor(floorId);
+            },
+        });
     },
 });

@@ -17,6 +17,7 @@ proto.save = function () {
 proto.reset = function () {
     this.wasShowOpening = false;
     this.lastFloor = {id: 0};
+    this.maxFloorId = 0;
     this.player = {
         level: 1,
         hp: 200,

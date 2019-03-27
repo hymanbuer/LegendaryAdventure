@@ -34,7 +34,7 @@ cc.Class({
     gotoFloor (floorId) {
         this.onChangeFloor({
             floorId: floorId,
-            isUp: false,
+            isUp: true,
         });
     },
 
@@ -113,6 +113,9 @@ cc.Class({
         profile.lastFloor = {id: floorId};
         if (isUp) {
             profile.lastFloor.upSymbol = symbol;
+        }
+        if (floorId > profile.maxFloorId) {
+            profile.maxFloorId = floorId;
         }
         profile.save();
     },

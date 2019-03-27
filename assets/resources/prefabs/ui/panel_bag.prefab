@@ -612,7 +612,7 @@
     },
     "component": "",
     "_componentId": "73de1LuHBFGGIRBeMb1S519",
-    "handler": "onClickUse",
+    "handler": "onClickPlus",
     "customEventData": ""
   },
   {
