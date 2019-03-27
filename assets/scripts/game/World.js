@@ -231,13 +231,14 @@ cc.Class({
     },
 
     onBeforeEnterPosition (sender, pos, passCallback) {
+        const grid = this.getGridAt(pos);
+        sender.node.zIndex = grid.y;
         this._onEntityEvent('BeforeEnter', sender, pos, passCallback);
     },
 
     onAfterEnterPosition (sender, pos, passCallback) {
         const grid = this.getGridAt(pos);
         const exit = this._getExit(grid);
-        sender.node.zIndex = grid.y;
         if (exit) {
             this.node.emit('change-floor', exit);
             passCallback(false);

@@ -35,6 +35,8 @@ const Game = cc.Class({
         this._bag = new Bag();
         this._mapState = new MapState();
         this._taskState = new TaskState();
+
+        this._bag.on('add-item', this._taskState.onGetItem, this._taskState);
     },
 });
 
