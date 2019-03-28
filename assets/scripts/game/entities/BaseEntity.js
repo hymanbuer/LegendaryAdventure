@@ -65,7 +65,7 @@ cc.Class({
         handlers.push(wrap(this[handleName].bind(this, sender)));
         async.series(handlers, (err, results) => {
             if (err) {
-                cc.warn(err);
+                cc.log(err);
             } else {
                 cc.log(handleName, results);
             }

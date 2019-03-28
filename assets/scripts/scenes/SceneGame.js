@@ -50,10 +50,6 @@ cc.Class({
             .then(() => this._isChangingFloor = false);
     },
 
-    onClickSetting () {
-        Game.openPanel('setting');
-    },
-
     _doChangeFloor (floorId, isUp, symbol) {
         return Game.res.loadMapAssets(floorId)
             .then(() => this._loadBackground(floorId))

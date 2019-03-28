@@ -47,9 +47,29 @@ cc.Class({
         return null;
     },
 
+    getTask (taskId) {
+        return this._tasks[taskId];
+    },
+
     _handleEvent (obj) {
-        this._eventMapList = new Array(GameConfig.maxFloors);
-        const FLOORS = obj.FLOOR;
+        this._parseFloors(obj.FLOOR);
+        this._parseTasks(obj.MISSIONDESCRIPTION);
+    },
+
+    _handlePlayer (obj) {
+        
+    },
+
+    _handleMonster (obj) {
+        this._monsterMap = new Map();
+        for (const monster of obj) {
+            const gid = Number.parseInt(monster.ID);
+            this._monsterMap.set(gid, monster);
+        }
+    },
+
+    _parseFloors (FLOORS) {
+        this._eventMapList = new Array(GameConfig.maxFloors + 1);
         for (let i = 0; i < FLOORS.length; i++) {
             const floorId = Number.parseInt(FLOORS[i].ID);
             let eventMap = this._eventMapList[floorId];
@@ -69,15 +89,16 @@ cc.Class({
         }
     },
 
-    _handlePlayer (obj) {
-
-    },
-
-    _handleMonster (obj) {
-        this._monsterMap = new Map();
-        for (const monster of obj) {
-            const gid = Number.parseInt(monster.ID);
-            this._monsterMap.set(gid, monster);
+    _parseTasks (TASKS) {
+        this._tasks = new Array(GameConfig.maxTasks + 1);
+        for (let info of TASKS.GID) {
+            const taskId = Number.parseInt(info.ID);
+            const name = info.MISSIONNAME;
+            const runningMessage = info.RUNNINGMESSAGE;
+            const finishedMessage = info.FINISHMESSAGE;
+            this._tasks[taskId] = {
+                taskId, name, runningMessage, finishedMessage
+            };
         }
     },
 });

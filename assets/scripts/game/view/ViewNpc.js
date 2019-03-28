@@ -2,6 +2,7 @@
 
 const Game = require('Game');
 const Utils = require('Utils')
+const TaskState = require('TaskState').TaskState;
 
 cc.Class({
     extends: require('BaseView'),
@@ -15,6 +16,18 @@ cc.Class({
 
     onLoad () {
         this.bubble.active = false;
+        Game.taskState.on('task-state-changed', this.onTaskStateChanged, this);
+    },
+
+    onDestroy () {
+        Game.taskState.off('task-state-changed', this.onTaskStateChanged, this);
+    },
+
+    start () {
+        if (Game.data.getTask(this.gid) != null
+            && Game.taskState.getTaskState(this.gid) == TaskState.New) {
+            this.showBubble('救命!');
+        }
     },
 
     init (gid) {
@@ -37,5 +50,15 @@ cc.Class({
         this.bubble.active = true;
         this.bubbleText.string = text;
         this.getComponent(cc.Animation).play('bubble_scale');
+    },
+
+    hideBubble () {
+        this.bubble.active = false;
+    },
+
+    onTaskStateChanged (taskId, state) {
+        if (taskId == this.gid && state != TaskState.New) {
+            this.hideBubble();
+        }
     },
 });

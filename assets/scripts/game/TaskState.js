@@ -7,6 +7,8 @@ const State = cc.Enum({
 });
 
 const TaskState = cc.Class({
+    mixins: [cc.EventTarget],
+
     ctor () {
         this._stateMap = new Map();
         this._needMap = new Map();
@@ -20,6 +22,7 @@ const TaskState = cc.Class({
     setTaskState (taskId, state) {
         taskId = Number.parseInt(taskId);
         this._stateMap.set(taskId, state);
+        this.emit('task-state-changed', taskId, state);
     },
 
     setNeedItem (taskId, itemGid) {
@@ -38,7 +41,7 @@ const TaskState = cc.Class({
         return tasks;
     },
 
-    hasRunningTasks () {
+    hasRunningTask () {
         for (let [taskId, state] of this._stateMap.entries()) {
             if (state == State.Accepted || state == State.Finished) {
                 return true;
@@ -52,6 +55,7 @@ const TaskState = cc.Class({
             const state = this.getTaskState(taskId);
             if (itemGid == needGid && state == State.Accepted) {
                 this.setTaskState(taskId, State.Finished);
+                this._needMap.delete(taskId);
                 break;
             }
         }

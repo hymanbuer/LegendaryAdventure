@@ -11,6 +11,10 @@ cc.js.get(exports, 'maxFloors', function () {
     return 101;
 });
 
+cc.js.get(exports, 'maxTasks', function () {
+    return 21;
+});
+
 exports.getSceneId = function (floorId) {
     let sceneId = Math.floor(floorId / 10);
     if (floorId % 10 !== 0) {

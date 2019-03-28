@@ -124,7 +124,31 @@ cc.Class({
 
     },
 
+    onClickLevel () {
+
+    },
+
+    onClickAttack () {
+
+    },
+
+    onClickDefence () {
+
+    },
+
     onClickBag () {
         Game.openPanel('bag');
+    },
+
+    onClickSetting () {
+        Game.openPanel('setting');
+    },
+
+    onClickQuest () {
+        if (Game.taskState.hasRunningTask()) {
+            Game.openPanel('quest');
+        } else {
+            Game.openPanel('notice', '没有进行中的任务!');
+        }
     },
 });

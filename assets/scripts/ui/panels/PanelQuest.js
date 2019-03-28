@@ -1,5 +1,6 @@
 
 const Game = require('Game');
+const TaskState = require('TaskState').TaskState;
 
 cc.Class({
     extends: cc.Component,
@@ -14,7 +15,18 @@ cc.Class({
         this.container.removeAllChildren();
 
         const tasks = Game.taskState.getRunningTasks();
-        
+        for (let task of tasks) {
+            const info = Game.data.getTask(task.taskId);
+            let title = info.name;
+            let detail = '';
+            if (task.state == TaskState.Accepted) {
+                detail = info.runningMessage;
+            } else if (task.state == TaskState.Finished) {
+                detail = info.finishedMessage;
+            }
+            const quest = this._createQuest(title, detail);
+            this.container.addChild(quest);
+        }
     },
 
     onClickClose () {
@@ -22,6 +34,10 @@ cc.Class({
     },
 
     _createQuest (title, detail) {
-
+        const quest = cc.instantiate(this.template);
+        cc.find('title', quest).getComponent(cc.Label).string = title;
+        cc.find('detail', quest).getComponent(cc.Label).string = detail;
+        quest.active = true;
+        return quest;
     },
 });

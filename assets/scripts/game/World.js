@@ -368,7 +368,6 @@ cc.Class({
     },
 
     _initLayerFloor () {
-        
         this._initLayerTiles(this._layerFloor, true);
     },
 
@@ -524,11 +523,8 @@ cc.Class({
 
             checkAddEventTrigger(gid, node);
             overideDestroy(node);
-
-            if (gid === 1) {
-                node.getComponent(BaseView).showBubble('救命');
-            }
-        } else if (Game.config.isUnknown(gid)) {
+        } 
+        else if (Game.config.isUnknown(gid)) {
             this._layerLogic.setTileGIDAt(0, x, y);
         }
     },
