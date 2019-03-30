@@ -28,8 +28,9 @@ proto.reset = function () {
         nextExp: 9,
     };
 
-    this.coins = 0;
-    this.items = [
+    this.bag = {};
+    this.bag.coins = 0;
+    this.bag.items = [
         {gid: 2001, num: 1},
         {gid: 2002, num: 3},
 
@@ -40,6 +41,11 @@ proto.reset = function () {
         {gid: 156, num: 5},
         {gid: 157, num: 5},
     ];
+
+    this.taskState = [];
+    this.savedPrincess = {
+        [9]: true,
+    };
 };
 
 module.exports = new GameProfile();

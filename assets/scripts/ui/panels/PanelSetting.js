@@ -2,6 +2,7 @@
 const setting = require('GameSetting');
 const AudioManager = require('AudioManager');
 const Main = require('Main');
+const Game = require('Game');
 
 cc.Class({
     extends: cc.Component,
@@ -40,7 +41,7 @@ cc.Class({
     },
 
     onClickGoldShop () {
-
+        Game.openPanel('shop', true);
     },
 
     onClickWeiboShare () {

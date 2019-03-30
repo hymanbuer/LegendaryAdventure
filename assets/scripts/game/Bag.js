@@ -1,13 +1,21 @@
 
-const GameProfile = require('GameProfile');
 const GameConfig = require('GameConfig');
 
 cc.Class({
     mixins: [cc.EventTarget],
 
     ctor () {
-        this._coins = GameProfile.coins;
-        this._items = GameProfile.items;
+        this._coins = 0;
+        this._items = [];
+    },
+
+    load (bag) {
+        this._coins = bag.coins;
+        this._items = bag.items;
+    },
+
+    dump () {
+
     },
 
     addItem (gid, num = 1) {

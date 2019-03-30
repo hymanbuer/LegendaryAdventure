@@ -110,3 +110,5 @@ const infiniteItemSet = new Set([
 exports.isInfiniteItem = function (gid) {
     return infiniteItemSet.has(gid);
 };
+
+exports.NPC_BEI_ER = 9;

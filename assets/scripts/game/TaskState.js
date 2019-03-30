@@ -14,6 +14,35 @@ const TaskState = cc.Class({
         this._needMap = new Map();
     },
 
+    load (taskState) {
+        if (taskState == null) {
+            return;
+        }
+        taskState.forEach(task => {
+            this._stateMap.set(task.taskId, task.state);
+            if (task.need) {
+                this._needMap.set(task.taskId, task.need);
+            }
+        });
+    },
+
+    dump () {
+        const tasks = [];
+        for (let [taskId, state] of this._stateMap.entries()) {
+            const task = {taskId, state};
+            if (this._needMap.has(taskId)) {
+                task.need = this._needMap.get(taskId);
+            }
+            tasks.push(task);
+        }
+        return tasks;
+    },
+
+    isTaskEnd (taskId) {
+        taskId = Number.parseInt(taskId);
+        return this._stateMap.get(taskId) == State.End;
+    },
+
     getTaskState (taskId) {
         taskId = Number.parseInt(taskId);
         return this._stateMap.get(taskId) || State.New;

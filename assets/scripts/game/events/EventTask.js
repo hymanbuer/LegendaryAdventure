@@ -19,16 +19,27 @@ cc.Class({
 
     doBeforeEnter (sender, callback) {
         const state = Game.taskState.getTaskState(this.event.ID);
+        
+
         if (state === TaskState.New) {
-            if (Game.bag.hasItem(this.event.TASKNEEDED)) {
-                callback(`Task finished: ${this.event.ID}`);
-                Game.taskState.setTaskState(this.event.ID, TaskState.Finished);
-            } else {
-                callback(`Task accepted: ${this.event.ID}`);
-                Game.taskState.setTaskState(this.event.ID, TaskState.Accepted);
-                Game.taskState.setNeedItem(this.event.ID, this.event.TASKNEEDED);
+            if (this.event.TASKNEEDED == null) {
+                Game.openPanel('talk', this.title, this.event.TASK, TalkType.Normal);
+                Game.onPanelClosed('talk', () => {
+                    callback(null);
+                    Game.taskState.setTaskState(this.event.ID, TaskState.End);
+                });
+            } 
+            else {
+                if (Game.bag.hasItem(this.event.TASKNEEDED)) {
+                    callback(`Task finished: ${this.event.ID}`);
+                    Game.taskState.setTaskState(this.event.ID, TaskState.Finished);
+                } else {
+                    callback(`Task accepted: ${this.event.ID}`);
+                    Game.taskState.setTaskState(this.event.ID, TaskState.Accepted);
+                    Game.taskState.setNeedItem(this.event.ID, this.event.TASKNEEDED);
+                }
+                Game.openPanel('talk', this.title, this.event.TASK, TalkType.Task);
             }
-            Game.openPanel('talk', this.title, this.event.TASK, TalkType.Task);
         } 
         else if (state === TaskState.Accepted) {
             callback(`Task proccessing: ${this.event.ID}`);
@@ -40,9 +51,12 @@ cc.Class({
             Game.onPanelClosed('talk', () => {
                 callback(null);
                 Game.mapState.removeEntity(this.floorId, this.grid);
+                Game.profile.savedPrincess[this.gid] = true;
                 this.node.destroy();
                 Game.openPanel('quest_complete', this.event.TASKBLACK);
             });
+        } else {
+            callback(null);
         }
     },
 });

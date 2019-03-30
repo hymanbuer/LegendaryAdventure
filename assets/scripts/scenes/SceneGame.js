@@ -39,6 +39,9 @@ cc.Class({
     },
 
     onChangeFloor (exit) {
+        if (!Game.taskState.isTaskEnd(Game.config.NPC_BEI_ER)) {
+            return;
+        }
         if (this._isChangingFloor) {
             return;
         }
@@ -102,6 +105,10 @@ cc.Class({
             const node = cc.instantiate(prefab);
             this.bg.removeAllChildren();
             this.bg.addChild(node);
+
+            if (floorId == 0 && profile.maxFloorId > 0) {
+                node.getChildByName('bubble').active = false;
+            }
         });
     },
 

@@ -26,7 +26,7 @@ cc.Class({
     start () {
         if (Game.data.getTask(this.gid) != null
             && Game.taskState.getTaskState(this.gid) == TaskState.New) {
-            this.showBubble('救命!');
+            this.showBubble(this.gid == 9 ? '勇者!' : '救命!');
         }
     },
 
@@ -47,9 +47,22 @@ cc.Class({
     },
 
     showBubble (text) {
-        this.bubble.active = true;
+        const worldPos = this.bubble.convertToWorldSpaceAR(cc.Vec2.ZERO);
+        const position = this.node.parent.convertToNodeSpaceAR(worldPos);
+        this.bubble.parent = this.node.parent;
+        this.bubble.position = position;
+        this.bubble.zIndex = this.node.zIndex + 1;
+
         this.bubbleText.string = text;
-        this.getComponent(cc.Animation).play('bubble_scale');
+        this.bubble.active = true;
+        this.bubble.setScale(0);
+        cc.tween(this.bubble)
+            .to(0.25, {scaleX: 1, scaleY: 1})
+            .delay(1.0)
+            .to(0.25, {scaleX: 0, scaleY: 0})
+            .delay(1.2)
+            .repeatForever()
+            .start();
     },
 
     hideBubble () {

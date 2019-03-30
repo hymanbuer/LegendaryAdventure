@@ -372,13 +372,19 @@ cc.Class({
     },
 
     _initLayerLogic () {
-        this._layerLogic = this._tiledMap.getLayer('logic');
         this._initLayerTiles(this._layerLogic, false);
 
         for (let y = 0; y < this._mapSize.height; y++) {
             for (let x = 0; x < this._mapSize.width; x++) {
                 const gid = this._layerLogic.getTileGIDAt(x, y);
-                const state = Game.mapState.getEntityState(this._floorId, cc.v2(x, y));
+                let state = Game.mapState.getEntityState(this._floorId, cc.v2(x, y));
+                if (this._floorId === 0 && Game.config.isNpc(gid)) {
+                    if (!Game.profile.savedPrincess[gid]) {
+                        this._layerLogic.setTileGIDAt(0, x, y);
+                        continue;
+                    }
+                }
+
                 if (state === null) {
                     this._parseLogicGid(gid, x, y);
                 } else if (state === 0) {
@@ -488,6 +494,9 @@ cc.Class({
                 }
                 if (event.ADDENTITY) {
                     add('EventAddEntity');
+                }
+                if (event.SHOPTALK) {
+                    add('EventShop');
                 }
             }
 
