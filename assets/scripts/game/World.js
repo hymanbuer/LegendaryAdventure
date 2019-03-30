@@ -130,10 +130,6 @@ cc.Class({
         }
     },
 
-    getPlayer () {
-        return this._hero.node;
-    },
-
     getMapSize () {
         return this._mapSize;
     },
@@ -193,6 +189,13 @@ cc.Class({
             if (!symbol || obj.symbol === symbol) return obj.grid;
         }
         return null;
+    },
+
+    removeEntity (grid) {
+        if (cc.isValid(this._entities[grid.y][grid.x])) {
+            this._entities[grid.y][grid.x].destroy();
+            Game.mapState.removeEntity(this._floorId, grid);
+        }
     },
 
     onTouchWorld (event) {

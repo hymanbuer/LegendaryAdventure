@@ -1,7 +1,6 @@
 
 const Game = require('Game');
 const Utils = require('Utils');
-const GameProfile = require('GameProfile');
 
 /**
  * Events:
@@ -35,6 +34,9 @@ cc.Class({
 
         top: cc.Node,
         bottom: cc.Node,
+
+        keys: cc.Node,
+        mission: cc.Node,
     },
 
     onLoad () {
@@ -44,25 +46,37 @@ cc.Class({
 
     start () {
         this._initPlayerStatus();
+        this._observePlayerStatus();
         this._updateNumKeys();
     },
 
+    enterBattleField () {
+        this.keys.active = false;
+        this.mission.active = false;
+    },
+
+    exitBattleField () {
+        this.keys.active = true;
+        this.mission.active = true;
+    },
+
     _initPlayerStatus () {
-        const info = GameProfile.player;
-        this.setLevel(info.level);
-        this.setAttack(info.attack);
-        this.setDefence(info.defence);
-        this.setExpStatus(info.exp, info.nextExp);
-        this.setHpStatus(info.hp, info.maxHp);
+        const player = Game.player;
+        this.setLevel(player.level);
+        this.setAttack(player.attack);
+        this.setDefence(player.defence);
+        this.setExpStatus(player.exp, player.nextExp);
+        this.setHpStatus(player.hp, player.maxHp);
     },
 
     _updateNumKeys () {
-        this.numYellowKeys.string = Game.bag.getNumOfItem(155);
-        this.numBlueKeys.string = Game.bag.getNumOfItem(156);
-        this.numRedKeys.string = Game.bag.getNumOfItem(157);
+        this.numYellowKeys.string = Game.bag.getNumOfItem(Game.config.KEY_YELLOW);
+        this.numBlueKeys.string = Game.bag.getNumOfItem(Game.config.KEY_BLUE);
+        this.numRedKeys.string = Game.bag.getNumOfItem(Game.config.KEY_RED);
     },
 
-    observePlayerStatus (player) {
+    _observePlayerStatus () {
+        const player = Game.player;
         player.on('player-level-changed', this.onLevelChanged, this);
         player.on('player-hp-changed', this.onHpStatusChanged, this);
         player.on('player-maxhp-changed', this.onHpStatusChanged, this);
@@ -99,41 +113,41 @@ cc.Class({
     },
 
     onItemChanged (gid) {
-        if (gid == 155 || gid == 156 || gid == 157) {
+        if (Game.config.isKeyItem(gid)) {
             this._updateNumKeys();
         }
     },
 
     onLevelChanged (playerStatus) {
-
+        this.setLevel(playerStatus.level);
     },
 
     onHpStatusChanged (playerStatus) {
-
+        this.setHpStatus(playerStatus.hp, playerStatus.maxHp);
     },
 
     onAttackChanged (playerStatus) {
-
+        this.setAttack(playerStatus.attack);
     },
 
     onDefenceChanged (playerStatus) {
-
+        this.setDefence(playerStatus.defence);
     },
 
     onExpStatusChanged (playerStatus) {
-
+        this.setExpStatus(playerStatus.exp, playerStatus.nextExp);
     },
 
     onClickLevel () {
-
+        Game.openPanel('stat');
     },
 
     onClickAttack () {
-
+        Game.openPanel('equipment');
     },
 
     onClickDefence () {
-
+        Game.openPanel('equipment');
     },
 
     onClickBag () {

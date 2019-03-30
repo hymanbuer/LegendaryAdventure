@@ -6,7 +6,8 @@ const GameProfile = require('GameProfile');
 const GameConfig = require('GameConfig');
 const Bag = require('Bag');
 const MapState = require('MapState');
-const TaskState = require('TaskState'); 
+const TaskState = require('TaskState');
+const PlayerStatus = require('PlayerStatus');
 
 const Game = cc.Class({
     extends: cc.Component,
@@ -36,8 +37,10 @@ const Game = cc.Class({
         this._bag = new Bag();
         this._mapState = new MapState();
         this._taskState = new TaskState();
+        this._playerStatus = new PlayerStatus();
         this._bag.load(GameProfile.bag);
-        this._taskState.load(GameProfile.taskState)
+        this._taskState.load(GameProfile.taskState);
+        this._playerStatus.load(GameProfile.player);
 
         this._bag.on('add-item', this._taskState.onGetItem, this._taskState);
     },
@@ -78,6 +81,9 @@ cc.js.get(Game, 'mapState', function () {
 });
 cc.js.get(Game, 'taskState', function () {
     return Game.instance._taskState;
+});
+cc.js.get(Game, 'player', function () {
+    return Game.instance._playerStatus;
 });
 cc.js.get(Game, 'res', function () {
     return Game.instance.getComponent('GameRes');

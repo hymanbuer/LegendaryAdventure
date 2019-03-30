@@ -38,8 +38,8 @@
         "__id__": 79
       }
     ],
-    "_active": true,
-    "_level": 1,
+    "_active": false,
+    "_level": 2,
     "_components": [
       {
         "__id__": 83
@@ -74,8 +74,8 @@
     },
     "_position": {
       "__type__": "cc.Vec3",
-      "x": 320,
-      "y": 568,
+      "x": 0,
+      "y": 0,
       "z": 0
     },
     "_scale": {
@@ -246,9 +246,7 @@
       "__id__": 3
     },
     "_enabled": true,
-    "_spriteFrame": {
-      "__uuid__": "d8810e1d-c29b-4c4d-8407-ec52dd7ff13e"
-    },
+    "_spriteFrame": null,
     "_type": 0,
     "_sizeMode": 2,
     "_fillType": 0,
@@ -2181,9 +2179,7 @@
       "__id__": 2
     },
     "_enabled": true,
-    "_spriteFrame": {
-      "__uuid__": "04c67e37-85be-4e4d-8fae-225ddbe64dd6"
-    },
+    "_spriteFrame": null,
     "_type": 0,
     "_sizeMode": 1,
     "_fillType": 0,
@@ -2929,6 +2925,9 @@
       "__id__": 1
     },
     "_enabled": true,
+    "battleBg": {
+      "__id__": 61
+    },
     "playerAttackNumber": {
       "__id__": 70
     },

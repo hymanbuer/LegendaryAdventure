@@ -111,4 +111,11 @@ exports.isInfiniteItem = function (gid) {
     return infiniteItemSet.has(gid);
 };
 
+exports.isKeyItem = function (gid) {
+    return gid == 155 || gid == 156 || gid == 157;
+};
+
 exports.NPC_BEI_ER = 9;
+exports.KEY_YELLOW = 155;
+exports.KEY_BLUE = 156;
+exports.KEY_RED = 157;

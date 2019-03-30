@@ -179,6 +179,30 @@ cc.Class({
         return this.commonAtlas.getSpriteFrame('img_scenebattle' + sceneId);
     },
 
+    getLargeBattleBg (floorId) {
+        const sceneId = GameConfig.getSceneId(floorId);
+        const url = `battles/battle_${sceneId}`;
+        return LoaderHelper.loadResByUrl(url, cc.SpriteFrame);
+    },
+
+    getLargeMonster (gid) {
+        let index, prefix;
+        if (gid >= 126 && gid <= 134) {
+            index = gid - 126;
+            prefix = 'MB';
+        } else if (gid >= 226 && gid <= 329) {
+            index = gid - 226;
+            prefix = 'M';
+        }
+
+        if (index == null) {
+            return Promise.resolve(null);
+        } else {
+            const url = `sprites/${prefix}_${Utils.fixedNumber(index, 2)}_b`;
+            return LoaderHelper.loadResByUrl(url, cc.SpriteFrame);
+        }
+    },
+
     getSmallMonster (floorId, gid) {
         const atlas = this.getMonsterAtlas(floorId);
         if (atlas == null) {

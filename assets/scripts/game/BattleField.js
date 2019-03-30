@@ -1,5 +1,6 @@
 
 const setting = require('GameSetting');
+const Game = require('Game');
 
 const AttackType = cc.Enum({
     PLAYER_CRITICAL_ATTACK: 'baoji',
@@ -33,6 +34,8 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
+        battleBg: cc.Sprite,
+        
         playerAttackNumber: cc.Label,
         monsterAttackNumber: cc.Label,
         monsterName: cc.Label,
@@ -79,6 +82,15 @@ cc.Class({
     },
 
     resetBattleData (player, monster) {
+        this.battleBg.spriteFrame = null;
+        Game.res.getLargeBattleBg(monster.floorId).then(spriteFrame => {
+            this.battleBg.spriteFrame = spriteFrame;
+        });
+        this.monster.spriteFrame = null;
+        Game.res.getLargeMonster(monster.gid).then(spriteFrame => {
+            this.monster.spriteFrame = spriteFrame;
+        });
+
         this._player = player;
         this._monster = monster;
         this._criticalPos = monster.criticalPos;
@@ -183,7 +195,7 @@ cc.Class({
     _checkBattleOver () {
         const isOver = this._player.hp <= 0 || this._monster.hp <= 0;
         if (isOver) {
-            this.node.emit('battle-over', this._monster.hp <= 0);
+            this.node.emit('battle-over', this._player, this._monster, this._monster.hp <= 0);
         }
         return isOver;
     },

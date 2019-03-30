@@ -4,6 +4,7 @@ const Game = require('Game');
 const World = require('World');
 const HudControl = require('HudControl');
 const Preface = require('Preface');
+const BattleField = require('BattleField');
 
 const profile = require('GameProfile');
 
@@ -15,10 +16,13 @@ cc.Class({
         world: World,
         mask: cc.Node,
         bg: cc.Node,
+        battleField: BattleField,
     },
 
     onLoad () {
         this.world.node.on('change-floor', this.onChangeFloor, this);
+        this.node.on('enter-battle-field', this.onEnterBattleField, this);
+        this.battleField.node.on('battle-over', this.onBattleOver, this);
     },
 
     start () {
@@ -27,7 +31,6 @@ cc.Class({
         this.mask.opacity = 255;
         Game.res.init()
             .then(() => this._doChangeFloor(lastFloor.id, true, lastFloor.upSymbol))
-            .then(() => this.hud.observePlayerStatus(this.world.getPlayer()))
             .then(() => this._maskOut());
     },
 
@@ -36,6 +39,23 @@ cc.Class({
             floorId: floorId,
             isUp: true,
         });
+    },
+
+    onEnterBattleField (event) {
+        const monster = event.detail;
+        this.battleField.node.active = true;
+        this.battleField.resetBattleData(Game.player, monster);
+        this.hud.enterBattleField();
+    },
+
+    onBattleOver (player, monster, isWin) {
+        this.battleField.node.active = false;
+        this.hud.exitBattleField();
+        if (isWin) {
+            this.world.removeEntity(monster.grid);
+        } else {
+
+        }
     },
 
     onChangeFloor (exit) {

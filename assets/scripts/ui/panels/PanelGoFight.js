@@ -15,7 +15,7 @@ cc.Class({
         title: cc.Label,
     },
 
-    run (floorId, gid) {
+    run (floorId, gid, grid) {
         const data = Game.data.getMonster(gid);
         this.title.string = data.NAME;
         this.text.string = data.MESSAGE;
@@ -27,6 +27,25 @@ cc.Class({
         this.body.spriteFrame = monster.body;
         this.feet.spriteFrame = monster.feet;
         this.battle.spriteFrame = Game.res.getSmallBattleBg(floorId);
+
+        this.monsterStatus = {
+            grid: grid,
+            floorId: floorId,
+            gid: gid,
+            name: data.NAME,
+            message: data.MESSAGE,
+            hp: data.HP,
+            maxHp: data.HP,
+            attack: data.ATT,
+            defence: data.DEF,
+            criticalPos: data.CRITPOS,
+            criticalLength: data.CRITLENGHT,
+            cursorMoveDuration: data.TIMING,
+    
+            exp: data.EXP,
+            gold: data.GOLD,
+            item: data.WUPIN,
+        };
     },
     
     onClickClose () {
@@ -34,6 +53,10 @@ cc.Class({
     },
 
     onClickGoFight () {
+        const event = new cc.Event.EventCustom('enter-battle-field', true);
+        event.detail = this.monsterStatus;
+        this.node.dispatchEvent(event);
         this.node.destroy();
+
     },
 });

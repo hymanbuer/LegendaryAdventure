@@ -1,6 +1,4 @@
 
-const GameProfile = require('GameProfile');
-
 /**
  * Events:
  *   player-level-changed
@@ -13,7 +11,7 @@ const GameProfile = require('GameProfile');
  *   
  */
 cc.Class({
-    extends: cc.Component,
+    mixins: [cc.EventTarget],
 
     properties: {
         _level: 0,
@@ -30,7 +28,7 @@ cc.Class({
             },
             set (value) {
                 this._level = value;
-                this.node.emit('player-level-changed', this);
+                this.emit('player-level-changed', this);
             }
         },
 
@@ -40,7 +38,7 @@ cc.Class({
             },
             set (value) {
                 this._hp = value;
-                this.node.emit('player-hp-changed', this);
+                this.emit('player-hp-changed', this);
             }
         },
 
@@ -50,7 +48,7 @@ cc.Class({
             },
             set (value) {
                 this._maxHp = value;
-                this.node.emit('player-maxhp-changed', this);
+                this.emit('player-maxhp-changed', this);
             }
         },
 
@@ -60,7 +58,7 @@ cc.Class({
             },
             set (value) {
                 this._attack = value;
-                this.node.emit('player-attack-changed', this);
+                this.emit('player-attack-changed', this);
             }
         },
 
@@ -70,7 +68,7 @@ cc.Class({
             },
             set (value) {
                 this._defence = value;
-                this.node.emit('player-defence-changed', this);
+                this.emit('player-defence-changed', this);
             }
         },
 
@@ -80,7 +78,7 @@ cc.Class({
             },
             set (value) {
                 this._exp = value;
-                this.node.emit('player-exp-changed', this);
+                this.emit('player-exp-changed', this);
             }
         },
 
@@ -90,23 +88,18 @@ cc.Class({
             },
             set (value) {
                 this._nextExp = value;
-                this.node.emit('player-nextexp-changed', this);
+                this.emit('player-nextexp-changed', this);
             }
         },
     },
 
-    onLoad () {
-        this._initProperties();
-    },
-
-    _initProperties () {
-        const info = GameProfile.player;
-        this.level = info.level;
-        this.hp = info.hp;
-        this.maxHp = info.maxHp;
-        this.attack = info.attack;
-        this.defence = info.defence;
-        this.exp = info.exp;
-        this.nextExp = info.nextExp;
+    load (player) {
+        this.level = player.level;
+        this.hp = player.hp;
+        this.maxHp = player.maxHp;
+        this.attack = player.attack;
+        this.defence = player.defence;
+        this.exp = player.exp;
+        this.nextExp = player.nextExp;
     },
 });
