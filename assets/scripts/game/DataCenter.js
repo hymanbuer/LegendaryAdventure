@@ -76,8 +76,9 @@ cc.Class({
 
     _handleMonster (obj) {
         this._monsterMap = new Map();
-        for (const monster of obj) {
+        for (let monster of obj) {
             const gid = Number.parseInt(monster.ID);
+            this._convertNumber(monster);
             this._monsterMap.set(gid, monster);
         }
     },
@@ -113,6 +114,14 @@ cc.Class({
             this._tasks[taskId] = {
                 taskId, name, runningMessage, finishedMessage
             };
+        }
+    },
+
+    _convertNumber (obj) {
+        for (let key in obj) {
+            if (!isNaN(obj[key])) {
+                obj[key] = Number(obj[key]);
+            }
         }
     },
 });

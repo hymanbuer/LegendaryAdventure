@@ -73,9 +73,6 @@ cc.Class({
         this.rootBar.on(cc.Node.EventType.SIZE_CHANGED, this._udpateAttackRange, this);
         this.node.on('player-attack', this._onPlayerAttack, this);
         this.node.on('monster-attack', this._onMonsterAttack, this);
-
-        this.node.opacity = 0;
-        this.node.runAction(cc.fadeIn(0.5));
     },
 
     onDisable () {
@@ -108,7 +105,10 @@ cc.Class({
         this._udpateAttackRange();
 
         this._totalAttackCount = 0;
-        this._isAttackReady = true;
+        this.node.opacity = 0;
+        this.node.runAction(cc.sequence(cc.fadeIn(0.5), cc.callFunc(() => {
+            this._isAttackReady = true;
+        })));
 
         this.monsterName.string = monster.name;
         this.monsterHp.string = `${monster.maxHp}:${monster.maxHp}`;
@@ -277,7 +277,7 @@ cc.Class({
     _calculateDamage (attacker, defencer, isCritical) {
         let damage = Math.max(0, attacker.attack - defencer.defence);
         if (isCritical) {
-            damage *= CRITICAL_TIMES;
+            damage = Math.floor(damage * CRITICAL_TIMES);
         }
         return damage;
     },
