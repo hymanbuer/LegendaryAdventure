@@ -30,6 +30,7 @@ cc.Class({
         cc.assert(item.num >= 0, `don't has enough item to be removed`);
 
         this.emit('add-item', gid, num);
+        return item.num;
     },
 
     reduceItem (gid, num = 1) {
@@ -42,6 +43,7 @@ cc.Class({
         cc.assert(item.num >= 0, `don't has enough item to be removed`);
 
         this.emit('remove-item', gid, num);
+        return item.num;
     },
 
     getNumOfItem (gid) {

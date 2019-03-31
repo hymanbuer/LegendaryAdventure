@@ -130,6 +130,23 @@ cc.Class({
         }
     },
 
+    respawnHero () {
+        return LoaderHelper.loadResByUrl('prefabs/game/respawn_mask').then(prefab => {
+            const mask = cc.instantiate(prefab);
+            mask.zIndex = cc.macro.MAX_ZINDEX - 1;
+            this.node.addChild(mask);
+
+            const grid = this._spawnPoint || this.getDownGrid();
+            this._hero.node.zIndex = grid.y;
+            this._hero.node.position = this.getPositionAt(grid);
+            this._hero.node.active = false;
+            this._showAnimation(grid, 'prefabs/game/respawn_hero', () => {
+                this._hero.node.active = true;
+                mask.destroy();
+            });
+        });
+    },
+
     getMapSize () {
         return this._mapSize;
     },
@@ -223,12 +240,17 @@ cc.Class({
         this._showAnimation(grid, 'prefabs/game/gb_target');
     },
 
-    _showAnimation (grid, prefabPath) {
+    _showAnimation (grid, prefabPath, callback) {
         LoaderHelper.loadResByUrl(prefabPath, cc.Prefab).then(prefab => {
             const node = cc.instantiate(prefab);
             node.position = this.getPositionAt(grid);
             node.zIndex = cc.macro.MAX_ZINDEX;
-            node.getComponent(cc.Animation).on('finished', node.destroy, node);
+            node.getComponent(cc.Animation).on('finished', () => {
+                if (callback) {
+                    callback();
+                }
+                node.destroy();
+            });
             this.node.addChild(node);
         });
     },
@@ -419,7 +441,7 @@ cc.Class({
                 exit.floorId = id;
                 exit.symbol = symbol;
                 if (symbol == 'z') {
-                    this._spawnPoint = exit;
+                    this._spawnPoint = exit.grid;
                 } else {
                     const standGrid = {grid: cc.v2(exit.grid), symbol: symbol};
                     if (exit.floorId > this._floorId) {

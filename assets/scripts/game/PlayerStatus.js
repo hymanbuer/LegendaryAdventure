@@ -37,7 +37,7 @@ cc.Class({
                 return this._hp;
             },
             set (value) {
-                this._hp = value;
+                this._hp = cc.misc.clampf(value, 0, this._maxHp);
                 this.emit('player-hp-changed', this);
             }
         },
@@ -77,7 +77,7 @@ cc.Class({
                 return this._exp;
             },
             set (value) {
-                this._exp = value;
+                this._exp = cc.misc.clampf(value, 0, this._nextExp);;
                 this.emit('player-exp-changed', this);
             }
         },
@@ -94,12 +94,12 @@ cc.Class({
     },
 
     load (player) {
-        this.level = player.level;
-        this.hp = player.hp;
-        this.maxHp = player.maxHp;
-        this.attack = player.attack;
-        this.defence = player.defence;
-        this.exp = player.exp;
-        this.nextExp = player.nextExp;
+        this._level = player.level;
+        this._hp = player.hp;
+        this._maxHp = player.maxHp;
+        this._attack = player.attack;
+        this._defence = player.defence;
+        this._exp = player.exp;
+        this._nextExp = player.nextExp;
     },
 });

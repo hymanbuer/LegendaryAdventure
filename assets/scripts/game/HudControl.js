@@ -59,7 +59,7 @@ cc.Class({
         this.keys.active = true;
         this.mission.active = true;
     },
-
+    
     _initPlayerStatus () {
         const player = Game.player;
         this.setLevel(player.level);

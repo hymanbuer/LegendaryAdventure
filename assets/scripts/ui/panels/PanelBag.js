@@ -10,12 +10,29 @@ const useFilter = new Set([
     2001,
 ]);
 
-function applyItem(gid) {
-    if (gid === 2001) {
-        Game.openPanel('teleport');
+function applyHealthItem(gid) {
+    const player = Game.player;
+    if (player.hp >= player.maxHp) {
+        Game.openPanel('notice', '您的生命值已满!');
+        return false;
     } else {
-
+        const percent = gid == 151 ? 0.25 : 0.5;
+        const restore = player.maxHp * percent;
+        player.hp += restore;
+        return true;
     }
+}
+
+function applyItem(gid) {
+    switch (gid) {
+        case 2001:
+            Game.openPanel('teleport');
+            return true;
+        case 151:
+        case 152:
+            return applyHealthItem(gid);
+    }
+    return false;
 }
 
 cc.Class({
@@ -66,14 +83,11 @@ cc.Class({
 
     onClickUse () {
         const item = this._checkedItem;
-        if (item == null) {
+        if (item == null || !applyItem(item.gid)) {
             return;
         }
 
-        applyItem(item.gid);
-        Game.bag.reduceItem(item.gid)
-
-        const remain = Game.bag.getNumOfItem(item.gid);
+        const remain = Game.bag.reduceItem(item.gid);
         if (remain <= 0) {
             item.node.destroy();
             this._checkedItem = null;

@@ -54,7 +54,7 @@ cc.Class({
         if (isWin) {
             this.world.removeEntity(monster.grid);
         } else {
-
+            this._doRespawnHero();
         }
     },
 
@@ -82,6 +82,13 @@ cc.Class({
                 this._saveLastFloor(floorId, isUp, symbol);
                 Game.closeAllPanel();
             });
+    },
+
+    _doRespawnHero () {
+        this._maskIn()
+            .then(() => this._doChangeFloor(0, false))
+            .then(() => this.world.respawnHero())
+            .then(() => this._maskOut())
     },
 
     _checkShowPreface (floorId, isUp) {
@@ -126,9 +133,9 @@ cc.Class({
             this.bg.removeAllChildren();
             this.bg.addChild(node);
 
-            if (floorId == 0 && profile.maxFloorId > 0) {
-                node.getChildByName('bubble').active = false;
-            }
+            // if (floorId == 0 && profile.maxFloorId > 0) {
+            //     node.getChildByName('bubble').active = false;
+            // }
         });
     },
 

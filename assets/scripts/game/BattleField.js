@@ -73,6 +73,15 @@ cc.Class({
         this.rootBar.on(cc.Node.EventType.SIZE_CHANGED, this._udpateAttackRange, this);
         this.node.on('player-attack', this._onPlayerAttack, this);
         this.node.on('monster-attack', this._onMonsterAttack, this);
+
+        this.node.opacity = 0;
+        this.node.runAction(cc.fadeIn(0.5));
+    },
+
+    onDisable () {
+        this.rootBar.off(cc.Node.EventType.SIZE_CHANGED, this._udpateAttackRange, this);
+        this.node.off('player-attack', this._onPlayerAttack, this);
+        this.node.off('monster-attack', this._onMonsterAttack, this);
     },
 
     update (dt) {
