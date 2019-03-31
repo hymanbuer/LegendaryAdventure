@@ -88,7 +88,15 @@ cc.Class({
 
     _checkUseRespawnItem () {
         if (Game.bag.hasItem(Game.config.ITEM_RESPAWN)) {
-            
+            Game.openPanel('lose', {
+                confirmHandler: () => {
+                    Game.bag.reduceItem(Game.config.ITEM_RESPAWN);
+                    Game.player.hp = Game.player.maxHp;
+                },
+                cancelHandler: () => {
+                    this._doRespawnHero();
+                },
+            });
         } else {
             this._doRespawnHero();
         }
