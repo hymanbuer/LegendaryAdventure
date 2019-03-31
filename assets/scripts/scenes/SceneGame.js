@@ -53,6 +53,41 @@ cc.Class({
         this.hud.exitBattleField();
         if (isWin) {
             this.world.removeEntity(monster.grid);
+            this._getMonsterAward(monster);
+        } else {
+            this._checkUseRespawnItem();
+        }
+    },
+
+    _getMonsterAward (monster) {
+        const player = Game.player;
+        let exp = player.exp + Number.parseInt(monster.exp);
+        if (player.level < Game.config.maxLevels && exp >= player.nextExp) {
+            const nextLevelInfo = Game.data.getLevelInfo(player.level + 1);
+            exp -= player.nextExp;
+            player.exp = exp;
+            player.nextExp = nextLevelInfo.nextExp;
+            player.maxHp += nextLevelInfo.hp;
+            player.hp = player.maxHp;
+            player.attack += nextLevelInfo.attack;
+            player.defence += nextLevelInfo.defence;
+            player.level = player.level + 1;
+            Game.openPanel('levelup', nextLevelInfo);
+        } else {
+            player.exp = exp;
+        }
+
+        Game.bag.plusCoins(Number.parseInt(monster.gold));
+        if (monster.item) {
+            // TODO: check add only once
+            Game.bag.addItem(monster.item);
+            Game.openPanel('get_item', monster.item);
+        }
+    },
+
+    _checkUseRespawnItem () {
+        if (Game.bag.hasItem(Game.config.ITEM_RESPAWN)) {
+
         } else {
             this._doRespawnHero();
         }

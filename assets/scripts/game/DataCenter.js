@@ -51,13 +51,27 @@ cc.Class({
         return this._tasks[taskId];
     },
 
+    getLevelInfo (level) {
+        return this._playerLevelInfos[level];
+    },
+
     _handleEvent (obj) {
         this._parseFloors(obj.FLOOR);
         this._parseTasks(obj.MISSIONDESCRIPTION);
     },
 
     _handlePlayer (obj) {
-        
+        this._playerLevelInfos = new Array(GameConfig.maxLevels + 1);
+        for (const config of obj) {
+            const info = {
+                level: Number.parseInt(config.ID),
+                nextExp: Number.parseInt(config.NEEDEXP),
+                hp: Number.parseInt(config.HP),
+                attack: Number.parseInt(config.ATT),
+                defence: Number.parseInt(config.DEF),
+            };
+            this._playerLevelInfos[info.level] = info;
+        }
     },
 
     _handleMonster (obj) {

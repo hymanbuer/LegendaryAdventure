@@ -144,6 +144,11 @@ cc.Class({
                 this._hero.node.active = true;
                 mask.destroy();
             });
+
+            const hpStep = Game.player.maxHp * 0.1;
+            this.schedule(() => {
+                Game.player.hp += hpStep;
+            }, 0.1, 10, 0);
         });
     },
 

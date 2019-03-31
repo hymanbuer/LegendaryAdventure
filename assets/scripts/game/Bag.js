@@ -65,12 +65,14 @@ cc.Class({
 
     plusCoins (num) {
         this._coins += num;
-        cc.assert(tihs._coins >= 0, 'coins less than 0');
+        cc.assert(this._coins >= 0, 'coins less than 0');
+        this.emit('coins-changed', num);
     },
 
     minusCoins (num) {
         this._coins -= num;
-        cc.assert(tihs._coins >= 0, 'coins less than 0');
+        cc.assert(this._coins >= 0, 'coins less than 0');
+        this.emit('coins-changed', num);
     },
 
     getNumOfCoins () {

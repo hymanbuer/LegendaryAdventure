@@ -15,6 +15,10 @@ cc.js.get(exports, 'maxTasks', function () {
     return 21;
 });
 
+cc.js.get(exports, 'maxLevels', function () {
+    return 99;
+});
+
 exports.getSceneId = function (floorId) {
     let sceneId = Math.floor(floorId / 10);
     if (floorId % 10 !== 0) {
@@ -119,3 +123,4 @@ exports.NPC_BEI_ER = 9;
 exports.KEY_YELLOW = 155;
 exports.KEY_BLUE = 156;
 exports.KEY_RED = 157;
+exports.ITEM_RESPAWN = 2002;
