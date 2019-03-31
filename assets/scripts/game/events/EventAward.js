@@ -12,7 +12,7 @@ cc.Class({
     },
 
     init (event) {
-        this.awardGid = Number.parseInt(event.TASKAWARD);
+        this.awardGid = event.TASKAWARD;
         this.message = event.MESSAGE;
         if (event.ADDENTITY) {
             this.delayDestroy = true;

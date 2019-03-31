@@ -39,24 +39,19 @@ const TaskState = cc.Class({
     },
 
     isTaskEnd (taskId) {
-        taskId = Number.parseInt(taskId);
         return this._stateMap.get(taskId) == State.End;
     },
 
     getTaskState (taskId) {
-        taskId = Number.parseInt(taskId);
         return this._stateMap.get(taskId) || State.New;
     },
 
     setTaskState (taskId, state) {
-        taskId = Number.parseInt(taskId);
         this._stateMap.set(taskId, state);
         this.emit('task-state-changed', taskId, state);
     },
 
     setNeedItem (taskId, itemGid) {
-        taskId = Number.parseInt(taskId);
-        itemGid = Number.parseInt(itemGid);
         this._needMap.set(taskId, itemGid);
     },
 

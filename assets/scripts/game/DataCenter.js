@@ -18,19 +18,16 @@ cc.Class({
     },
 
     getEvent (floorId, gid) {
-        gid = Number.parseInt(gid);
         if (this._eventMapList[floorId])
             return this._eventMapList[floorId].get(gid);
         return null;
     },
 
     getMonster (gid) {
-        gid = Number.parseInt(gid);
         return this._monsterMap.get(gid);
     },
 
     getItemInfo (gid) {
-        gid = Number.parseInt(gid);
         return this._monsterMap.get(gid);
     },
 
@@ -64,11 +61,11 @@ cc.Class({
         this._playerLevelInfos = new Array(GameConfig.maxLevels + 1);
         for (const config of obj) {
             const info = {
-                level: Number.parseInt(config.ID),
-                nextExp: Number.parseInt(config.NEEDEXP),
-                hp: Number.parseInt(config.HP),
-                attack: Number.parseInt(config.ATT),
-                defence: Number.parseInt(config.DEF),
+                level: config.ID,
+                nextExp: config.NEEDEXP,
+                hp: config.HP,
+                attack: config.ATT,
+                defence: config.DEF,
             };
             this._playerLevelInfos[info.level] = info;
         }
@@ -77,8 +74,7 @@ cc.Class({
     _handleMonster (obj) {
         this._monsterMap = new Map();
         for (let monster of obj) {
-            const gid = Number.parseInt(monster.ID);
-            this._convertNumber(monster);
+            const gid = monster.ID;
             this._monsterMap.set(gid, monster);
         }
     },
@@ -86,7 +82,7 @@ cc.Class({
     _parseFloors (FLOORS) {
         this._eventMapList = new Array(GameConfig.maxFloors + 1);
         for (let i = 0; i < FLOORS.length; i++) {
-            const floorId = Number.parseInt(FLOORS[i].ID);
+            const floorId = FLOORS[i].ID;
             let eventMap = this._eventMapList[floorId];
             if (!eventMap) eventMap = this._eventMapList[floorId] = new Map();
 
@@ -97,7 +93,7 @@ cc.Class({
             for (let j = 0; j < GIDS.length; j++) {
                 const event = GIDS[j];
                 if (event) {
-                    const gid = Number.parseInt(event.ID);
+                    const gid = event.ID;
                     eventMap.set(gid, event);
                 }
             }
@@ -107,21 +103,13 @@ cc.Class({
     _parseTasks (TASKS) {
         this._tasks = new Array(GameConfig.maxTasks + 1);
         for (let info of TASKS.GID) {
-            const taskId = Number.parseInt(info.ID);
+            const taskId = info.ID;
             const name = info.MISSIONNAME;
             const runningMessage = info.RUNNINGMESSAGE;
             const finishedMessage = info.FINISHMESSAGE;
             this._tasks[taskId] = {
                 taskId, name, runningMessage, finishedMessage
             };
-        }
-    },
-
-    _convertNumber (obj) {
-        for (let key in obj) {
-            if (!isNaN(obj[key])) {
-                obj[key] = Number(obj[key]);
-            }
         }
     },
 });

@@ -61,7 +61,7 @@ cc.Class({
 
     _getMonsterAward (monster) {
         const player = Game.player;
-        let exp = player.exp + Number.parseInt(monster.exp);
+        let exp = player.exp + monster.exp;
         if (player.level < Game.config.maxLevels && exp >= player.nextExp) {
             const nextLevelInfo = Game.data.getLevelInfo(player.level + 1);
             exp -= player.nextExp;
@@ -77,7 +77,7 @@ cc.Class({
             player.exp = exp;
         }
 
-        Game.bag.plusCoins(Number.parseInt(monster.gold));
+        Game.bag.plusCoins(monster.gold);
         if (monster.item) {
             // TODO: check add only once
             Game.bag.addItem(monster.item);

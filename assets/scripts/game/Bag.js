@@ -19,7 +19,6 @@ cc.Class({
     },
 
     addItem (gid, num = 1) {
-        gid = this._parseGid(gid);
         let item = this._getItem(gid);
         if (!item) {
             item = {gid: gid, num: num};
@@ -34,7 +33,6 @@ cc.Class({
     },
 
     reduceItem (gid, num = 1) {
-        gid = this._parseGid(gid);
         const item = this._getItem(gid);
         cc.assert(item, `item not exist ${gid}`);
         if (GameConfig.isInfiniteItem(gid)) return;
@@ -47,7 +45,6 @@ cc.Class({
     },
 
     getNumOfItem (gid) {
-        gid = this._parseGid(gid);
         const item = this._getItem(gid);
         return item ? item.num : 0;
     },
@@ -58,7 +55,6 @@ cc.Class({
     },
 
     hasItem (gid) {
-        gid = this._parseGid(gid);
         const item = this._getItem(gid);
         return item && item.num > 0;
     },
@@ -80,12 +76,7 @@ cc.Class({
     },
 
     _getItem (gid) {
-        gid = this._parseGid(gid);
         const index = this._items.findIndex(item => item.gid === gid);
         return index >= 0 ? this._items[index] : null;
-    },
-
-    _parseGid (gid) {
-        return Number.parseInt(gid);
     },
 });
