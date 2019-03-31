@@ -7,6 +7,7 @@ const Preface = require('Preface');
 const BattleField = require('BattleField');
 
 const profile = require('GameProfile');
+const GameSetting = require('GameSetting');
 
 cc.Class({
     extends: cc.Component,
@@ -60,6 +61,13 @@ cc.Class({
     },
 
     _getMonsterAward (monster) {
+        if (GameSetting.isDoubleExp) {
+            monster.exp *= 2;
+        }
+        if (GameSetting.isDoubleGold) {
+            monster.gold *= 2;
+        }
+
         const player = Game.player;
         let exp = player.exp + monster.exp;
         if (player.level < Game.config.maxLevels && exp >= player.nextExp) {

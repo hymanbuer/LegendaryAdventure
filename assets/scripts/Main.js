@@ -60,6 +60,7 @@ const Main = cc.Class({
         this._addMask();
 
         profile.reset();
+        setting.reset();
     },
 
     _addMask () {
