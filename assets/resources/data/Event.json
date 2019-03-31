@@ -2110,10 +2110,6 @@
                     {
                         "ID": 2,
                         "text": "我的公主姐妹们被王后抓去了，请你赶快去救她们。"
-                    },
-                    {
-                        "ID": 3,
-                        "text": "送你三个复活十字架,放到你的背包里了"
                     }
                 ],
                 "SHOPTALK": "我可以为你提供冒险途中必要的物品，你要购买么?",
@@ -2549,37 +2545,37 @@
     "COLDDOWN": 240
 },
 "ENHANCE00": {
-    "LIMIT": 50,
+    "LIMIT": 25,
     "GOLDCOST": 50,
     "COSTADD": 4,
     "ADD": 2
 },
 "ENHANCE01": {
-    "LIMIT": 100,
+    "LIMIT": 25,
     "GOLDCOST": 200,
     "COSTADD": 4,
     "ADD": 4
 },
 "ENHANCE02": {
-    "LIMIT": 300,
+    "LIMIT": 25,
     "GOLDCOST": 350,
     "COSTADD": 4,
     "ADD": 12
 },
 "ENHANCE03": {
-    "LIMIT": 500,
+    "LIMIT": 25,
     "GOLDCOST": 500,
     "COSTADD": 4,
     "ADD": 20
 },
 "ENHANCE04": {
-    "LIMIT": 1000,
+    "LIMIT": 25,
     "GOLDCOST": 700,
     "COSTADD": 4,
     "ADD": 40
 },
 "ENHANCE05": {
-    "LIMIT": 1000,
+    "LIMIT": 25,
     "GOLDCOST": 900,
     "COSTADD": 2,
     "ADD": 40

@@ -31,6 +31,11 @@ cc.Class({
         return this._monsterMap.get(gid);
     },
 
+    getEnhanceInfo (level) {
+        const key = `ENHANCE${Utils.fixedNumber(level, 2)}`;
+        return this.eventConfig.json[key];
+    },
+
     getPreface (floorId) {
         const name = `FLOOR${Utils.fixedNumber(floorId, 2)}PERFACE`;
         const config = this.eventConfig.json[name];

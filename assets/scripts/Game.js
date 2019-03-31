@@ -42,7 +42,59 @@ const Game = cc.Class({
         this._taskState.load(GameProfile.taskState);
         this._playerStatus.load(GameProfile.player);
 
+        this._initListeners();
+    },
+
+    _initListeners () {
         this._bag.on('add-item', this._taskState.onGetItem, this._taskState);
+        this._bag.on('add-item', this.onCheckGetSwordOrStones, this);
+        this._bag.on('add-item', this.onCheckGetShieldOrStones, this);
+    },
+
+    onCheckGetSwordOrStones (gid) {
+        if (GameConfig.isSwordItem(gid)) {
+            this._playerStatus.changeSword(this._createNewSword(gid));
+        } else if (GameConfig.isSwordStoneItem(gid)) {
+            this._playerStatus.addSwordStone(gid);
+        }
+    },
+
+    onCheckGetShieldOrStones (gid) {
+        if (GameConfig.isShieldItem(gid)) {
+            this._playerStatus.changeShield(this._createNewShield(gid));
+        } else if (GameConfig.isShieldStoneItem(gid)) {
+            this._playerStatus.addShieldStone(gid);
+        }
+    },
+
+    _createNewSword (gid) {
+        const sword = {};
+        const info = Game.data.getItemInfo(gid);
+        sword.base = info.ATT;
+        sword.stones = [];
+        sword.enhance = this._createCommonEnhance(gid);
+        return sword;
+    },
+
+    _createNewShield (gid) {
+        const shield = {};
+        const info = Game.data.getItemInfo(gid);
+        shield.base = info.DEF;
+        shield.stones = [];
+        shield.enhance = this._createCommonEnhance(gid);
+        return sword;
+    },
+
+    _createCommonEnhance (gid) {
+        const level = GameConfig.getEquipmentLevel(gid);
+        const info = Game.data.getEnhanceInfo(level);
+        return {
+            level: 0,
+            limit: info.LIMIT,
+            cost: info.GOLDCOST,
+            costStep: info.COSTADD,
+            step: info.ADD,
+        };
     },
 });
 

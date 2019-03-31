@@ -60,7 +60,7 @@ const itemSet = new Set([
     360,
 ]);
 itemRanges.forEach(range => {
-    for (let i = range[0]; i < range[1]; i++) {
+    for (let i = range[0]; i <= range[1]; i++) {
         itemSet.add(i);
     }
 });
@@ -117,6 +117,44 @@ exports.isInfiniteItem = function (gid) {
 
 exports.isKeyItem = function (gid) {
     return gid == 155 || gid == 156 || gid == 157;
+};
+
+exports.isSwordItem = function (gid) {
+    return gid >= 176 && gid <= 181;
+};
+
+exports.isShieldItem = function (gid) {
+    return gid >= 182 && gid <= 187;
+};
+
+const swordStoneSet = new Set([
+    39, 40, 41, 42, 43, 44,
+    64, 65, 66, 67, 68, 69,
+    89, 90, 91, 92, 93, 94,
+    114, 115, 116, 117, 118, 119,
+    139, 140, 141, 142, 143, 144,
+]);
+exports.isSwordStoneItem = function (gid) {
+    return swordStoneSet.has(gid);
+};
+
+const shieldStoneSet = new Set([
+    45, 46, 47, 48, 49, 50,
+    70, 71, 72, 73, 74, 75,
+    95, 96, 97, 98, 99, 100,
+    120, 121, 122, 123, 124, 125,
+    145, 146, 147, 148, 149, 150,
+]);
+exports.isShieldStoneItem = function (gid) {
+    return shieldStoneSet.has(gid);
+};
+
+exports.getEquipmentLevel = function (gid) {
+    if (exports.isSwordItem(gid)) {
+        return gid - 176;
+    } else if (exports.isShieldItem(gid)) {
+        return gid - 182;
+    }
 };
 
 exports.NPC_BEI_ER = 9;

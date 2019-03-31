@@ -101,5 +101,46 @@ cc.Class({
         this._defence = player.defence;
         this._exp = player.exp;
         this._nextExp = player.nextExp;
+
+        this._sword = player.sword || {};
+        this._shield = player.shield || {};
+    },
+
+    changeSword (sword) {
+        const previous = this._sword;
+        if (previous.gid) {
+            this.attack -= previous.base;
+            this.attack -= previous.enhance.level * previous.enhance.step;
+        }
+        this._sword = sword;
+        this.attack += sword.base;
+        this.attack += sword.enhance.level * sword.enhance.step;
+    },
+
+    changeShield (shield) {
+        const previous = this._shield;
+        if (previous.gid) {
+            this.defence -= previous.base;
+            this.defence -= previous.enhance.level * previous.enhance.step;
+        }
+        this._shield = shield;
+        this.defence += sword.base;
+        this.defence += sword.enhance.level * sword.enhance.step;
+    },
+
+    addSwordStone (gid) {
+        this._sword.stones.push(gid);
+    },
+
+    addShieldStone (gid) {
+        this._shield.stones.push(gid);
+    },
+
+    hasSword () {
+        return !!this._sword.gid;
+    },
+
+    hasShield () {
+        return !!this._shield.gid;
     },
 });

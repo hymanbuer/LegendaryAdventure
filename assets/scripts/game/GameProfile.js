@@ -27,6 +27,8 @@ proto.reset = function () {
         exp: 0,
         nextExp: 9,
     };
+    this.player.sword = undefined;
+    this.player.shield = undefined;
 
     this.bag = {};
     this.bag.coins = 0;

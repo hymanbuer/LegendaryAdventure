@@ -2,9 +2,18 @@
 const Game = require('Game');
 
 const hideFilter = new Set([
-    153, 154, 155, 156, 157,
-    176, 177, 178, 179, 180, 181,
+
 ]);
+const hideRanges = [
+    [39, 50], [64, 75], [89, 100], [114, 125], [139, 150],
+    [153, 157], [176, 187],
+];
+hideRanges.forEach(range => {
+    for (let i = range[0]; i <= range[1]; i++) {
+        hideFilter.add(i);
+    }
+});
+
 const useFilter = new Set([
     151, 152,
     2001,
