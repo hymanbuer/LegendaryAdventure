@@ -75,6 +75,7 @@ cc.Class({
             Game.openPanel('levelup', nextLevelInfo);
         } else {
             player.exp = exp;
+            Game.openPanel('win', monster);
         }
 
         Game.bag.plusCoins(monster.gold);
@@ -87,7 +88,7 @@ cc.Class({
 
     _checkUseRespawnItem () {
         if (Game.bag.hasItem(Game.config.ITEM_RESPAWN)) {
-
+            
         } else {
             this._doRespawnHero();
         }
