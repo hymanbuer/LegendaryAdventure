@@ -106,6 +106,6 @@ cc.Class({
     },
 
     onClickPlus () {
-
+        Game.openPanel('shop', true);
     },
 });

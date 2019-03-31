@@ -62,6 +62,10 @@ cc.Class({
         }
     },
 
+    onClickPlus () {
+        Game.openPanel('shop', true);
+    },
+
     _enhance () {
         if (this._isSword) {
             Game.player.enhanceSword();
