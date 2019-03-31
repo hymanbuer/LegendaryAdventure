@@ -70,6 +70,7 @@ const Game = cc.Class({
     _createNewSword (gid) {
         const sword = {};
         const info = Game.data.getItemInfo(gid);
+        sword.gid = gid;
         sword.base = info.ATT;
         sword.stones = [];
         sword.enhance = this._createCommonEnhance(gid);
@@ -79,6 +80,7 @@ const Game = cc.Class({
     _createNewShield (gid) {
         const shield = {};
         const info = Game.data.getItemInfo(gid);
+        shield.gid = gid;
         shield.base = info.DEF;
         shield.stones = [];
         shield.enhance = this._createCommonEnhance(gid);

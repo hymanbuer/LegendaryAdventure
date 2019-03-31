@@ -151,9 +151,9 @@ exports.isShieldStoneItem = function (gid) {
 
 exports.getEquipmentLevel = function (gid) {
     if (exports.isSwordItem(gid)) {
-        return gid - 176;
+        return gid - 176 + 1;
     } else if (exports.isShieldItem(gid)) {
-        return gid - 182;
+        return gid - 182 + 1;
     }
 };
 

@@ -143,4 +143,44 @@ cc.Class({
     hasShield () {
         return !!this._shield.gid;
     },
+
+    getSword () {
+        return cc.instantiate(this._sword);
+    },
+
+    getShield () {
+        return cc.instantiate(this._shield);
+    },
+
+    enhanceSword () {
+        if (!this.hasSword() || this._sword.enhance.level >= this._sword.enhance.limit) {
+            return;
+        }
+        this._sword.enhance.level += 1;
+        this.attack += this._sword.enhance.step;
+    },
+
+    enhanceShield () {
+        if (!this.hasShield() || this._shield.enhance.level >= this._shield.enhance.limit) {
+            return;
+        }
+        this._shield.enhance.level += 1;
+        this.defence += this._shield.enhance.step;
+    },
+
+    getBaseAttack () {
+        let base = this.attack;
+        if (this._sword.gid) {
+            base -= this._sword.enhance.level * this._sword.enhance.step;
+        }
+        return base;
+    },
+
+    getBaseDefence () {
+        let base = this.defence;
+        if (this._shield.gid) {
+            base -= this._shield.enhance.level * this._shield.enhance.step;
+        }
+        return base;
+    },
 });

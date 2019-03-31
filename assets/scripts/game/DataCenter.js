@@ -32,7 +32,7 @@ cc.Class({
     },
 
     getEnhanceInfo (level) {
-        const key = `ENHANCE${Utils.fixedNumber(level, 2)}`;
+        const key = `ENHANCE${Utils.fixedNumber(level-1, 2)}`;
         return this.eventConfig.json[key];
     },
 

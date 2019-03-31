@@ -246,4 +246,17 @@ cc.Class({
         const name = 'text_zonename' + (id + 1);
         return this.itemAtlas.getSpriteFrame(name);
     },
+
+    getEquipNameSpriteFrameByGid (gid) {
+        const isSword = GameConfig.isSwordItem(gid);
+        const level = GameConfig.getEquipmentLevel(gid);
+        const prefix = isSword ? 'text_namesword' : 'text_nameshield';
+        const name = `${prefix}${level}`;
+        return this.commonAtlas.getSpriteFrame(name);
+    },
+
+    getPropertySpriteFrameType (isSword) {
+        const name = isSword ? 'text_weapon_at' : 'text_weapon_df';
+        return this.commonAtlas.getSpriteFrame(name);
+    },
 });

@@ -143,11 +143,19 @@ cc.Class({
     },
 
     onClickAttack () {
-        Game.openPanel('equipment');
+        if (Game.player.hasSword()) {
+            Game.openPanel('equipment', true);
+        } else {
+            Game.openPanel('notice', '您还没有获得武器!');
+        }
     },
 
     onClickDefence () {
-        Game.openPanel('equipment');
+        if (Game.player.hasShield()) {
+            Game.openPanel('equipment', false);
+        } else {
+            Game.openPanel('notice', '您还没有获得盾牌!');
+        }
     },
 
     onClickBag () {
