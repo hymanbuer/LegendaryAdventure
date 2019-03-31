@@ -49,6 +49,19 @@ const Game = cc.Class({
         this._bag.on('add-item', this._taskState.onGetItem, this._taskState);
         this._bag.on('add-item', this.onCheckGetSwordOrStones, this);
         this._bag.on('add-item', this.onCheckGetShieldOrStones, this);
+        this._bag.on('add-item', this.onCheckInstantUseItem, this);
+    },
+
+    onCheckInstantUseItem (gid) {
+        if (GameConfig.isInstantUseItem(gid)) {
+            this._bag.reduceItem(gid);
+            const info = Game.data.getItemInfo(gid);
+            if (info.ATT) {
+                this._playerStatus.attack += info.ATT;
+            } else if (info.DEF) {
+                this._playerStatus.defence += info.ATT;
+            }
+        }
     },
 
     onCheckGetSwordOrStones (gid) {

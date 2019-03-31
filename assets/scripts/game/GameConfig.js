@@ -157,6 +157,10 @@ exports.getEquipmentLevel = function (gid) {
     }
 };
 
+exports.isInstantUseItem = function (gid) {
+    return gid == 153 || gid == 154;
+};
+
 exports.NPC_BEI_ER = 9;
 exports.KEY_YELLOW = 155;
 exports.KEY_BLUE = 156;
