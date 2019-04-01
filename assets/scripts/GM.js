@@ -3,6 +3,13 @@ const SceneGame = require('SceneGame');
 const Game = require('Game');
 const profile = require('GameProfile');
 
+/**
+ * Usage:
+ *   In Chrome Console input:
+ *   > GM('goto-floor', 3)
+ *   > GM('plus-coins', 1000)
+ *   ...
+ */
 cc.Class({
     extends: cc.Component,
 
@@ -65,5 +72,9 @@ cc.Class({
             floorId: lastFloor.id - 1,
             isUp: false,
         });
+    },
+
+    'plus-coins' (num) {
+        Game.bag.plusCoins(num);
     },
 });

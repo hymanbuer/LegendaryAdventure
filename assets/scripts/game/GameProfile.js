@@ -31,7 +31,7 @@ proto.reset = function () {
     this.player.shield = undefined;
 
     this.bag = {};
-    this.bag.coins = 10000;
+    this.bag.coins = 0;
     this.bag.items = [
         {gid: 2001, num: 1},
         {gid: 2002, num: 3},
