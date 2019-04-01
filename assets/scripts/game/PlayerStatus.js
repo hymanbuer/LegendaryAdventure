@@ -129,11 +129,15 @@ cc.Class({
     },
 
     addSwordStone (gid) {
-        this._sword.stones.push(gid);
+        if (this.hasSword()) {
+            this._sword.stones.push(gid);
+        }
     },
 
     addShieldStone (gid) {
-        this._shield.stones.push(gid);
+        if (this.hasShield()) {
+            this._shield.stones.push(gid);
+        }
     },
 
     hasSword () {

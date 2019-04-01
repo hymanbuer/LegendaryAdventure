@@ -48,6 +48,8 @@ proto.reset = function () {
     this.savedPrincess = {
         [9]: true,
     };
+
+    this.shop = {};
 };
 
 module.exports = new GameProfile();

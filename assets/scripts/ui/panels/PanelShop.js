@@ -2,6 +2,45 @@
 const Game = require('Game');
 const GameSetting = require('GameSetting');
 
+// 151, 152, 153, 154, 2002
+const shopItemConfigs = [
+    {
+        type: 0,
+        gid: 151,
+        basePrice: 50,
+        priceStep: 1,
+        maxPrice: 250,
+    },
+    {
+        type: 1,
+        gid: 152,
+        basePrice: 200,
+        priceStep: 1,
+        maxPrice: 500,
+    },
+    {
+        type: 2,
+        gid: 153,
+        basePrice: 100,
+        priceStep: 1,
+        maxPrice: 200,
+    },
+    {
+        type: 3,
+        gid: 154,
+        basePrice: 100,
+        priceStep: 1,
+        maxPrice: 200,
+    },
+    {
+        type: 4,
+        gid: 2002,
+        basePrice: 150,
+        priceStep: 5,
+        maxPrice: 800,
+    },
+];
+
 cc.Class({
     extends: cc.Component,
 
@@ -16,11 +55,13 @@ cc.Class({
         buyDoubleGold: cc.Node,
 
         coins: cc.Label,
+        prices: [cc.Label],
     },
 
     onLoad () {
         this._updateCoins();
         this._updateDoubleWidgets();
+        this._updatePrices();
     },
 
     run (isOnlyGoldShop) {
@@ -67,7 +108,21 @@ cc.Class({
     },
 
     _doBuyItem (type) {
-        
+        let price = this._getPriceByType(type);
+        if (price > Game.bag.getNumOfCoins()) {
+            Game.openPanel('notice', '金币不足!');
+        } else {
+            const config = shopItemConfigs[type];
+            Game.bag.minusCoins(price);
+            Game.bag.addItem(config.gid);
+
+            this._updateCoins();
+            if (price < config.maxPrice) {
+                price += config.priceStep;
+                Game.profile.shop[config.gid] = price;
+                this._updatePrices();
+            }
+        }
     },
 
     _switchToGoldShop () {
@@ -93,5 +148,20 @@ cc.Class({
         this.tickDoubleGold.active = GameSetting.isDoubleGold;
         this.buyDoubleExp.active = !GameSetting.isDoubleExp;
         this.buyDoubleGold.active = !GameSetting.isDoubleGold;
+    },
+
+    _updatePrices () {
+        this.prices.forEach((price, type) => {
+            price.string = this._getPriceByType(type); 
+        });
+    },
+
+    _getPriceByType (type) {
+        const config = shopItemConfigs[type];
+        let price = Game.profile.shop[config.gid];
+        if (price == null) {
+            price = config.basePrice;
+        }
+        return price;
     },
 });

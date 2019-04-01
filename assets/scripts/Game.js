@@ -59,7 +59,7 @@ const Game = cc.Class({
             if (info.ATT) {
                 this._playerStatus.attack += info.ATT;
             } else if (info.DEF) {
-                this._playerStatus.defence += info.ATT;
+                this._playerStatus.defence += info.DEF;
             }
         }
     },
