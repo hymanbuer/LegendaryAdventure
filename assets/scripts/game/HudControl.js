@@ -2,6 +2,8 @@
 const Game = require('Game');
 const Utils = require('Utils');
 
+const HP_LOWER_PERCENT = 0.3;
+
 /**
  * Events:
  *   player-level-changed
@@ -24,6 +26,7 @@ cc.Class({
         hpStatus: cc.Label,
         hpBar: cc.ProgressBar,
         expBar: cc.ProgressBar,
+        hpWarn: cc.Node,
 
         siteName: cc.Sprite,
         siteFloor: cc.Label,
@@ -105,6 +108,7 @@ cc.Class({
     setHpStatus (hp, maxHp) {
         this.hpBar.progress = hp / maxHp;
         this.hpStatus.string = `${hp}:${maxHp}`;
+        this.hpWarn.active = hp > 0 && this.hpBar.progress <= HP_LOWER_PERCENT;
     },
 
     changeSite (floorId) {
