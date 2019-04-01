@@ -112,6 +112,9 @@ cc.Class({
             this.attack -= previous.base;
             this.attack -= previous.enhance.level * previous.enhance.step;
         }
+        if (previous.stones) {
+            cc.js.array.appendObjectsAt(sword.stones, previous.stones, 0);
+        } 
         this._sword = sword;
         this.attack += sword.base;
         this.attack += sword.enhance.level * sword.enhance.step;
@@ -123,21 +126,22 @@ cc.Class({
             this.defence -= previous.base;
             this.defence -= previous.enhance.level * previous.enhance.step;
         }
+        if (previous.stones) {
+            cc.js.array.appendObjectsAt(shield.stones, previous.stones, 0);
+        } 
         this._shield = shield;
-        this.defence += sword.base;
-        this.defence += sword.enhance.level * sword.enhance.step;
+        this.defence += shield.base;
+        this.defence += shield.enhance.level * shield.enhance.step;
     },
 
     addSwordStone (gid) {
-        if (this.hasSword()) {
-            this._sword.stones.push(gid);
-        }
+        this._sword.stones = this._sword.stones || [];
+        this._sword.stones.push(gid);
     },
 
     addShieldStone (gid) {
-        if (this.hasShield()) {
-            this._shield.stones.push(gid);
-        }
+        this._shield.stones = this._shield.stones || [];
+        this._shield.stones.push(gid);
     },
 
     hasSword () {

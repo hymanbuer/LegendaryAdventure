@@ -97,7 +97,7 @@ const Game = cc.Class({
         shield.base = info.DEF;
         shield.stones = [];
         shield.enhance = this._createCommonEnhance(gid);
-        return sword;
+        return shield;
     },
 
     _createCommonEnhance (gid) {
