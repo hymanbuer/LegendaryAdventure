@@ -569,67 +569,58 @@ cc.Class({
     },
 
     _initSearch () {
-        const getNeighbors = (grid, target) => {
-            const neighbors = [];
-            for (const d of fourDirections) {
-                const x = grid.x + d.x;
-                const y = grid.y + d.y;
-                if (!this._isValidGridXY(x, y)) continue;
-                if (this._hasNpc(x, y) && !isSameGrid(cc.v2(x, y), target)) continue;
-            
-                if (this.isReachable(x, y))
-                    neighbors.push({x, y});
+        const GridGraph = require('GridGraph');
+        const AStarSearch = require('AStarSearch');
+        const Heuristic = require('Heuristic');
+
+        const self = this;
+        const defautCost = 1;
+        const entityTypeCosts = [];
+        entityTypeCosts[EntityType.Monster] = 10;
+        entityTypeCosts[EntityType.Item] = 1;
+        entityTypeCosts[EntityType.Npc] = 10;
+        entityTypeCosts[EntityType.Door] = 2;
+        entityTypeCosts[EntityType.Trigger] = 1;
+        entityTypeCosts[EntityType.StaticItem] = 10;
+
+        function getToGridCost(grid) {
+            const entity = self._entities[grid.y][grid.x];
+            if (entity == null) {
+                return defautCost;
             }
-            return neighbors;
-        };
-
-        this._search = this._createSearch(getNeighbors);
-    },
-
-    _createSearch (getNeighbors) {
-        const width = this._mapSize.width;
-        const height = this._mapSize.height;
-        const visited = Utils.create2dArray(width, height, false);
-
-        function clear() {
-            Utils.fill2dArray(visited, false);
+            const gid = entity.getComponent(BaseEntity).gid;
+            const type = getEntityType(gid);
+            return entityTypeCosts[type] || defautCost;
         }
 
-        function getPath(start, target) {
-            if (isSameGrid(start, target)) return [];
-
-            const path = [];
-            let last = target;
-            do {
-                path.unshift(last);
-                last = last.parent;
-            } while (last && !isSameGrid(start, last));
-
-            return path;
-        }
-
-        return (start, target) => {
-            clear();
-
-            const queue = [];
-            queue.push(start);
-            visited[start.y][start.x] = true;
-            while (queue.length > 0) {
-                const next = queue.shift();
-                if (isSameGrid(next, target)) {
-                    return getPath(start, next);
-                }
-
-                for (const neighbor of getNeighbors(next, target)) {
-                    if (!visited[neighbor.y][neighbor.x]) {
-                        visited[neighbor.y][neighbor.x] = true;
-                        neighbor.parent = next;
-                        queue.push(neighbor);
-                    }
+        // create GridGraph
+        const mapSize = this.getMapSize();
+        const walkableGrids = [];
+        for (let y = 0; y < mapSize.height; ++y) {
+            for (let x = 0; x < mapSize.width; ++x) {
+                const grid = {x, y};
+                if (this.isReachable(x, y)) {
+                    walkableGrids.push(grid);
                 }
             }
+        }
+        const worldGraph = new GridGraph(mapSize, walkableGrids, false);
 
-            return []
+        // create AStarSearch
+        const index2grid = index => worldGraph.index2grid(index);
+        const heuristc = Heuristic.create(Heuristic.Type.Manhattan, index2grid);
+        const getNeighbors = index => worldGraph.getNodeNeighbors(index);
+        const getEdgeCost = (from, to) => getToGridCost(index2grid(to));
+        const search = new AStarSearch(worldGraph.maxSize, getNeighbors, getEdgeCost, heuristc);
+        
+        this._search = (startGrid, targetGrid) => {
+            const start = worldGraph.grid2index(startGrid.x, startGrid.y);
+            const target = worldGraph.grid2index(targetGrid.x, targetGrid.y);
+            const isFound = search.search(start, target);
+            if (!isFound) {
+                return [];
+            }
+            return search.path.map(index => worldGraph.index2grid(index));
         };
     },
 
