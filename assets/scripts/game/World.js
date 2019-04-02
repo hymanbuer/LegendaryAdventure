@@ -415,6 +415,10 @@ cc.Class({
                     }
                 }
 
+                if (Game.instance.isMonsterRespawn && Game.config.isMonster(gid)) {
+                    state = gid;
+                }
+
                 if (state === null) {
                     this._parseLogicGid(gid, x, y);
                 } else if (state === 0) {

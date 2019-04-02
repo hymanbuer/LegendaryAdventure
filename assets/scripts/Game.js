@@ -17,7 +17,7 @@ const Game = cc.Class({
     },
 
     properties: {
-        
+        isMonsterRespawn: true,
     },
 
     onLoad () {
