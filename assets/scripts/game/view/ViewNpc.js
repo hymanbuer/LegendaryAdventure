@@ -11,16 +11,17 @@ cc.Class({
         body: cc.Sprite,
         shadow: cc.Sprite,
         bubble: cc.Node,
-        bubbleText: cc.Label,
     },
 
     onLoad () {
-        this.bubble.active = false;
         Game.taskState.on('task-state-changed', this.onTaskStateChanged, this);
+        this.bubble.active = false;
+        this._bubbleOffset = cc.v2(this.bubble.position);
     },
 
     onDestroy () {
         Game.taskState.off('task-state-changed', this.onTaskStateChanged, this);
+        this.hideBubble();
     },
 
     start () {
@@ -47,26 +48,35 @@ cc.Class({
     },
 
     showBubble (text) {
-        const worldPos = this.bubble.convertToWorldSpaceAR(cc.Vec2.ZERO);
+        const cloneBubble = cc.instantiate(this.bubble);
+        const worldPos = this.node.convertToWorldSpaceAR(this._bubbleOffset);
         const position = this.node.parent.convertToNodeSpaceAR(worldPos);
-        this.bubble.parent = this.node.parent;
-        this.bubble.position = position;
-        this.bubble.zIndex = this.node.zIndex + 1;
+        cloneBubble.parent = this.node.parent;
+        cloneBubble.position = position;
+        cloneBubble.zIndex = this.node.zIndex + 1;
+        cloneBubble.active = true;
 
-        this.bubbleText.string = text;
-        this.bubble.active = true;
-        this.bubble.setScale(0);
-        cc.tween(this.bubble)
+        const label = cloneBubble.getComponentInChildren(cc.Label);
+        if (label) {
+            label.string = text;
+        }
+
+        cloneBubble.setScale(0);
+        cc.tween(cloneBubble)
             .to(0.25, {scaleX: 1, scaleY: 1})
             .delay(1.0)
             .to(0.25, {scaleX: 0, scaleY: 0})
             .delay(1.2)
             .repeatForever()
             .start();
+
+        this.cloneBubble = cloneBubble;
     },
 
     hideBubble () {
-        this.bubble.active = false;
+        if (cc.isValid(this.cloneBubble)) {
+            this.cloneBubble.destroy();
+        }
     },
 
     onTaskStateChanged (taskId, state) {

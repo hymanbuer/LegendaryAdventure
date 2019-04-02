@@ -304,7 +304,7 @@
         "__id__": 9
       }
     ],
-    "_active": false,
+    "_active": true,
     "_level": 2,
     "_components": [
       {
@@ -334,8 +334,8 @@
     },
     "_position": {
       "__type__": "cc.Vec3",
-      "x": -22,
-      "y": 21,
+      "x": 1,
+      "y": 27,
       "z": 0
     },
     "_scale": {
@@ -513,9 +513,6 @@
     },
     "bubble": {
       "__id__": 8
-    },
-    "bubbleText": {
-      "__id__": 10
     },
     "_id": ""
   },
