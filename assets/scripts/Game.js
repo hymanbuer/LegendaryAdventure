@@ -30,7 +30,6 @@ const Game = cc.Class({
     },
 
     start () {
-
     },
 
     _init () {
@@ -38,11 +37,24 @@ const Game = cc.Class({
         this._mapState = new MapState();
         this._taskState = new TaskState();
         this._playerStatus = new PlayerStatus();
-        this._bag.load(GameProfile.bag);
-        this._taskState.load(GameProfile.taskState);
-        this._playerStatus.load(GameProfile.player);
+        this._loadProfile();
 
         this._initListeners();
+    },
+
+    _loadProfile () {
+        this._bag.load(GameProfile.bag);
+        this._mapState.load(GameProfile.mapState)
+        this._taskState.load(GameProfile.taskState);
+        this._playerStatus.load(GameProfile.player);
+    },
+
+    saveProfile () {
+        GameProfile.bag = this._bag.dump();
+        GameProfile.mapState = this._mapState.dump()
+        GameProfile.taskState = this._taskState.dump();
+        GameProfile.player = this._playerStatus.dump();
+        GameProfile.save();
     },
 
     _initListeners () {

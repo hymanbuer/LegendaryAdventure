@@ -1,13 +1,35 @@
 
 const GameConfig = require('GameConfig');
 
-function gridKey(grid) {
+function getGridKey(grid) {
     return `${grid.x}, ${grid.y}`;
 }
 
 cc.Class({
     ctor () {
         this._mapStateList = new Array(GameConfig.maxFloors);
+    },
+
+    load (mapState) {
+        if (mapState == null) {
+            return;
+        }
+        mapState.forEach((floorState, floorId) => floorState && floorState.forEach(gridState => {
+            this._setEntityState(floorId, gridState.gridKey, gridState.state);
+        }));
+    },
+
+    dump () {
+        const mapStateList = new Array(GameConfig.maxFloors);
+        this._mapStateList.forEach((mapState, floorId) => {
+            const floorState = [];
+            for (let [gridKey, state] of mapState.entries()) {
+                const gridState = {gridKey, state};
+                floorState.push(gridState);
+            }
+            mapStateList[floorId] = floorState;
+        });
+        return mapStateList;
     },
 
     isEntityRemoved (floorId, grid) {
@@ -20,19 +42,23 @@ cc.Class({
     },
 
     getEntityState (floorId, grid) {
-        const key = gridKey(grid);
-        if (!this._mapStateList[floorId] || !this._mapStateList[floorId].has(key))
+        const gridKey = getGridKey(grid);
+        if (!this._mapStateList[floorId] || !this._mapStateList[floorId].has(gridKey))
             return null;
         
-        return this._mapStateList[floorId].get(key);
+        return this._mapStateList[floorId].get(gridKey);
     },
 
     setEntityState (floorId, grid, state) {
-        const key = gridKey(grid);
+        const gridKey = getGridKey(grid);
+        this._setEntityState(floorId, gridKey, state);
+    },
+
+    _setEntityState (floorId, gridKey, state) {
         let mapState = this._mapStateList[floorId];
         if (!mapState) {
             mapState = this._mapStateList[floorId] = new Map();
         }
-        mapState.set(key, state);
+        mapState.set(gridKey, state);
     },
 });

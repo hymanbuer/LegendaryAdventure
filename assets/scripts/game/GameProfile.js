@@ -39,6 +39,7 @@ proto.reset = function () {
         {gid: 2002, num: 3},
     ];
 
+    this.mapState = [];
     this.taskState = [];
     this.savedPrincess = {
         [9]: true,

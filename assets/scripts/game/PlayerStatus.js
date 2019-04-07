@@ -106,6 +106,20 @@ cc.Class({
         this._shield = player.shield || {};
     },
 
+    dump () {
+        const player = {};
+        player.level = this._level;
+        player.hp = this._hp;
+        player.maxHp = this._maxHp;
+        player.attack = this._attack;
+        player.defence = this._defence;
+        player.exp = this._exp;
+        player.nextExp = this._nextExp;
+        player.sword = cc.instantiate(this._sword);
+        player.shield = cc.instantiate(this._shield);
+        return player;
+    },
+
     changeSword (sword) {
         const previous = this._sword;
         if (previous.gid) {

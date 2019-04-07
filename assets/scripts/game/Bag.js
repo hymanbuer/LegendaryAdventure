@@ -10,12 +10,15 @@ cc.Class({
     },
 
     load (bag) {
-        this._coins = bag.coins;
-        this._items = bag.items;
+        this._coins = bag.coins || 0;
+        this._items = bag.items || [];
     },
 
     dump () {
-
+        const bag = {};
+        bag.coins = this._coins;
+        bag.items = this._items;
+        return bag;
     },
 
     addItem (gid, num = 1) {

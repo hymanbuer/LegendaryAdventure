@@ -59,8 +59,8 @@ const Main = cc.Class({
         profile.load();
         this._addMask();
 
-        profile.reset();
-        setting.reset();
+        // profile.reset();
+        // setting.reset();
     },
 
     _addMask () {

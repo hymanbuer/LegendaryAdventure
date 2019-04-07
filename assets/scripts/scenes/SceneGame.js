@@ -199,6 +199,7 @@ cc.Class({
         if (floorId > profile.maxFloorId) {
             profile.maxFloorId = floorId;
         }
-        profile.save();
+        // profile.save();
+        Game.instance.saveProfile();
     },
 });
