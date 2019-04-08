@@ -15,13 +15,15 @@
     "subContext": ""
   },
   "encryptJs": true,
-  "excludeScenes": [],
+  "excludeScenes": [
+    "fbe21814-4d3e-40f8-b137-6cd78097a8cc"
+  ],
   "fb-instant-games": {},
   "includeSDKBox": false,
   "inlineSpriteFrames": true,
   "inlineSpriteFrames_native": true,
-  "md5Cache": true,
-  "mergeStartScene": true,
+  "md5Cache": false,
+  "mergeStartScene": false,
   "optimizeHotUpdate": false,
   "orientation": {
     "landscapeLeft": true,

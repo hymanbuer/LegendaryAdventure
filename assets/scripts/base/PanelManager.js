@@ -119,7 +119,7 @@ const PanelManager = cc.Class({
         err => {
             removeLoadingTips();
             this._panelMap.delete(root.id);
-            return `failed to load ${name}: ${err}`;
+            return `failed to load ${name}: ${err.message}`;
         });
     },
 

@@ -7,7 +7,6 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        uiAboutPrefab: cc.Prefab,
         btnStart: cc.Node,
         btnContinue: cc.Node,
         btnRestart: cc.Node,
