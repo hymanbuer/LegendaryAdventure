@@ -30,19 +30,21 @@ const Game = cc.Class({
     },
 
     onEnable () {
-        this._beforeUnloadListener = () => {
-            this.saveProfile();
-        };
-        window.addEventListener('beforeunload', this._beforeUnloadListener);
-        window.addEventListener('unload', this._beforeUnloadListener);
+        // this._beforeUnloadListener = () => {
+        //     this.saveProfile();
+        // };
+        // window.addEventListener('beforeunload', this._beforeUnloadListener);
+        // window.addEventListener('unload', this._beforeUnloadListener);
     },
 
     onDisable () {
-        window.removeEventListener('beforeunload', this._beforeUnloadListener);
-        window.removeEventListener('unload', this._beforeUnloadListener);
+        // window.removeEventListener('beforeunload', this._beforeUnloadListener);
+        // window.removeEventListener('unload', this._beforeUnloadListener);
+        this.unschedule(this.saveProfile);
     },
 
     start () {
+        this.schedule(this.saveProfile, 5)
     },
 
     _init () {
@@ -96,11 +98,11 @@ const Game = cc.Class({
         this._bag.on('add-item', this.onCheckGetShieldOrStones, this);
         this._bag.on('add-item', this.onCheckInstantUseItem, this);
 
-        this._bag.on('add-item', this.saveBag, this);
-        this._bag.on('remove-item', this.saveBag, this);
-        this._bag.on('coins-changed', this.saveBag, this);
+        // this._bag.on('add-item', this.saveBag, this);
+        // this._bag.on('remove-item', this.saveBag, this);
+        // this._bag.on('coins-changed', this.saveBag, this);
 
-        this._taskState.on('task-state-changed', this.saveTaskState, this);
+        // this._taskState.on('task-state-changed', this.saveTaskState, this);
     },
 
     onCheckInstantUseItem (gid) {
