@@ -70,7 +70,6 @@ cc.Class({
     _playClip (name) {
         const animation = this._getAnimation();
         animation.play(name);
-        cc.log('## play ->', name);
     },
 
     _getCurrentClipName () {

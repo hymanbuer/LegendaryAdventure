@@ -6,6 +6,8 @@ function getGridKey(grid) {
 }
 
 cc.Class({
+    mixins: [cc.EventTarget],
+
     ctor () {
         this._mapStateList = new Array(GameConfig.maxFloors);
     },

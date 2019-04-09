@@ -29,6 +29,19 @@ const Game = cc.Class({
         Game.instance = null;
     },
 
+    onEnable () {
+        this._beforeUnloadListener = () => {
+            this.saveProfile();
+        };
+        window.addEventListener('beforeunload', this._beforeUnloadListener);
+        window.addEventListener('unload', this._beforeUnloadListener);
+    },
+
+    onDisable () {
+        window.removeEventListener('beforeunload', this._beforeUnloadListener);
+        window.removeEventListener('unload', this._beforeUnloadListener);
+    },
+
     start () {
     },
 
@@ -57,11 +70,37 @@ const Game = cc.Class({
         GameProfile.save();
     },
 
+    saveBag () {
+        GameProfile.bag = this._bag.dump();
+        GameProfile.save();
+    },
+
+    saveMapState () {
+        GameProfile.mapState = this._mapState.dump();
+        GameProfile.save();
+    },
+
+    saveTaskState () {
+        GameProfile.taskState = this._taskState.dump();
+        GameProfile.save();
+    },
+
+    savePlayerStatus () {
+        GameProfile.player = this._playerStatus.dump();
+        GameProfile.save();
+    },
+
     _initListeners () {
         this._bag.on('add-item', this._taskState.onGetItem, this._taskState);
         this._bag.on('add-item', this.onCheckGetSwordOrStones, this);
         this._bag.on('add-item', this.onCheckGetShieldOrStones, this);
         this._bag.on('add-item', this.onCheckInstantUseItem, this);
+
+        this._bag.on('add-item', this.saveBag, this);
+        this._bag.on('remove-item', this.saveBag, this);
+        this._bag.on('coins-changed', this.saveBag, this);
+
+        this._taskState.on('task-state-changed', this.saveTaskState, this);
     },
 
     onCheckInstantUseItem (gid) {

@@ -120,6 +120,7 @@ cc.Class({
             if (price < config.maxPrice) {
                 price += config.priceStep;
                 Game.profile.shop[config.gid] = price;
+                Game.profile.save();
                 this._updatePrices();
             }
         }
