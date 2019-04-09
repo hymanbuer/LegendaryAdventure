@@ -7,7 +7,25 @@
   ],
   "design-resolution-height": 1136,
   "design-resolution-width": 640,
-  "excluded-modules": [],
+  "excluded-modules": [
+    "LabelOutline",
+    "Spine Skeleton",
+    "DragonBones",
+    "RichText",
+    "MotionStreak",
+    "ScrollBar",
+    "PageView",
+    "PageViewIndicator",
+    "Slider",
+    "EditBox",
+    "VideoPlayer",
+    "WebView",
+    "Collider",
+    "Physics",
+    "StudioComponent",
+    "Intersection",
+    "Native Socket"
+  ],
   "facebook": {
     "appID": "",
     "audience": {
@@ -29,7 +47,6 @@
     "height": 640,
     "width": 960
   },
-  "start-scene": "current",
   "use-customize-simulator": true,
   "use-project-simulator-setting": false
 }

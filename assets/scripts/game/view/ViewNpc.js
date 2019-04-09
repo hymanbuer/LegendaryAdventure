@@ -14,14 +14,20 @@ cc.Class({
     },
 
     onLoad () {
-        Game.taskState.on('task-state-changed', this.onTaskStateChanged, this);
         this.bubble.active = false;
         this._bubbleOffset = cc.v2(this.bubble.position);
     },
 
     onDestroy () {
-        Game.taskState.off('task-state-changed', this.onTaskStateChanged, this);
         this.hideBubble();
+    },
+
+    onEnable () {
+        Game.taskState.on('task-state-changed', this.onTaskStateChanged, this);
+    },
+
+    onDisable () {
+        Game.taskState.off('task-state-changed', this.onTaskStateChanged, this);
     },
 
     start () {
