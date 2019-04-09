@@ -19,6 +19,14 @@ const MoveState = cc.Enum({
 const MOVE_TAG = 100;
 const MOVE_SPEED = 360;
 
+function fuzzyEqual(a, b) {
+    const variance = 4;
+    if (a - variance <= b && b <= a + variance) {
+        return true;
+    }
+    return false;
+}
+
 cc.Class({
     extends: cc.Component,
 
@@ -194,11 +202,17 @@ cc.Class({
 
     _rotateTo (target) {
         let direction = null;
-        if (target.x > this.node.x) direction = Direction.East;
-        else if (target.x < this.node.x) direction = Direction.West;
-        else if (target.y < this.node.y) direction = Direction.South;
-        else if (target.y > this.node.y) direction = Direction.North;
-
+        const isXEqual = fuzzyEqual(target.x, this.node.x);
+        const isYEqual = fuzzyEqual(target.y, this.node.y);
+        if (!isXEqual && target.x > this.node.x) {
+            direction = Direction.East;
+        } else if (!isXEqual && target.x < this.node.x) {
+            direction = Direction.West;
+        } else if (!isYEqual && target.y < this.node.y) {
+            direction = Direction.South;
+        } else if (!isYEqual && target.y > this.node.y) {
+            direction = Direction.North;
+        }
         if (direction != null) {
             this.node.emit('character-rotate', direction);
         }
