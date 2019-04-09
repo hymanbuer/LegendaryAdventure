@@ -1,6 +1,6 @@
 {
   "ver": "2.2.0",
-  "uuid": "0a01d449-a58b-4d4e-80b0-c862835a0698",
+  "uuid": "4a6f1291-6c48-40ab-b6ff-c5ab75536e47",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -8,9 +8,9 @@
   "subMetas": {
     "GameLoading": {
       "ver": "1.0.3",
-      "uuid": "ec669b24-42f0-475e-b1fb-8f3223f915c2",
-      "rawTextureUuid": "0a01d449-a58b-4d4e-80b0-c862835a0698",
-      "trimType": "auto",
+      "uuid": "7a24aae2-d5b0-4dde-9377-7a550226a30e",
+      "rawTextureUuid": "4a6f1291-6c48-40ab-b6ff-c5ab75536e47",
+      "trimType": "custom",
       "trimThreshold": 1,
       "rotated": false,
       "offsetX": 0,
@@ -21,10 +21,10 @@
       "height": 1136,
       "rawWidth": 768,
       "rawHeight": 1136,
-      "borderTop": 229,
-      "borderBottom": 323,
-      "borderLeft": 120,
-      "borderRight": 112,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
       "subMetas": {}
     }
   }
