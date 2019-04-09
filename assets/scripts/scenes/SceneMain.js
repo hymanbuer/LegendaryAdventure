@@ -10,6 +10,7 @@ cc.Class({
         btnStart: cc.Node,
         btnContinue: cc.Node,
         btnRestart: cc.Node,
+        loadingTips: cc.Node,
     },
 
     onLoad () {
@@ -33,6 +34,7 @@ cc.Class({
 
     onClickContinueGame () {
         Main.instance.transition('game', 0.5, 0);
+        this._showLoadingTips();
     },
 
     onClickAbout () {
@@ -51,5 +53,13 @@ cc.Class({
         } else {
             Main.instance.transition('opening');
         }
+        this._showLoadingTips();
+    },
+
+    _showLoadingTips () {
+        this.loadingTips.active = true;
+        this.btnStart.active = false;
+        this.btnContinue.active = false;
+        this.btnRestart.active = false;
     },
 });

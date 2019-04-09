@@ -61,6 +61,9 @@ cc.Class({
         itemAtlas: cc.SpriteAtlas,
         commonAtlas: cc.SpriteAtlas,
         resConfig: cc.JsonAsset,
+
+        roleAction: cc.SpriteAtlas,
+        commonAtlas2: cc.SpriteAtlas,
     },
 
     onLoad () {
@@ -76,13 +79,7 @@ cc.Class({
     },
 
     init () {
-        const urls = [
-            'sheets/RoleAction',
-        ];
-        const types = [
-            cc.SpriteAtlas,
-        ];
-        return LoaderHelper.loadResArrayByUrl(urls, types);
+        return Promise.resolve();
     },
 
     loadMapAssets (floorId) {

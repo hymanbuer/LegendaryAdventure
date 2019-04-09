@@ -1,16 +1,16 @@
 {
   "ver": "2.2.0",
-  "uuid": "7e3a258b-4d90-48fc-b0ff-2c0399ff7ccb",
+  "uuid": "58f782b0-f28d-4c10-a84e-d599406e004a",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
   "subMetas": {
-    "Android_downBg": {
+    "fengmian_background": {
       "ver": "1.0.3",
-      "uuid": "f9d41f7a-982f-441a-9f43-3d5d60dcc11f",
-      "rawTextureUuid": "7e3a258b-4d90-48fc-b0ff-2c0399ff7ccb",
-      "trimType": "auto",
+      "uuid": "fbb019f6-0a85-475c-9df1-46b6c69ac6c0",
+      "rawTextureUuid": "58f782b0-f28d-4c10-a84e-d599406e004a",
+      "trimType": "custom",
       "trimThreshold": 1,
       "rotated": false,
       "offsetX": 0,
@@ -18,9 +18,9 @@
       "trimX": 0,
       "trimY": 0,
       "width": 768,
-      "height": 94,
+      "height": 1140,
       "rawWidth": 768,
-      "rawHeight": 94,
+      "rawHeight": 1140,
       "borderTop": 0,
       "borderBottom": 0,
       "borderLeft": 0,

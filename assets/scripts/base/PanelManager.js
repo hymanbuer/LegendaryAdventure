@@ -74,7 +74,7 @@ const PanelManager = cc.Class({
             }
             this.unschedule(addLoadingTips);
         }
-        this.scheduleOnce(addLoadingTips, 0.05);
+        this.scheduleOnce(addLoadingTips, 0.1);
     
         const assetId = config.assetId || name;
         const promise = config.uuid ? LoaderHelper.loadResByUuid(config.uuid)

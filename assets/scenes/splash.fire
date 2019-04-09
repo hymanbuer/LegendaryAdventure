@@ -187,7 +187,9 @@
     },
     "_enabled": true,
     "uiMaskPrefab": null,
-    "loadingTipsPrefab": null,
+    "loadingTipsPrefab": {
+      "__uuid__": "c2a383d4-f4a9-4617-bb32-c44bdd979c4f"
+    },
     "panelConfig": {
       "__uuid__": "9e869bae-11e9-4341-b5a4-0907a8119dff"
     },
