@@ -1,4 +1,6 @@
 
+const LoaderHelper = require('CCLoaderHelper');
+
 const assettype2name = { 
     'cc.Asset': 'native-asset',
     'cc.AnimationClip': 'animation-clip',
@@ -30,22 +32,6 @@ const name2assettype = {};
 for (let key in assettype2name) {
     const value = assettype2name[key];
     name2assettype[value] = key;
-}
-
-function getResByUuid (uuid) {
-    const url = cc.AssetLibrary.getLibUrlNoExt(uuid) + '.json';
-    return cc.loader.getRes(url);
-}
-
-function loadResByUuid (uuid) {
-    return new Promise((resolve, reject) => {
-        cc.loader.load({ type: 'uuid', uuid: uuid }, null, (err, asset) => {
-            if (err)
-                reject(err);
-            else
-                resolve(asset);
-        });
-    });
 }
 
 /**
@@ -96,13 +82,13 @@ const Assets = cc.Class({
     get: function (id, type) {
         const config = this._getConfig(id, type);
         if (!config) return null;
-        else return getResByUuid(config.uuid);
+        else return this._get(config);
     },
 
     load: function (id, type) {
         const config = this._getConfig(id, type);
         if (!config) return Promise.reject(`${id} ${type} don't exist`);
-        else return loadResByUuid(config.uuid);
+        else return this._load(config);
     },
 
     /////////////////////////////
@@ -149,5 +135,23 @@ const Assets = cc.Class({
             type = cc.js.getClassByName(type);
         }
         return type;
+    },
+
+    _get (config) {
+        if (config.url) {
+            const type = cc.js.getClassByName(config.type);
+            return LoaderHelper.getResByUrl(config.url, type);
+        } else if (config.uuid) {
+            return LoaderHelper.getResByUuid(config.uuid);
+        }
+    },
+
+    _load (config) {
+        if (config.url) {
+            const type = cc.js.getClassByName(config.type);
+            return LoaderHelper.loadResByUrl(config.url, type);
+        } else if (config.uuid) {
+            return LoaderHelper.loadResByUuid(config.uuid);
+        }
     },
 });

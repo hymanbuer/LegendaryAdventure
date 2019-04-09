@@ -49,6 +49,19 @@ for (let type in Editor.assettype2name) {
     name2assettype[name] = type;
 }
 
+const resourcesPath = 'db://assets/resources/';
+function getResUrl(uuid) {
+    const info = Editor.assetdb.remote.assetInfoByUuid(uuid);
+    if (info) {
+        let url = info.url;
+        if (url.indexOf(resourcesPath) != -1) {
+            url = url.substring(0, url.lastIndexOf('.'));
+            url = url.substring(resourcesPath.length);
+            return url;
+        }
+    }
+}
+
 Editor.polymerElement({
     properties: {
         selected: {
@@ -80,6 +93,7 @@ Editor.polymerElement({
             config.uuid = icon.uuid;
             config.type = name2assettype[icon.type];        // e.g. type -> "cc.Texture2D"
             config.name = icon.type;                        // e.g. name -> "texture"
+            config.url = getResUrl(icon.uuid);
             ret.push(config);
         });
         return ret;
