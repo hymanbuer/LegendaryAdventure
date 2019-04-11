@@ -17,6 +17,10 @@ cc.Class({
         const tasks = Game.taskState.getRunningTasks();
         for (let task of tasks) {
             const info = Game.data.getTask(task.taskId);
+            if (info == null) {
+                continue;
+            }
+
             let title = info.name;
             let detail = '';
             if (task.state == TaskState.Accepted) {
@@ -26,6 +30,10 @@ cc.Class({
             }
             const quest = this._createQuest(title, detail);
             this.container.addChild(quest);
+        }
+
+        if (this.container.children.length == 0) {
+            this.node.destroy();
         }
     },
 

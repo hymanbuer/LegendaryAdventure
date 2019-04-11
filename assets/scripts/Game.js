@@ -44,7 +44,7 @@ const Game = cc.Class({
     },
 
     start () {
-        this.schedule(this.saveProfile, 5)
+        this.schedule(this.saveProfile, 2.5);
     },
 
     _init () {
@@ -72,37 +72,11 @@ const Game = cc.Class({
         GameProfile.save();
     },
 
-    saveBag () {
-        GameProfile.bag = this._bag.dump();
-        GameProfile.save();
-    },
-
-    saveMapState () {
-        GameProfile.mapState = this._mapState.dump();
-        GameProfile.save();
-    },
-
-    saveTaskState () {
-        GameProfile.taskState = this._taskState.dump();
-        GameProfile.save();
-    },
-
-    savePlayerStatus () {
-        GameProfile.player = this._playerStatus.dump();
-        GameProfile.save();
-    },
-
     _initListeners () {
         this._bag.on('add-item', this._taskState.onGetItem, this._taskState);
         this._bag.on('add-item', this.onCheckGetSwordOrStones, this);
         this._bag.on('add-item', this.onCheckGetShieldOrStones, this);
         this._bag.on('add-item', this.onCheckInstantUseItem, this);
-
-        // this._bag.on('add-item', this.saveBag, this);
-        // this._bag.on('remove-item', this.saveBag, this);
-        // this._bag.on('coins-changed', this.saveBag, this);
-
-        // this._taskState.on('task-state-changed', this.saveTaskState, this);
     },
 
     onCheckInstantUseItem (gid) {

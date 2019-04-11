@@ -61,10 +61,6 @@ function getEntityType(gid) {
     return EntityType.Invalid;
 }
 
-function isSameGrid(a, b) {
-    return a.x === b.x && a.y === b.y;
-}
-
 cc.Class({
     extends: cc.Component,
 
@@ -187,12 +183,17 @@ cc.Class({
         return this._layerLogic.getTileGIDAt(pos, y);
     },
 
-    isReachable (pos, y) {
-        if (this._getExit(pos, y)) return true;
+    isReachable (x, y) {
+        if (!this._isValidGridXY(x, y)) {
+            return false;
+        }
+        if (this._getExit(x, y)) {
+            return true;
+        }
         
-        return this._layerFloor.getTileGIDAt(pos, y) > 0
-            && (this._layerLogic.getTileGIDAt(pos, y) === 0
-                || this._hasEntity(pos, y));
+        return this._layerFloor.getTileGIDAt(x, y) > 0
+            && (this._layerLogic.getTileGIDAt(x, y) === 0
+                || this._hasEntity(x, y));
     },
 
     searchPath (start, target) {
@@ -224,7 +225,7 @@ cc.Class({
         const touch = event.touch;
         const pos = this.node.convertToNodeSpaceAR(touch.getLocation());
         const targetGrid = this.getGridAt(pos);
-        if (!this.isReachable(targetGrid)) {
+        if (!this.isReachable(targetGrid.x, targetGrid.y)) {
             this._showForbidAnimation(targetGrid);
             return;
         }
@@ -580,12 +581,12 @@ cc.Class({
         const self = this;
         const defautCost = 1;
         const entityTypeCosts = [];
-        entityTypeCosts[EntityType.Monster] = 10;
+        entityTypeCosts[EntityType.Monster] = 100;
         entityTypeCosts[EntityType.Item] = 1;
-        entityTypeCosts[EntityType.Npc] = 10;
+        entityTypeCosts[EntityType.Npc] = 100;
         entityTypeCosts[EntityType.Door] = 2;
         entityTypeCosts[EntityType.Trigger] = 1;
-        entityTypeCosts[EntityType.StaticItem] = 10;
+        entityTypeCosts[EntityType.StaticItem] = 100;
 
         function getToGridCost(grid) {
             const entity = self._entities[grid.y][grid.x];
@@ -602,8 +603,8 @@ cc.Class({
         const walkableGrids = [];
         for (let y = 0; y < mapSize.height; ++y) {
             for (let x = 0; x < mapSize.width; ++x) {
-                const grid = {x, y};
                 if (this.isReachable(x, y)) {
+                    const grid = {x, y};
                     walkableGrids.push(grid);
                 }
             }

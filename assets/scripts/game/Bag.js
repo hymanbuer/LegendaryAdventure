@@ -38,7 +38,9 @@ cc.Class({
     reduceItem (gid, num = 1) {
         const item = this._getItem(gid);
         cc.assert(item, `item not exist ${gid}`);
-        if (GameConfig.isInfiniteItem(gid)) return;
+        if (GameConfig.isInfiniteItem(gid)) {
+            return item.num;
+        }
 
         item.num -= num;
         cc.assert(item.num >= 0, `don't has enough item to be removed`);
