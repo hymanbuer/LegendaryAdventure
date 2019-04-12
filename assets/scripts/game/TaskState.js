@@ -55,6 +55,15 @@ const TaskState = cc.Class({
         this._needMap.set(taskId, itemGid);
     },
 
+    isNeedItem (gid) {
+        for (let itemGid of this._needMap.values()) {
+            if (itemGid == gid) {
+                return true;
+            }
+        }
+        return false;
+    },
+
     getRunningTasks () {
         const tasks = [];
         for (let [taskId, state] of this._stateMap.entries()) {

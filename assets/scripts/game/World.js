@@ -262,14 +262,15 @@ cc.Class({
     },
 
     onBeforeEnterPosition (sender, pos, passCallback) {
-        const grid = this.getGridAt(pos);
-        sender.node.zIndex = grid.y;
+        // const grid = this.getGridAt(pos);
+        // sender.node.zIndex = grid.y;
         this._onEntityEvent('BeforeEnter', sender, pos, passCallback);
     },
 
     onAfterEnterPosition (sender, pos, passCallback) {
         const grid = this.getGridAt(pos);
         const exit = this._getExit(grid);
+        sender.node.zIndex = grid.y;
         if (exit) {
             this.node.emit('change-floor', exit);
             passCallback(false);
@@ -518,6 +519,9 @@ cc.Class({
                     const trigger = node.addComponent(compName);
                     trigger.init(event);
                 };
+                if (event.TASKGIFT) {
+                    add('EventGift');
+                }
                 if (event.TALK) {
                     add('EventTalk');
                 }

@@ -191,6 +191,9 @@ cc.Class({
             index = gid - 226;
             prefix = 'M';
         }
+        if (specialMonsterIndexMap[gid]) {
+            index = specialMonsterIndexMap[gid];
+        }
 
         if (index == null) {
             return Promise.resolve(null);

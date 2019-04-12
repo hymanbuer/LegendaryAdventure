@@ -87,8 +87,9 @@ cc.Class({
         }
 
         Game.bag.plusCoins(monster.gold);
-        if (monster.item) {
-            // TODO: check add only once
+        if (monster.item 
+            && Game.taskState.isNeedItem(monster.item) 
+            && !Game.bag.hasItem(monster.item)) {
             Game.bag.addItem(monster.item);
             Game.openPanel('get_item', monster.item);
         }

@@ -44,12 +44,15 @@ const PanelTalk = cc.Class({
     run (title, talkList, type) {
         this.talkTitle = title;
         this.talkList = talkList;
-        this.talkType = type;
+        this.talkType = type || TalkType.Normal;
     },
 
     start () {
         this._next = 0;
         this.title.string = this.talkTitle;
+        if (!Array.isArray(this.talkList)) {
+            this.talkList = [this.talkList];
+        }
         this._showNextTalk();
     },
 

@@ -23,8 +23,7 @@ cc.Class({
             if (this.event.TASKNEEDED == null) {
                 Game.openPanel('talk', this.title, this.event.TASK, TalkType.Normal);
                 Game.onPanelClosed('talk', () => {
-                    callback(null);
-                    Game.taskState.setTaskState(this.event.ID, TaskState.End);
+                    this._doTaskEnd(callback);
                 });
             } 
             else {
@@ -44,22 +43,37 @@ cc.Class({
         } 
         else if (state === TaskState.Finished) {
             this._doTaskEnd(callback);
-        } else {
+        } 
+        else {
             callback(null);
+            if (this.event.TASKOVER) {
+                Game.openPanel('talk', this.title, this.event.TASKOVER, TalkType.Normal);
+            }
         }
     },
 
     _doTaskEnd (callback) {
         Game.taskState.setTaskState(this.event.ID, TaskState.End);
-        Game.bag.reduceItem(this.event.TASKNEEDED);
-        Game.mapState.removeEntity(this.floorId, this.grid);
-        Game.profile.savedPrincess[this.gid] = true;
+        if (this.event.TASKNEEDED) {
+            Game.bag.reduceItem(this.event.TASKNEEDED);
+        }
+        if (Game.config.isPrincess(this.gid)) {
+            Game.profile.savedPrincess[this.gid] = true;
+        }
 
-        Game.openPanel('talk', this.title, this.event.TASKEND, TalkType.Normal);
-        Game.onPanelClosed('talk', () => {
+        const checkTaskBlack = () => {
             callback(null);
-            Game.openPanel('quest_complete', this.event.TASKBLACK);
-            this.node.destroy();
-        });
+            if (this.event.TASKBLACK) {
+                Game.openPanel('quest_complete', this.event.TASKBLACK);
+                Game.mapState.removeEntity(this.floorId, this.grid);
+                this.node.destroy();
+            }
+        };
+        if (this.event.TASKEND) {
+            Game.openPanel('talk', this.title, this.event.TASKEND, TalkType.Normal);
+            Game.onPanelClosed('talk', checkTaskBlack);
+        } else {
+            checkTaskBlack();
+        }
     },
 });
