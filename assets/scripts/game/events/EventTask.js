@@ -57,9 +57,6 @@ cc.Class({
         if (this.event.TASKNEEDED) {
             Game.bag.reduceItem(this.event.TASKNEEDED);
         }
-        if (Game.config.isPrincess(this.gid)) {
-            Game.profile.savedPrincess[this.gid] = true;
-        }
 
         const checkTaskBlack = () => {
             callback(null);

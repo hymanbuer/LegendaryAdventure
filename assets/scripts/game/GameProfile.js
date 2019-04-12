@@ -40,10 +40,7 @@ proto.reset = function () {
     ];
 
     this.mapState = [];
-    this.taskState = [];
-    this.savedPrincess = {
-        [9]: true,
-    };
+    this.taskState = [{taskId: 9, state: 3}];
 
     this.shop = {};
 };

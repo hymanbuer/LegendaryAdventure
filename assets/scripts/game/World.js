@@ -411,7 +411,7 @@ cc.Class({
                 const gid = this._layerLogic.getTileGIDAt(x, y);
                 let state = Game.mapState.getEntityState(this._floorId, cc.v2(x, y));
                 if (this._floorId === 0 && Game.config.isNpc(gid)) {
-                    if (!Game.profile.savedPrincess[gid]) {
+                    if (!Game.taskState.isTaskEnd(gid)) {
                         this._layerLogic.setTileGIDAt(0, x, y);
                         continue;
                     }
