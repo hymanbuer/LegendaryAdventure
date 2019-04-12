@@ -103,7 +103,15 @@ cc.Class({
             GameSetting.save();
             this._updateDoubleWidgets();
         } else {
-            Game.openPanel('notice', '为了更好的游戏体验，暂不开放该功能~');
+            this._noticeCount = this._noticeCount == null ? 0 : this._noticeCount;
+            this._noticeCount += 1;
+            if (this._noticeCount > 3) {
+                Game.openPanel('notice', '好吧，既然你要坚持，那就给你加一点金币吧！');
+                Game.bag.plusCoins(2000);
+                this._updateCoins();
+            } else {
+                Game.openPanel('notice', '为了更好的游戏体验，暂不开放该功能~');
+            }
         }
     },
 
