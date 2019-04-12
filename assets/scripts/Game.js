@@ -35,16 +35,21 @@ const Game = cc.Class({
         // };
         // window.addEventListener('beforeunload', this._beforeUnloadListener);
         // window.addEventListener('unload', this._beforeUnloadListener);
+        this._errorListener = event => {
+            this.saveProfile();
+        };
+        window.addEventListener('error', this._errorListener);
     },
 
     onDisable () {
         // window.removeEventListener('beforeunload', this._beforeUnloadListener);
         // window.removeEventListener('unload', this._beforeUnloadListener);
+        window.removeEventListener('error', this._errorListener);
         this.unschedule(this.saveProfile);
     },
 
     start () {
-        this.schedule(this.saveProfile, 2.5);
+        this.schedule(this.saveProfile, 2);
     },
 
     _init () {
