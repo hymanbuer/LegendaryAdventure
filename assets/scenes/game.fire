@@ -139,7 +139,7 @@
       "__id__": 2
     },
     "_enabled": true,
-    "isMonsterRespawn": true,
+    "isMonsterRespawn": false,
     "_id": "7cAYswZPZFNbQGb6roUECq"
   },
   {

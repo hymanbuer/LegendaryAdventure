@@ -162,7 +162,7 @@ window.boot = function () {
     var initStartTime = cc.sys.now();
     function runCallback() {
         var initTime = (cc.sys.now() - initStartTime);
-        var leastInitTime = 1000;
+        var leastInitTime = 1500;
         if (initTime >= leastInitTime) {
             onStart();
         } else if (window.setTimeout) {

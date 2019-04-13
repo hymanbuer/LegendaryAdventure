@@ -17,7 +17,7 @@ const MoveState = cc.Enum({
 });
 
 const MOVE_TAG = 100;
-const MOVE_SPEED = 360;
+const MOVE_SPEED = 320;
 
 function fuzzyEqual(a, b) {
     const variance = 4;

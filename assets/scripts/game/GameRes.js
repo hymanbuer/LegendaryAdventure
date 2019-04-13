@@ -40,6 +40,7 @@ const specialBodyNameMap = {
     [103]: 'P103_00',
     [109]: 'P_109_00',
     [111]: 'P_109_00',
+    [127]: 'MB_01_01',
 };
 
 function getMapUrl(floorId) {
@@ -225,7 +226,8 @@ cc.Class({
         if (index != undefined) {
             feetName = `${prefix}_${Utils.fixedNumber(index, 2)}`;
             bodyName = `${feetName}_00`;
-        } else if (specialBodyNameMap[gid]) {
+        }
+        if (specialBodyNameMap[gid]) {
             bodyName = specialBodyNameMap[gid];
         }
 

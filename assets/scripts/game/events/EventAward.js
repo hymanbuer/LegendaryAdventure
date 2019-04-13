@@ -12,17 +12,15 @@ cc.Class({
     },
 
     init (event) {
+        this.event = event;
         this.awardGid = event.TASKAWARD;
         this.message = event.MESSAGE;
-        if (event.ADDENTITY) {
-            this.delayDestroy = true;
-        }
     },
 
     doBeforeEnter (sender, callback) {
         callback(null);
 
-        if (!this.delayDestroy) {
+        if (!this.event.ADDENTITY && !this.event.TASKOVER) {
             this.node.destroy();
             Game.mapState.removeEntity(this.floorId, this.grid);
         }
