@@ -45,6 +45,10 @@ cc.Class({
         item.num -= num;
         cc.assert(item.num >= 0, `don't has enough item to be removed`);
 
+        if (item.num == 0) {
+            cc.js.array.remove(this._items, item);
+        }
+
         this.emit('remove-item', gid, num);
         return item.num;
     },
@@ -83,7 +87,6 @@ cc.Class({
     },
 
     _getItem (gid) {
-        const index = this._items.findIndex(item => item.gid === gid);
-        return index >= 0 ? this._items[index] : null;
+        return this._items.find(item => item.gid === gid);
     },
 });

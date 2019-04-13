@@ -157,6 +157,11 @@ exports.getEquipmentLevel = function (gid) {
     }
 };
 
+exports.isEquipmentMaxLevel = function (gid) {
+    const level = exports.getEquipmentLevel(gid);
+    return level && level >= 6;
+};
+
 exports.isInstantUseItem = function (gid) {
     return gid == 153 || gid == 154;
 };

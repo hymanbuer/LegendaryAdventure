@@ -13,6 +13,7 @@ cc.Class({
     start () {
         this.story.spriteFrame = this.storySpriteFrames[0];
         this.currentIndex = 0;
+        cc.director.preloadScene('game');
     },
 
     onClick () {

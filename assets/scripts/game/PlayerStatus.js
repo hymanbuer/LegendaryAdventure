@@ -126,7 +126,7 @@ cc.Class({
             this.attack -= previous.base;
             this.attack -= previous.enhance.level * previous.enhance.step;
         }
-        if (previous.stones) {
+        if (previous.stones && !previous.gid) {
             cc.js.array.appendObjectsAt(sword.stones, previous.stones, 0);
         } 
         this._sword = sword;
@@ -140,7 +140,7 @@ cc.Class({
             this.defence -= previous.base;
             this.defence -= previous.enhance.level * previous.enhance.step;
         }
-        if (previous.stones) {
+        if (previous.stones && !previous.gid) {
             cc.js.array.appendObjectsAt(shield.stones, previous.stones, 0);
         } 
         this._shield = shield;

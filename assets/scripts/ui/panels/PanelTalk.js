@@ -1,7 +1,8 @@
 
 const TalkType = cc.Enum({
-    Normal: -1,
-    Task: -1,
+    Normal: 0,
+    Task: 1,
+    Shop: 2,
 });
 
 const PanelTalk = cc.Class({
@@ -25,34 +26,41 @@ const PanelTalk = cc.Class({
                     value = [value];
                 }
                 this._talkList = value;
+                this._next = 0;
             }
         },
         _talkList: [],
-
-        talkTitle: '...',
-        talkType: TalkType.Normal,
+        _talkType: TalkType.Normal,
 
         accept: cc.Node,
+        shopNode: cc.Node,
+        shopTalk: cc.Node,
+        shopGet: cc.Node,
+        shopUpgrade: cc.Node,
     },
 
     onLoad () {
-        this.title.string = this.talkTitle;
+        this.title.string = '...';
         this.text.string = '';
         this.accept.active = false;
+        this.shopNode.active = false;
     },
 
-    run (title, talkList, type) {
-        this.talkTitle = title;
+    run (title, talkList, type, shopInfo) {
+        this.title.string = title || '...';
         this.talkList = talkList;
-        this.talkType = type || TalkType.Normal;
+        this._talkType = type || TalkType.Normal;
+
+        this._shopInfo = shopInfo || {};
+        if (type == TalkType.Shop) {
+            this.shopNode.active = true;
+            this.shopTalk.active = this._shopInfo.hasTalk;
+            this.shopGet.active = this._shopInfo.hasGet;
+            this.shopUpgrade.active = this._shopInfo.hasUpgrade;
+        }
     },
 
     start () {
-        this._next = 0;
-        this.title.string = this.talkTitle;
-        if (!Array.isArray(this.talkList)) {
-            this.talkList = [this.talkList];
-        }
         this._showNextTalk();
     },
 
@@ -63,6 +71,26 @@ const PanelTalk = cc.Class({
     },
 
     onClickAccept () {
+        this.node.destroy();
+    },
+
+    onClickShopTalk () {
+        this.shopNode.active = false;
+        this.talkList = this._shopInfo.talkList;
+        this._showNextTalk();
+    },
+
+    onClickShopGet () {
+        if (this._shopInfo.getCallback) {
+            this._shopInfo.getCallback();
+        }
+        this.node.destroy();
+    },
+
+    onClickShopUpgrade () {
+        if (this._shopInfo.upgradeCallback) {
+            this._shopInfo.upgradeCallback();
+        }
         this.node.destroy();
     },
 
@@ -81,7 +109,7 @@ const PanelTalk = cc.Class({
     },
 
     _isLastTaskTalk () {
-        return this.talkType === TalkType.Task 
+        return this._talkType === TalkType.Task 
             && this._next === this.talkList.length;
     },
 });
