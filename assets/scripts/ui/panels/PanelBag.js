@@ -6,7 +6,7 @@ const hideFilter = new Set([
 ]);
 const hideRanges = [
     [39, 50], [64, 75], [89, 100], [114, 125], [139, 150],
-    [153, 157], [176, 187],
+    [176, 187],
 ];
 hideRanges.forEach(range => {
     for (let i = range[0]; i <= range[1]; i++) {
