@@ -2,6 +2,7 @@
 const profile = require('GameProfile');
 const Main = require('Main');
 const Game = require('Game');
+const version = require('version');
 
 cc.Class({
     extends: cc.Component,
@@ -11,12 +12,15 @@ cc.Class({
         btnContinue: cc.Node,
         btnRestart: cc.Node,
         loadingTips: cc.Node,
+        version: cc.Label,
     },
 
     onLoad () {
         this.btnStart.active = !profile.wasShowOpening;
         this.btnContinue.active = profile.wasShowOpening;
         this.btnRestart.active = profile.wasShowOpening;
+
+        this.version.string = `v${version.resVersion}`;
     },
 
     start () {
