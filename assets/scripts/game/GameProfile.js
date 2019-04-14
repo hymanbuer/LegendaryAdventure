@@ -24,10 +24,8 @@ proto.reset = function () {
         level: 1,
         hp: 200,
         maxHp: 200,
-        // attack: 15,
-        // defence: 10,
-        attack: 9500,
-        defence: 9000,
+        attack: 15,
+        defence: 10,
         exp: 0,
         nextExp: 9,
     };

@@ -49,7 +49,7 @@ cc.Class({
             cc.js.array.remove(this._items, item);
         }
 
-        this.emit('remove-item', gid, num);
+        this.emit('reduce-item', gid, num);
         return item.num;
     },
 

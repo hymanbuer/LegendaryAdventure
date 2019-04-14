@@ -37,5 +37,6 @@ cc.Class({
                 callback(null);
             });
         }
+        Game.audio.playEffect('open-door');
     },
 });

@@ -41,8 +41,8 @@
     },
     "_scale": {
       "__type__": "cc.Vec3",
-      "x": 1.0467053408394662,
-      "y": 1.0467053408394662,
+      "x": 0.560915503703373,
+      "y": 0.560915503703373,
       "z": 1
     },
     "_quat": {
@@ -1044,7 +1044,7 @@
     },
     "_position": {
       "__type__": "cc.Vec3",
-      "x": -241,
+      "x": 0,
       "y": 0,
       "z": 0
     },
@@ -1109,7 +1109,7 @@
     "alignMode": 1,
     "_target": null,
     "_alignFlags": 8,
-    "_left": 0,
+    "_left": 241,
     "_right": 0,
     "_top": 0,
     "_bottom": 0,
@@ -1215,7 +1215,7 @@
       "__id__": 22
     },
     "_children": [],
-    "_active": true,
+    "_active": false,
     "_level": 0,
     "_components": [
       {

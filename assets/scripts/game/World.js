@@ -240,6 +240,7 @@ cc.Class({
 
     _showForbidAnimation (grid) {
         this._showAnimation(grid, 'prefabs/game/gb_stop');
+        Game.audio.playEffect('forbid-click');
     },
 
     _showTargetAnimation (grid) {
@@ -361,6 +362,13 @@ cc.Class({
         node.on('after-enter-position', this.onAfterEnterPosition, this);
         node.on('before-exit-position', this.onBeforeExitPosition, this);
         node.on('after-exit-position', this.onAfterExitPosition, this);
+
+        node.on('character-stand', () => {
+            Game.audio.stopEffect('run');
+        });
+        node.on('character-walk', () => {
+            Game.audio.playEffect('run', true);
+        });
 
         return node.getComponent(CharacterControl);
     },

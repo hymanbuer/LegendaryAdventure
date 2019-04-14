@@ -127,6 +127,18 @@ exports.isShieldItem = function (gid) {
     return gid >= 182 && gid <= 187;
 };
 
+exports.isBoxItem = function (gid) {
+    return gid == 401 || gid == 402 || gid == 419;
+};
+
+exports.isBloodItem = function (gid) {
+    return gid == 151 || gid == 152;
+};
+
+exports.isGemItem = function (gid) {
+    return gid == 153 || gid == 154;
+};
+
 const swordStoneSet = new Set([
     39, 40, 41, 42, 43, 44,
     64, 65, 66, 67, 68, 69,

@@ -47,6 +47,7 @@ cc.Class({
         this.battleField.node.active = true;
         this.battleField.resetBattleData(Game.player, monster);
         this.hud.enterBattleField();
+        Game.audio.playMusic('battle');
     },
 
     onBattleOver (player, monster, isWin) {
@@ -58,6 +59,7 @@ cc.Class({
         } else {
             this._checkUseRespawnItem();
         }
+        Game.audio.playMusicBySceneId(Game.config.getSceneId(this._floorId));
     },
 
     _getMonsterAward (monster) {
@@ -118,6 +120,7 @@ cc.Class({
         if (this._isChangingFloor) {
             return;
         }
+        Game.audio.playEffect('change-floor');
         this._isChangingFloor = true;
         this._maskIn()
             .then(() => this._doChangeFloor(exit.floorId, exit.isUp, exit.symbol))
@@ -133,7 +136,9 @@ cc.Class({
                 this.world.initFloor(floorId, isUp, symbol);
                 this.hud.changeSite(floorId);
                 this._saveLastFloor(floorId, isUp, symbol);
+                this._floorId = floorId;
                 Game.closeAllPanel();
+                Game.audio.playMusicBySceneId(Game.config.getSceneId(floorId));
             });
     },
 

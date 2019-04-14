@@ -44,7 +44,7 @@ cc.Class({
 
     onLoad () {
         Game.bag.on('add-item', this.onItemChanged, this);
-        Game.bag.on('remove-item', this.onItemChanged, this);
+        Game.bag.on('reduce-item', this.onItemChanged, this);
     },
 
     start () {
@@ -144,6 +144,7 @@ cc.Class({
 
     onClickLevel () {
         Game.openPanel('stat');
+        Game.audio.playEffect('open-bag');
     },
 
     onClickAttack () {
@@ -164,6 +165,7 @@ cc.Class({
 
     onClickBag () {
         Game.openPanel('bag');
+        Game.audio.playEffect('open-bag');
     },
 
     onClickSetting () {

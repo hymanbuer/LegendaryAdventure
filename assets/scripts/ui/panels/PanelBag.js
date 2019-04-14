@@ -75,6 +75,7 @@ cc.Class({
 
     onClickClose () {
         this.node.destroy();
+        Game.audio.playEffect('close-bag');
     },
 
     onCheckItem (event) {

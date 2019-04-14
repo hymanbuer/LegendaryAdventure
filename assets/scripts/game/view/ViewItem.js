@@ -19,4 +19,10 @@ cc.Class({
             node.setScale(scale);
         }
     },
+
+    onDestroy () {
+        if (Game.config.isBoxItem()) {
+            Game.audio.playEffect('open-box');
+        }
+    },
 });

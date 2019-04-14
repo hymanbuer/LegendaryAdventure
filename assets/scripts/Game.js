@@ -82,6 +82,9 @@ const Game = cc.Class({
         this._bag.on('add-item', this.onCheckGetSwordOrStones, this);
         this._bag.on('add-item', this.onCheckGetShieldOrStones, this);
         this._bag.on('add-item', this.onCheckInstantUseItem, this);
+
+        this._bag.on('add-item', this.onPlayGetSound, this);
+        this._bag.on('reduce-item', this.onPlayUseSound, this);
     },
 
     onCheckInstantUseItem (gid) {
@@ -109,6 +112,24 @@ const Game = cc.Class({
             this._playerStatus.changeShield(this._createNewShield(gid));
         } else if (GameConfig.isShieldStoneItem(gid)) {
             this._playerStatus.addShieldStone(gid);
+        }
+    },
+
+    onPlayGetSound (gid) {
+        if (GameConfig.isKeyItem(gid)) {
+            Game.audio.playEffect('get-key');
+        } else if (GameConfig.isBloodItem(gid)) {
+            Game.audio.playEffect('get-blood');
+        } else if (GameConfig.isGemItem(gid)) {
+            Game.audio.playEffect('get-gem');
+        } else if (GameConfig.isItem(gid)) {
+            Game.audio.playEffect('get-item');
+        }
+    },
+
+    onPlayUseSound (gid) {
+        if (GameConfig.isBloodItem(gid)) {
+            Game.audio.playEffect('use-blood');
         }
     },
 
@@ -189,6 +210,9 @@ cc.js.get(Game, 'res', function () {
 });
 cc.js.get(Game, 'config', function () {
     return GameConfig;
+});
+cc.js.get(Game, 'audio', function () {
+    return Game.instance.getComponent('GameAudio');
 });
 
 cc.js.get(Game, 'profile', function () {
