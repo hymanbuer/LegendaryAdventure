@@ -34,6 +34,7 @@ const specialMonsterIndexMap = {
     [326]: 5,
     [327]: 107,
     [328]: 107,
+    [134]: 9,
 };
 const specialBodyNameMap = {
     [102]: 'P_102_00',

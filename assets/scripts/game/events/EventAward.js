@@ -24,8 +24,9 @@ cc.Class({
             this.node.destroy();
             Game.mapState.removeEntity(this.floorId, this.grid);
         }
-        Game.bag.addItem(this.awardGid);
-
-        Game.openPanel('get_item_dialog', this.awardGid, this.message);
+        if (!Game.bag.hasItem(this.awardGid)) {
+            Game.bag.addItem(this.awardGid);
+            Game.openPanel('get_item_dialog', this.awardGid, this.message);
+        }
     },
 });

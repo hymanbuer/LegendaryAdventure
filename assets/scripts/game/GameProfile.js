@@ -24,8 +24,10 @@ proto.reset = function () {
         level: 1,
         hp: 200,
         maxHp: 200,
-        attack: 15,
-        defence: 10,
+        // attack: 15,
+        // defence: 10,
+        attack: 9500,
+        defence: 9000,
         exp: 0,
         nextExp: 9,
     };
@@ -37,10 +39,14 @@ proto.reset = function () {
     this.bag.items = [
         {gid: 2001, num: 1},
         {gid: 2002, num: 3},
+
+        {gid: 155, num: 5},
+        {gid: 156, num: 5},
+        {gid: 157, num: 5},
     ];
 
     this.mapState = [];
-    this.taskState = [{taskId: 9, state: 3}];
+    this.taskState = [];
 
     this.shop = {};
 };
