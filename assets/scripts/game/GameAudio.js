@@ -195,7 +195,6 @@ cc.Class({
             cc.loader.loadRes(url, cc.AudioClip, (err, clip) => {
                 if (!err) {
                     cc.audioEngine.playMusic(clip, loop);
-                    cc.audioEngine.setMusicVolume(0.7);
                     if (!setting.isAudioOn) {
                         cc.audioEngine.pauseMusic();
                     }

@@ -23,10 +23,12 @@ const specialExitOffset = {
         down: {x: 0, y: 1},
     },
 
+    [37]: {
+        down: {x: -1, y: 0},
+    },
     [69]: {
         down: {x: -1, y: 0},
     },
-
     [86]: {
         up: {x: 0, y: -1},
         down: {x: 0, y: -1},
