@@ -43,12 +43,16 @@ const Main = cc.Class({
 
     transition (nextSceneName, inTime, outTime) {
         cc.director.preloadScene(nextSceneName);
+        this.mask.active = true;
         this.mask.zIndex = cc.macro.MAX_ZINDEX;
+        this.mask.opacity = 0;
         this.mask.runAction(cc.sequence(
             cc.fadeIn(inTime || 0.5),
             cc.callFunc(() => {
                 cc.director.loadScene(nextSceneName, () => {
-                    this.mask.runAction(cc.fadeOut(outTime || 0.5));
+                    this.mask.runAction(cc.sequence(cc.fadeOut(outTime || 0.5), cc.callFunc(() => {
+                        this.mask.active = false;
+                    })));
                 });
             }),
         ));
@@ -58,13 +62,11 @@ const Main = cc.Class({
         setting.load();
         profile.load();
         this._addMask();
-
-        // profile.reset();
-        // setting.reset();
     },
 
     _addMask () {
         this.mask = cc.instantiate(this.maskPrefab);
         this.mask.parent = this.node.parent;
+        this.mask.active = false;
     },
 });
