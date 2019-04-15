@@ -74,6 +74,7 @@ cc.Class({
         }
         this._equip = this._isSword ? Game.player.getSword() : Game.player.getShield();
         this._updateEnhance();
+        Game.audio.playEffect('equip-enhance');
     },
 
     _updateEnhance () {

@@ -48,6 +48,7 @@ cc.Class({
             Game.bag.addItem(newShieldGid);
             Game.bag.reduceItem(equip.gid);
             this._updateView(false);
+            Game.audio.playEffect('equip-upgrade');
         }
     },
 

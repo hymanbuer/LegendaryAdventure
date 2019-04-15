@@ -89,6 +89,14 @@ cc.Class({
             default: null,
             type: cc.AudioClip,
         },
+        equipEnhance: {
+            default: null,
+            type: cc.AudioClip,
+        },
+        equipUpgrade: {
+            default: null,
+            type: cc.AudioClip,
+        },
     },
 
     onLoad () {
@@ -120,6 +128,8 @@ cc.Class({
         map.set('monster-attack', this.monsterAttack);
         map.set('player-attack', this.playerAttack);
         map.set('player-critical-attack', this.playerCriticalAttack);
+        map.set('equip-enhance', this.equipEnhance);
+        map.set('equip-upgrade', this.equipUpgrade);
     },
 
     _initMusic () {

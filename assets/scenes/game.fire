@@ -260,6 +260,12 @@
     "playerCriticalAttack": {
       "__uuid__": "66c32deb-1e20-4369-8ad2-602771011555"
     },
+    "equipEnhance": {
+      "__uuid__": "0f725c10-2e25-4d27-8f24-e782307aa7fe"
+    },
+    "equipUpgrade": {
+      "__uuid__": "ac9337d9-3a3a-4847-92ad-dde41b9d8d0b"
+    },
     "_id": "f2/FSBM8FAALdbr7M2NsmK"
   },
   {
