@@ -30,9 +30,9 @@ cc.Class({
         setting.save();
         AudioManager.instance.muteAudio = !sender.isChecked;
         if (sender.isChecked) {
-            cc.audioEngine.pauseAll();
+            cc.audioEngine.resumeMusic();
         } else {
-            cc.audioEngine.resumeAll();
+            cc.audioEngine.pauseMusic();
         }
     },
 

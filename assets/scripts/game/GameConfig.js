@@ -139,6 +139,10 @@ exports.isGemItem = function (gid) {
     return gid == 153 || gid == 154;
 };
 
+exports.isBombItem = function (gid) {
+    return gid == 360;
+};
+
 const swordStoneSet = new Set([
     39, 40, 41, 42, 43, 44,
     64, 65, 66, 67, 68, 69,

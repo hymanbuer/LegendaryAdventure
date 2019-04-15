@@ -145,6 +145,8 @@ cc.Class({
             this.schedule(() => {
                 Game.player.hp += hpStep;
             }, 0.1, 10, 0);
+
+            Game.audio.playEffect('respawn');
         });
     },
 

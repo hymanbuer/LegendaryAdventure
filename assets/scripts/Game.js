@@ -130,6 +130,8 @@ const Game = cc.Class({
     onPlayUseSound (gid) {
         if (GameConfig.isBloodItem(gid)) {
             Game.audio.playEffect('use-blood');
+        } else if (GameConfig.isBombItem(gid)) {
+            Game.audio.playEffect('use-bomb');
         }
     },
 

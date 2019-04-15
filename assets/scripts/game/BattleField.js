@@ -73,12 +73,16 @@ cc.Class({
         this.rootBar.on(cc.Node.EventType.SIZE_CHANGED, this._udpateAttackRange, this);
         this.node.on('player-attack', this._onPlayerAttack, this);
         this.node.on('monster-attack', this._onMonsterAttack, this);
+        this.node.on('player-miss', this._onAttackMiss, this);
+        this.node.on('monster-miss', this._onAttackMiss, this);
     },
 
     onDisable () {
         this.rootBar.off(cc.Node.EventType.SIZE_CHANGED, this._udpateAttackRange, this);
         this.node.off('player-attack', this._onPlayerAttack, this);
         this.node.off('monster-attack', this._onMonsterAttack, this);
+        this.node.off('player-miss', this._onAttackMiss, this);
+        this.node.off('monster-miss', this._onAttackMiss, this);
     },
 
     update (dt) {
@@ -282,13 +286,22 @@ cc.Class({
         return damage;
     },
 
-    _onPlayerAttack (num) {
+    _onPlayerAttack (num, isCritical) {
         this.monsterHp.string = `${this._monster.hp}:${this._monster.maxHp}`;
         this.monsterHpProgress.progress = this._monster.hp / this._monster.maxHp;
+        if (isCritical) {
+            Game.audio.playEffect('player-critical-attack');
+        } else {
+            Game.audio.playEffect('player-attack');
+        }
     },
 
     _onMonsterAttack (num) {
+        Game.audio.playEffect('monster-attack');
+    },
 
+    _onAttackMiss (num) {
+        Game.audio.playEffect('miss');
     },
 
     _showPlayerMiss () {
@@ -318,7 +331,7 @@ cc.Class({
 
     _showPlayerCriticalAttack (num) {
         return Promise.resolve().then(() => {
-            this.node.emit('player-attack', num);
+            this.node.emit('player-attack', num, true);
             this._showMonsterHurtAction(true);
             this._showCriticalAttackSign();
             this._showCriticalSign();

@@ -26,6 +26,10 @@ cc.Class({
         this.battleField.node.on('battle-over', this.onBattleOver, this);
     },
 
+    onDestroy () {
+        cc.audioEngine.stopMusic();
+    },
+
     start () {
         const lastFloor = profile.lastFloor;
         this.mask.active = true;
@@ -58,6 +62,7 @@ cc.Class({
             this._getMonsterAward(monster);
         } else {
             this._checkUseRespawnItem();
+            Game.audio.playEffect('lose');
         }
         Game.audio.playMusicBySceneId(Game.config.getSceneId(this._floorId));
     },
@@ -83,9 +88,11 @@ cc.Class({
             player.defence += nextLevelInfo.defence;
             player.level = player.level + 1;
             Game.openPanel('levelup', nextLevelInfo);
+            Game.audio.playEffect('level-up');
         } else {
             player.exp = exp;
             Game.openPanel('win', monster);
+            Game.audio.playEffect('win');
         }
 
         Game.bag.plusCoins(monster.gold);
@@ -103,6 +110,7 @@ cc.Class({
                 confirmHandler: () => {
                     Game.bag.reduceItem(Game.config.ITEM_RESPAWN);
                     Game.player.hp = Game.player.maxHp;
+                    Game.audio.playEffect('respawn');
                 },
                 cancelHandler: () => {
                     this._doRespawnHero();

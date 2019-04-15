@@ -37,10 +37,6 @@ proto.reset = function () {
     this.bag.items = [
         {gid: 2001, num: 1},
         {gid: 2002, num: 3},
-
-        {gid: 155, num: 5},
-        {gid: 156, num: 5},
-        {gid: 157, num: 5},
     ];
 
     this.mapState = [];

@@ -5,72 +5,121 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        soundForbidClick: {
+        forbidClick: {
             default: null,
             type: cc.AudioClip,
         },
-        soundRun: {
+        run: {
             default: null,
             type: cc.AudioClip,
         },
-        soundOpenBag: {
+        openBag: {
             default: null,
             type: cc.AudioClip,
         },
-        soundOpenBox: {
+        openBox: {
             default: null,
             type: cc.AudioClip,
         },
-        soundOpenDoor: {
+        openDoor: {
             default: null,
             type: cc.AudioClip,
         },
-        soundCloseBag: {
+        closeBag: {
             default: null,
             type: cc.AudioClip,
         },
-        soundGetKey: {
+        getKey: {
             default: null,
             type: cc.AudioClip,
         },
-        soundGetBlood: {
+        getBlood: {
             default: null,
             type: cc.AudioClip,
         },
-        soundGetGem: {
+        getGem: {
             default: null,
             type: cc.AudioClip,
         },
-        soundGetItem: {
+        getItem: {
             default: null,
             type: cc.AudioClip,
         },
-        soundChangeFloor: {
+        changeFloor: {
             default: null,
             type: cc.AudioClip,
-        },  
+        },
+        useBlood: {
+            default: null,
+            type: cc.AudioClip,
+        },
+        useBomb: {
+            default: null,
+            type: cc.AudioClip,
+        },
+        respawn: {
+            default: null,
+            type: cc.AudioClip,
+        },
+        levelUp: {
+            default: null,
+            type: cc.AudioClip,
+        },
+        lose: {
+            default: null,
+            type: cc.AudioClip,
+        },
+        win: {
+            default: null,
+            type: cc.AudioClip,
+        },
+        miss: {
+            default: null,
+            type: cc.AudioClip,
+        },
+        monsterAttack: {
+            default: null,
+            type: cc.AudioClip,
+        },
+        playerAttack: {
+            default: null,
+            type: cc.AudioClip,
+        },
+        playerCriticalAttack: {
+            default: null,
+            type: cc.AudioClip,
+        },
     },
 
     onLoad () {
         this._initSound();
         this._initMusic();
-        
     },
 
     _initSound () {
         const map = this._soundMap = new Map();
         this._soundPlayingMap = new Map();
-        map.set('forbid-click', this.soundForbidClick);
-        map.set('run', this.soundRun);
-        map.set('open-bag', this.soundOpenBag);
-        map.set('open-box', this.soundOpenBox);
-        map.set('open-door', this.soundOpenDoor);
-        map.set('close-bag', this.soundCloseBag);
-        map.set('get-key', this.soundGetKey);
-        map.set('get-blood', this.soundGetBlood);
-        map.set('get-gem', this.soundGetGem);
-        map.set('get-item', this.soundGetItem);
-        map.set('change-floor', this.soundChangeFloor);
+        map.set('forbid-click', this.forbidClick);
+        map.set('run', this.run);
+        map.set('open-bag', this.openBag);
+        map.set('open-box', this.openBox);
+        map.set('open-door', this.openDoor);
+        map.set('close-bag', this.closeBag);
+        map.set('get-key', this.getKey);
+        map.set('get-blood', this.getBlood);
+        map.set('get-gem', this.getGem);
+        map.set('get-item', this.getItem);
+        map.set('change-floor', this.changeFloor);
+        map.set('use-blood', this.useBlood);
+        map.set('use-bomb', this.useBomb);
+        map.set('respawn', this.respawn);
+        map.set('level-up', this.levelUp);
+        map.set('lose', this.lose);
+        map.set('win', this.win);
+        map.set('miss', this.miss);
+        map.set('monster-attack', this.monsterAttack);
+        map.set('player-attack', this.playerAttack);
+        map.set('player-critical-attack', this.playerCriticalAttack);
     },
 
     _initMusic () {
@@ -97,9 +146,6 @@ cc.Class({
         this._soundPlayingMap.clear();
     },
 
-    start () {
-    },
-
     stopEffect (name) {
         const audioId = this._soundPlayingMap.get(name);
         if (audioId != null) {
@@ -118,7 +164,7 @@ cc.Class({
         if (!setting.isAudioOn) {
             return;
         }
-        if (this.isEffectPlaying(name)) {
+        if (this._isEffectLoop(name)) {
             return;
         }
 
@@ -130,9 +176,6 @@ cc.Class({
     },
 
     playMusic (name, loop=true) {
-        if (!setting.isAudioOn) {
-            return;
-        }
         if (this._lastMusic == name) {
             return;
         }
@@ -143,6 +186,9 @@ cc.Class({
                 if (!err) {
                     cc.audioEngine.playMusic(clip, loop);
                     cc.audioEngine.setMusicVolume(0.7);
+                    if (!setting.isAudioOn) {
+                        cc.audioEngine.pauseMusic();
+                    }
                     this._lastMusic = name;
                 }
             });
@@ -152,5 +198,10 @@ cc.Class({
     playMusicBySceneId (sceneId) {
         const name = `scene-${sceneId}`;
         this.playMusic(name, true);
+    },
+
+    _isEffectLoop (name) {
+        const audioId = this._soundPlayingMap.get(name);
+        return audioId != null && cc.audioEngine.isLoop(audioId);
     },
 });

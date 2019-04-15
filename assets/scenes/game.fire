@@ -142,7 +142,7 @@
       "__id__": 2
     },
     "_enabled": true,
-    "isMonsterRespawn": false,
+    "isMonsterRespawn": true,
     "_id": "7cAYswZPZFNbQGb6roUECq"
   },
   {
@@ -197,38 +197,68 @@
       "__id__": 2
     },
     "_enabled": true,
-    "soundForbidClick": {
+    "forbidClick": {
       "__uuid__": "74e3a10b-b5d4-44cc-9232-658d5e3a1d50"
     },
-    "soundRun": {
+    "run": {
       "__uuid__": "011a39e1-6b48-4d54-849e-ffadc7094f04"
     },
-    "soundOpenBag": {
+    "openBag": {
       "__uuid__": "f402ea9a-bf95-4346-a382-1cd3252249be"
     },
-    "soundOpenBox": {
+    "openBox": {
       "__uuid__": "02a1ffcc-c440-43ae-bbab-0d00775841a6"
     },
-    "soundOpenDoor": {
+    "openDoor": {
       "__uuid__": "09790163-e55f-4d56-a21d-d5848ce5e490"
     },
-    "soundCloseBag": {
+    "closeBag": {
       "__uuid__": "96871ef4-469e-4ee4-b680-1d6f0e97b666"
     },
-    "soundGetKey": {
+    "getKey": {
       "__uuid__": "93d7717a-5225-4011-b2da-e6f0e03b5598"
     },
-    "soundGetBlood": {
+    "getBlood": {
       "__uuid__": "7388e74a-5a2b-44b2-8622-6434003e41b2"
     },
-    "soundGetGem": {
+    "getGem": {
       "__uuid__": "591cb81e-6418-4e31-aae8-ce17777333a7"
     },
-    "soundGetItem": {
+    "getItem": {
       "__uuid__": "a5715d94-eebc-4d1d-8622-175bcacf9edc"
     },
-    "soundChangeFloor": {
+    "changeFloor": {
       "__uuid__": "609d2da2-4f8c-4c48-b483-9d55d2eb776c"
+    },
+    "useBlood": {
+      "__uuid__": "273d0df2-45a0-493a-ae24-2fcf5a7aab8f"
+    },
+    "useBomb": {
+      "__uuid__": "29f9c6af-a2b0-432d-876c-9900caa3e315"
+    },
+    "respawn": {
+      "__uuid__": "61549de8-3ebf-4eb4-866a-a720aa367dcf"
+    },
+    "levelUp": {
+      "__uuid__": "e657c32e-6399-4510-8f92-f8e73296c56f"
+    },
+    "lose": {
+      "__uuid__": "020d4d8b-c9f2-45dc-a57f-31b35b17fb8b"
+    },
+    "win": {
+      "__uuid__": "d3006006-1d29-40be-984f-7e96b9b00418"
+    },
+    "miss": {
+      "__uuid__": "ed434814-4ec6-44b3-848f-5031270c9f81"
+    },
+    "monsterAttack": {
+      "__uuid__": "0b7f4c00-e784-4238-8937-9251421e7d9c"
+    },
+    "playerAttack": {
+      "__uuid__": "aed08be4-3a8b-4ea2-a0f0-38c145639c2b"
+    },
+    "playerCriticalAttack": {
+      "__uuid__": "66c32deb-1e20-4369-8ad2-602771011555"
     },
     "_id": "f2/FSBM8FAALdbr7M2NsmK"
   },
