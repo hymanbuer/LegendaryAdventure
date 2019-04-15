@@ -1,2 +1,2 @@
 
-exports.resVersion = '0.9.1';
+exports.resVersion = '0.9.2';
